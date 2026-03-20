@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1A1A2E"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#93003C"/>
+      <stop offset="100%" stop-color="#6E002D"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="224" fill="url(#bg)"/>
+
+  <!-- Wine glass silhouette -->
+  <g transform="translate(512, 340)">
+    <!-- Glass bowl -->
+    <ellipse cx="0" cy="0" rx="140" ry="160" fill="url(#accent)" opacity="0.9"/>
+    <!-- Stem -->
+    <rect x="-12" y="140" width="24" height="180" rx="12" fill="#93003C"/>
+    <!-- Base -->
+    <ellipse cx="0" cy="340" rx="90" ry="16" fill="#93003C"/>
+    <!-- Wine level -->
+    <ellipse cx="0" cy="40" rx="110" ry="100" fill="#B8145E" opacity="0.6"/>
+  </g>
+
+  <!-- Text: W -->
+  <text x="512" y="900" text-anchor="middle"
+    font-family="serif" font-weight="900" font-size="160" fill="white" opacity="0.15">
+    WB
+  </text>
+</svg>

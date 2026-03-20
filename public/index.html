@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WineBro — Your Elder Brother in Wine & Spirits</title>
+  <meta name="description" content="WineBro pairs the right wine with your butter chicken, recommends a whisky for your dal makhani, and teaches you tasting — in Hindi, Marathi, Gujarati, and English.">
+  <meta name="theme-color" content="#1A1A2E">
+  <meta property="og:title" content="WineBro — Not a Sommelier. Your Bro.">
+  <meta property="og:description" content="The first food & drink pairing app built for Indian cuisine. 52 dishes. 46 wines & spirits. 4 languages.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://winebro.web.app">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@300;400;600;700&family=Lora:ital@1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paprika: #93003C;
+      --paprika-light: #C4185A;
+      --charcoal: #1A1A2E;
+      --charcoal-deep: #0F172A;
+      --salem: #14A358;
+      --salem-light: #34D399;
+      --gold: #EFBF04;
+      --surface: rgba(255,255,255,0.04);
+      --surface-2: rgba(255,255,255,0.07);
+      --border: rgba(255,255,255,0.08);
+      --text-primary: #F1F1F1;
+      --text-secondary: rgba(255,255,255,0.65);
+      --text-tertiary: rgba(255,255,255,0.38);
+      --font-display: 'Playfair Display', serif;
+      --font-body: 'Montserrat', sans-serif;
+      --font-editorial: 'Lora', serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--charcoal);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── HERO ─────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 24px;
+      position: relative;
+      background: linear-gradient(180deg, var(--charcoal) 0%, var(--charcoal-deep) 60%, #1a0a1a 100%);
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(transparent, var(--charcoal-deep));
+      pointer-events: none;
+    }
+
+    .hero-logo {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 72px;
+      line-height: 0.9;
+      margin-bottom: 16px;
+      letter-spacing: -2px;
+    }
+    .hero-logo .wine { color: var(--text-primary); }
+    .hero-logo .bro { color: var(--salem-light); }
+
+    .hero-tagline {
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 40px;
+      font-weight: 600;
+    }
+
+    .hero-pitch {
+      max-width: 580px;
+      font-size: 20px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      font-weight: 300;
+      margin-bottom: 48px;
+    }
+    .hero-pitch strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .store-badges {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .store-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 28px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .store-badge:hover {
+      border-color: var(--paprika-light);
+      color: var(--text-primary);
+      background: rgba(147, 0, 60, 0.1);
+      transform: translateY(-2px);
+    }
+    .store-badge svg { width: 20px; height: 20px; fill: currentColor; }
+
+    /* ─── SECTION BASE ─────────────────────────────────── */
+    section {
+      padding: 120px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--paprika-light);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      max-width: 600px;
+    }
+
+    .section-subtitle {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      font-weight: 300;
+      max-width: 560px;
+      margin-bottom: 60px;
+    }
+
+    /* ─── WHY SECTION ──────────────────────────────────── */
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .why-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 28px;
+      transition: all 0.3s;
+    }
+    .why-card:hover {
+      border-color: rgba(255,255,255,0.15);
+      transform: translateY(-4px);
+    }
+    .why-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .why-card h3 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .why-card p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    /* ─── FEATURES ─────────────────────────────────────── */
+    .feature-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      margin-bottom: 120px;
+    }
+    .feature-block.reverse { direction: rtl; }
+    .feature-block.reverse > * { direction: ltr; }
+
+    .feature-content .feature-number {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 900;
+      color: rgba(147, 0, 60, 0.15);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .feature-content h3 {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .feature-content p {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+    .feature-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .feature-tag {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .feature-visual {
+      position: relative;
+    }
+    .phone-frame {
+      width: 280px;
+      height: 560px;
+      background: linear-gradient(145deg, var(--charcoal-deep), #0a0a18);
+      border-radius: 36px;
+      border: 2px solid rgba(255,255,255,0.1);
+      padding: 16px;
+      margin: 0 auto;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+      overflow: hidden;
+    }
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 22px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .phone-statusbar {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--charcoal);
+    }
+    .phone-notch {
+      width: 80px;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+    }
+    .phone-content {
+      flex: 1;
+      background: var(--charcoal);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .mock-header {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .mock-subtitle {
+      font-size: 10px;
+      color: var(--text-tertiary);
+    }
+    .mock-card {
+      background: var(--surface-2);
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid var(--border);
+    }
+    .mock-chip {
+      display: inline-block;
+      background: rgba(147, 0, 60, 0.15);
+      border: 1px solid rgba(147, 0, 60, 0.3);
+      border-radius: 16px;
+      padding: 4px 10px;
+      font-size: 9px;
+      color: var(--paprika-light);
+      margin: 2px;
+    }
+    .mock-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: var(--surface-2);
+    }
+    .mock-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--paprika), var(--gold));
+    }
+    .mock-score {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--salem-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--salem-light);
+    }
+    .mock-star { color: var(--gold); font-size: 12px; letter-spacing: 2px; }
+    .mock-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    .flex-row { display: flex; gap: 8px; align-items: center; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+
+    /* ─── BRO TIP ──────────────────────────────────────── */
+    .bro-tip-section {
+      text-align: center;
+      padding: 100px 24px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .bro-quote {
+      font-family: var(--font-editorial);
+      font-style: italic;
+      font-size: 22px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      position: relative;
+      padding: 0 20px;
+    }
+    .bro-quote::before {
+      content: '\201C';
+      position: absolute;
+      left: -20px;
+      top: -20px;
+      font-size: 80px;
+      font-family: var(--font-display);
+      color: rgba(147, 0, 60, 0.2);
+      font-style: normal;
+    }
+    .bro-attribution {
+      font-size: 14px;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* ─── NUMBERS ──────────────────────────────────────── */
+    .numbers-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 24px;
+      text-align: center;
+    }
+    .number-card {
+      padding: 32px 16px;
+    }
+    .number-value {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--paprika-light), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .number-label {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ─── LANGUAGES ────────────────────────────────────── */
+    .lang-strip {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+    .lang-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 10px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    /* ─── CTA ──────────────────────────────────────────── */
+    .cta-section {
+      text-align: center;
+      padding: 120px 24px;
+      background: linear-gradient(180deg, var(--charcoal-deep) 0%, #1a0a1a 50%, var(--charcoal-deep) 100%);
+    }
+    .cta-section .section-title {
+      margin: 0 auto 16px;
+    }
+    .cta-section .section-subtitle {
+      margin: 0 auto 48px;
+    }
+
+    /* ─── FOOTER ───────────────────────────────────────── */
+    footer {
+      padding: 40px 24px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    footer .footer-links {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    footer a {
+      color: var(--text-tertiary);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+    footer a:hover { color: var(--paprika-light); }
+    footer .copyright {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    /* ─── RESPONSIVE ───────────────────────────────────── */
+    @media (max-width: 900px) {
+      .why-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+      .feature-block, .feature-block.reverse { grid-template-columns: 1fr; gap: 40px; direction: ltr; }
+      .feature-visual { order: -1; }
+      .section-title { font-size: 32px; }
+      .hero-logo { font-size: 56px; }
+      .hero-pitch { font-size: 17px; }
+      .numbers-grid { grid-template-columns: repeat(3, 1fr); }
+      .number-value { font-size: 36px; }
+    }
+    @media (max-width: 540px) {
+      .hero { padding: 40px 20px; }
+      section { padding: 80px 20px; }
+      .numbers-grid { grid-template-columns: repeat(2, 1fr); }
+      .phone-frame { width: 220px; height: 440px; }
+      .store-badges { flex-direction: column; align-items: center; }
+      .feature-content h3 { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── HERO ──────────────────────────────────────────── -->
+<header class="hero">
+  <div class="hero-logo">
+    <span class="wine">Wine</span><br>
+    <span class="bro">Bro</span>
+  </div>
+  <p class="hero-tagline">Your elder brother in wine & spirits</p>
+  <p class="hero-pitch">
+    Not a sommelier. <strong>Your Bro.</strong><br>
+    WineBro pairs the right drink with your butter chicken,
+    picks a whisky for your biryani night, and teaches you
+    tasting&nbsp;&mdash; like a Duolingo for drinks.
+  </p>
+  <div class="store-badges">
+    <a href="#" class="store-badge">
+      <svg viewBox="0 0 24 24"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>
+      Google Play
+    </a>
+    <a href="#" class="store-badge">
+      <svg viewBox="0 0 24 24"><path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,16.97 2.96,12.45 4.7,9.39C5.56,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.46 12.36,4.26 13,3.5Z"/></svg>
+      App Store
+    </a>
+  </div>
+</header>
+
+<!-- ─── WHY ───────────────────────────────────────────── -->
+<section>
+  <div class="reveal">
+    <p class="section-label">The Problem</p>
+    <h2 class="section-title">Most wine apps think you're eating charcuterie.</h2>
+    <p class="section-subtitle">You're eating paneer tikka. WineBro is the first pairing app that actually understands Indian food, Indian drinks, and how you really learn.</p>
+  </div>
+
+  <div class="why-grid">
+    <div class="why-card reveal">
+      <div class="why-icon" style="background: rgba(147,0,60,0.12); color: var(--paprika-light);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+      </div>
+      <h3>Not for You</h3>
+      <p>Western wine apps pair Cabernet with steak. Useless when your table has dal makhani, tandoori chicken, and gulab jamun.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon" style="background: rgba(20,163,88,0.12); color: var(--salem-light);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19h16M4 15h16M4 11h16M4 7h16"/></svg>
+      </div>
+      <h3>Too Much Jargon</h3>
+      <p>Sommelier language makes wine feel exclusive. You shouldn't need a certification to enjoy a good bottle with dinner.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon" style="background: rgba(239,191,4,0.12); color: var(--gold);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      </div>
+      <h3>Boring to Learn</h3>
+      <p>Reading wine textbooks is painful. Learning should feel like a game &mdash; streaks, levels, badges, and a Bro cheering you on.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FEATURES ──────────────────────────────────────── -->
+<section>
+  <div class="reveal">
+    <p class="section-label">Features</p>
+    <h2 class="section-title">Everything your Bro knows, in your pocket.</h2>
+    <p class="section-subtitle">Real algorithms, real Indian food data, real tasting science. No generic recommendations.</p>
+  </div>
+
+  <!-- Feature 1: Pairing Engine -->
+  <div class="feature-block reveal">
+    <div class="feature-content">
+      <div class="feature-number">01</div>
+      <h3>Smart Pairing Engine</h3>
+      <p>52 curated Indian dishes matched with 46 wines and spirits using weighted cosine similarity, archetype bonuses, and food-drink interaction rules. Not random picks &mdash; real math.</p>
+      <div class="feature-tags">
+        <span class="feature-tag">Food &rarr; Drink</span>
+        <span class="feature-tag">Drink &rarr; Food</span>
+        <span class="feature-tag">Occasion-based</span>
+        <span class="feature-tag">Complement vs Contrast</span>
+      </div>
+    </div>
+    <div class="feature-visual">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-statusbar"><div class="phone-notch"></div></div>
+          <div class="phone-content">
+            <div class="mock-header">What are you eating?</div>
+            <div class="mock-subtitle">Pick a dish and I'll find the perfect drink</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;margin:8px 0">
+              <span class="mock-chip">Butter Chicken</span>
+              <span class="mock-chip" style="background:rgba(147,0,60,0.3);border-color:var(--paprika-light)">Biryani</span>
+              <span class="mock-chip">Paneer Tikka</span>
+              <span class="mock-chip">Goan Fish Curry</span>
+              <span class="mock-chip">Dal Makhani</span>
+            </div>
+            <div style="font-family:var(--font-display);font-size:14px;font-weight:700;margin-top:8px">Best Pairings</div>
+            <div class="mock-card">
+              <div class="flex-between">
+                <div>
+                  <div style="font-size:12px;font-weight:600">Sula Sauvignon Blanc</div>
+                  <div style="font-size:9px;color:var(--text-tertiary)">White Wine &middot; Nashik</div>
+                </div>
+                <div class="mock-score">92%</div>
+              </div>
+            </div>
+            <div class="mock-card">
+              <div class="flex-between">
+                <div>
+                  <div style="font-size:12px;font-weight:600">Fratelli Sette</div>
+                  <div style="font-size:9px;color:var(--text-tertiary)">Red Wine &middot; Akluj</div>
+                </div>
+                <div class="mock-score">87%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 2: Scanner -->
+  <div class="feature-block reverse reveal">
+    <div class="feature-content">
+      <div class="feature-number">02</div>
+      <h3>Label Scanner</h3>
+      <p>Point your camera at any wine or spirits bottle. ML Kit reads the label, matches it against our database, and instantly tells you what it pairs with &mdash; and whether you'll like it.</p>
+      <div class="feature-tags">
+        <span class="feature-tag">ML Kit OCR</span>
+        <span class="feature-tag">Fuzzy Matching</span>
+        <span class="feature-tag">Instant Pairings</span>
+      </div>
+    </div>
+    <div class="feature-visual">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-statusbar"><div class="phone-notch"></div></div>
+          <div class="phone-content" style="align-items:center;justify-content:center;gap:16px">
+            <div style="width:120px;height:120px;border-radius:20px;border:2px dashed rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:var(--text-secondary)">Tap to scan a label</div>
+            <div class="mock-card" style="width:100%;margin-top:12px">
+              <div class="flex-row" style="margin-bottom:8px">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--salem-light)"></div>
+                <span style="font-size:10px;color:var(--salem-light);font-weight:600">Product Found</span>
+              </div>
+              <div style="font-family:var(--font-display);font-size:14px;font-weight:700">Sula Riesling</div>
+              <div style="font-size:9px;color:var(--text-tertiary)">White Wine &middot; Nashik &middot; 12% ABV</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 3: BroCard Journal -->
+  <div class="feature-block reveal">
+    <div class="feature-content">
+      <div class="feature-number">03</div>
+      <h3>BroCard Tasting Journal</h3>
+      <p>Log every sip with a professional 6-step tasting sheet &mdash; appearance, nose, palate, finish, rating. Build your personal wine diary and track how your taste evolves.</p>
+      <div class="feature-tags">
+        <span class="feature-tag">6-Step BroCard</span>
+        <span class="feature-tag">150+ Aromas</span>
+        <span class="feature-tag">Star Ratings</span>
+        <span class="feature-tag">Cloud Synced</span>
+      </div>
+    </div>
+    <div class="feature-visual">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-statusbar"><div class="phone-notch"></div></div>
+          <div class="phone-content">
+            <div class="flex-between">
+              <div class="mock-header">BroCard</div>
+              <div style="font-size:10px;color:var(--text-tertiary)">Step 5 of 6</div>
+            </div>
+            <div style="font-size:12px;color:var(--text-secondary);margin-top:4px">Finish & Rating</div>
+            <div style="font-size:10px;color:var(--text-tertiary);margin:8px 0 4px">Finish Length</div>
+            <div style="display:flex;gap:4px">
+              <span class="mock-chip">Short</span>
+              <span class="mock-chip" style="background:rgba(147,0,60,0.3);border-color:var(--paprika-light)">Medium</span>
+              <span class="mock-chip">Long</span>
+            </div>
+            <div style="font-size:10px;color:var(--text-tertiary);margin:12px 0 4px">Your Rating</div>
+            <div class="mock-star">&starf;&starf;&starf;&starf;&star;</div>
+            <div class="mock-card" style="margin-top:16px;background:linear-gradient(135deg,rgba(30,20,30,0.8),rgba(147,0,60,0.15));">
+              <div style="font-family:var(--font-display);font-size:13px;font-weight:700">Fratelli Sette</div>
+              <div style="font-size:9px;color:var(--text-tertiary)">Red Wine &middot; Akluj</div>
+              <div style="margin-top:8px;font-size:9px;color:var(--text-tertiary)">
+                <div class="flex-between"><span>Appearance</span><span style="color:var(--text-secondary)">Ruby, Clear, Medium</span></div>
+                <div class="flex-between" style="margin-top:2px"><span>Nose</span><span style="color:var(--text-secondary)">Medium &mdash; Berry, Vanilla</span></div>
+                <div class="flex-between" style="margin-top:2px"><span>Palate</span><span style="color:var(--text-secondary)">Dry, Medium acid, Medium tannin</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 4: Gamification -->
+  <div class="feature-block reverse reveal">
+    <div class="feature-content">
+      <div class="feature-number">04</div>
+      <h3>Learn Like a Game</h3>
+      <p>Earn XP for every scan, pairing, and tasting. Level up from Curious Sibling to Wise Elder. Unlock 20 badges. Maintain streaks. Wine education that actually sticks.</p>
+      <div class="feature-tags">
+        <span class="feature-tag">4 Levels</span>
+        <span class="feature-tag">20 Badges</span>
+        <span class="feature-tag">Daily Streaks</span>
+        <span class="feature-tag">Palate Profile</span>
+      </div>
+    </div>
+    <div class="feature-visual">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-statusbar"><div class="phone-notch"></div></div>
+          <div class="phone-content" style="align-items:center">
+            <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--paprika),var(--gold));display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(239,191,4,0.3)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z"/></svg>
+            </div>
+            <div style="font-family:var(--font-display);font-size:16px;font-weight:700;margin-top:8px">Aspiring Taster</div>
+            <div style="font-size:10px;color:var(--gold);font-weight:600">750 / 1500 XP</div>
+            <div class="mock-bar" style="width:100%;margin:4px 0"><div class="mock-bar-fill" style="width:50%"></div></div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;margin-top:12px">
+              <div class="mock-card" style="text-align:center;padding:10px 4px">
+                <div style="font-size:18px;font-weight:700">12</div>
+                <div style="font-size:8px;color:var(--text-tertiary)">Tastings</div>
+              </div>
+              <div class="mock-card" style="text-align:center;padding:10px 4px">
+                <div style="font-size:18px;font-weight:700;color:var(--paprika-light)">5d</div>
+                <div style="font-size:8px;color:var(--text-tertiary)">Streak</div>
+              </div>
+              <div class="mock-card" style="text-align:center;padding:10px 4px">
+                <div style="font-size:18px;font-weight:700;color:var(--gold)">7</div>
+                <div style="font-size:8px;color:var(--text-tertiary)">Badges</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:100%;margin-top:8px">
+              <div class="mock-card" style="text-align:center;padding:8px 2px;border-color:var(--gold);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5z"/><circle cx="12" cy="12" r="3.5" fill="var(--charcoal)"/></svg>
+                <div style="font-size:6px;color:var(--text-secondary);margin-top:2px">Eagle Eye</div>
+              </div>
+              <div class="mock-card" style="text-align:center;padding:8px 2px;border-color:var(--gold);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
+                <div style="font-size:6px;color:var(--text-secondary);margin-top:2px">The Pen</div>
+              </div>
+              <div class="mock-card" style="text-align:center;padding:8px 2px;border-color:var(--gold);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                <div style="font-size:6px;color:var(--text-secondary);margin-top:2px">Matchmaker</div>
+              </div>
+              <div class="mock-card" style="text-align:center;padding:8px 2px;opacity:0.35;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-tertiary)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+                <div style="font-size:6px;color:var(--text-tertiary);margin-top:2px">Locked</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── BRO TIP ───────────────────────────────────────── -->
+<div class="bro-tip-section reveal">
+  <p class="section-label" style="text-align:center">The Bro Way</p>
+  <p class="bro-quote">When pairing with spicy Indian food, reach for an off-dry Riesling or a fruity Ros&eacute;. The residual sugar tames the heat while the acidity keeps your palate refreshed. High-tannin reds will amplify the burn &mdash; avoid them!</p>
+  <p class="bro-attribution">&mdash; Your Bro</p>
+</div>
+
+<!-- ─── NUMBERS ───────────────────────────────────────── -->
+<section>
+  <div class="numbers-grid reveal">
+    <div class="number-card">
+      <div class="number-value">52</div>
+      <div class="number-label">Indian Dishes</div>
+    </div>
+    <div class="number-card">
+      <div class="number-value">46</div>
+      <div class="number-label">Wines & Spirits</div>
+    </div>
+    <div class="number-card">
+      <div class="number-value">150+</div>
+      <div class="number-label">Aromas</div>
+    </div>
+    <div class="number-card">
+      <div class="number-value">20</div>
+      <div class="number-label">Badges</div>
+    </div>
+    <div class="number-card">
+      <div class="number-value">4</div>
+      <div class="number-label">Languages</div>
+    </div>
+  </div>
+  <div class="lang-strip reveal">
+    <span class="lang-pill">English</span>
+    <span class="lang-pill">&#x0939;&#x093F;&#x0902;&#x0926;&#x0940;</span>
+    <span class="lang-pill">&#x092E;&#x0930;&#x093E;&#x0920;&#x0940;</span>
+    <span class="lang-pill">&#x0A97;&#x0AC1;&#x0A9C;&#x0AB0;&#x0ABE;&#x0AA4;&#x0AC0;</span>
+  </div>
+</section>
+
+<!-- ─── CTA ───────────────────────────────────────────── -->
+<div class="cta-section">
+  <div class="reveal">
+    <p class="section-label" style="text-align:center">Get Started</p>
+    <h2 class="section-title" style="text-align:center">Ready to find your perfect pairing?</h2>
+    <p class="section-subtitle" style="text-align:center">Download WineBro and let your elder brother guide you through the world of wine, spirits, and Indian food.</p>
+    <div class="store-badges">
+      <a href="#" class="store-badge">
+        <svg viewBox="0 0 24 24"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>
+        Google Play
+      </a>
+      <a href="#" class="store-badge">
+        <svg viewBox="0 0 24 24"><path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,16.97 2.96,12.45 4.7,9.39C5.56,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.46 12.36,4.26 13,3.5Z"/></svg>
+        App Store
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ─── FOOTER ────────────────────────────────────────── -->
+<footer>
+  <div class="footer-links">
+    <a href="/privacy-policy.html">Privacy Policy</a>
+    <a href="/deletion-policy.html">Account Deletion</a>
+  </div>
+  <p class="copyright">&copy; 2026 Culinary Happiness Ventures (CHV)</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+</script>
+</body>
+</html>

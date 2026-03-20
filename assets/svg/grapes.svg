@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <circle cx="28" cy="28" r="6" fill="currentColor" opacity="0.2" stroke="currentColor" stroke-width="1.5"/>
+  <circle cx="36" cy="28" r="6" fill="currentColor" opacity="0.2" stroke="currentColor" stroke-width="1.5"/>
+  <circle cx="24" cy="36" r="6" fill="currentColor" opacity="0.2" stroke="currentColor" stroke-width="1.5"/>
+  <circle cx="32" cy="36" r="6" fill="currentColor" opacity="0.2" stroke="currentColor" stroke-width="1.5"/>
+  <circle cx="40" cy="36" r="6" fill="currentColor" opacity="0.2" stroke="currentColor" stroke-width="1.5"/>
+  <circle cx="28" cy="44" r="6" fill="currentColor" opacity="0.2" stroke="currentColor" stroke-width="1.5"/>
+  <circle cx="36" cy="44" r="6" fill="currentColor" opacity="0.2" stroke="currentColor" stroke-width="1.5"/>
+  <circle cx="32" cy="50" r="6" fill="currentColor" opacity="0.2" stroke="currentColor" stroke-width="1.5"/>
+  <path d="M32 8v14M30 10c-4-2-8 0-10 4M34 10c4-2 8 0 10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

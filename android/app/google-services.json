@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "708385389571",
+    "project_id": "winebro",
+    "storage_bucket": "winebro.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:708385389571:android:98591173586d1c9478a236",
+        "android_client_info": {
+          "package_name": "com.chv.winebro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "708385389571-9dh89upae3nr6rld9u90oo1c63ncu01u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chv.winebro",
+            "certificate_hash": "b8bc89c55ccd9615b4dd0bc35a06a5bbda4e35fe"
+          }
+        },
+        {
+          "client_id": "708385389571-iv9d0tk2tjn2kodstokrv5j2pgh0urua.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chv.winebro",
+            "certificate_hash": "6f9de3f1f72f2150a89ad972a81bae7a243faf69"
+          }
+        },
+        {
+          "client_id": "708385389571-1i1ko2982bl4c2165mhknfngo2ls93j8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoQGXyMdW7E0SWYpp0N2mfHQiWy_pm0J4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "708385389571-1i1ko2982bl4c2165mhknfngo2ls93j8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "708385389571-seqmucrvaltvqa7ofphc1op680vmj2eo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.chv.winebro"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,453 @@
+{
+  "@@locale": "en",
+
+  "appTagline": "YOUR ELDER BROTHER IN WINE & SPIRITS",
+  "@appTagline": {"description": "Splash screen tagline below brand logo"},
+
+  "enterPhoneNumber": "Enter your phone number",
+  "@enterPhoneNumber": {"description": "Login heading in phone mode"},
+
+  "createAccount": "Create your account",
+  "@createAccount": {"description": "Login heading in email sign-up mode"},
+
+  "welcomeBack": "Welcome back",
+  "@welcomeBack": {"description": "Login heading in email sign-in mode"},
+
+  "findPerfectPairing": "Let's find your perfect pairing, Bro",
+  "@findPerfectPairing": {"description": "Login subtitle"},
+
+  "phoneLabel": "Phone",
+  "@phoneLabel": {"description": "Phone toggle button label"},
+
+  "emailLabel": "Email",
+  "@emailLabel": {"description": "Email toggle button label"},
+
+  "passwordHint": "Password",
+  "@passwordHint": {"description": "Password field hint text"},
+
+  "ageConfirmation": "I confirm I am of legal drinking age in my state",
+  "@ageConfirmation": {"description": "Age verification checkbox text"},
+
+  "ageVerificationRequired": "Please confirm you are of legal drinking age",
+  "@ageVerificationRequired": {"description": "Snackbar when age not confirmed"},
+
+  "sendOtp": "Send OTP",
+  "@sendOtp": {"description": "Phone login button"},
+
+  "signUp": "Sign Up",
+  "@signUp": {"description": "Email sign-up button"},
+
+  "signIn": "Sign In",
+  "@signIn": {"description": "Email sign-in button"},
+
+  "alreadyHaveAccount": "Already have an account? Sign In",
+  "@alreadyHaveAccount": {"description": "Toggle to sign-in mode"},
+
+  "dontHaveAccount": "Don't have an account? Sign Up",
+  "@dontHaveAccount": {"description": "Toggle to sign-up mode"},
+
+  "verifyOtpTitle": "Verify OTP",
+  "@verifyOtpTitle": {"description": "OTP screen heading"},
+
+  "otpSentTo": "We sent a 6-digit code to {phone}",
+  "@otpSentTo": {
+    "description": "OTP screen subtitle",
+    "placeholders": {"phone": {"type": "String"}}
+  },
+
+  "verify": "Verify",
+  "@verify": {"description": "OTP verify button"},
+
+  "orContinueWith": "or continue with",
+  "@orContinueWith": {"description": "Divider text before social login"},
+
+  "signInWithGoogle": "Continue with Google",
+  "@signInWithGoogle": {"description": "Google sign-in button"},
+
+  "changeNumber": "Change number",
+  "@changeNumber": {"description": "Go back from OTP screen"},
+
+  "resendOtp": "Resend OTP",
+  "@resendOtp": {"description": "Resend OTP button"},
+
+  "resendIn": "Resend in {seconds}s",
+  "@resendIn": {
+    "description": "Resend countdown timer",
+    "placeholders": {"seconds": {"type": "int"}}
+  },
+
+  "whatShouldWeCallYou": "What should we call you, Bro?",
+  "@whatShouldWeCallYou": {"description": "Name screen heading"},
+
+  "firstNameNeeded": "Your first name is all we need",
+  "@firstNameNeeded": {"description": "Name screen subtitle"},
+
+  "yourNameHint": "Your name",
+  "@yourNameHint": {"description": "Name input placeholder"},
+
+  "continueButton": "Continue",
+  "@continueButton": {"description": "Name screen button"},
+
+  "greeting": "Hey {userName}",
+  "@greeting": {
+    "description": "Home screen greeting",
+    "placeholders": {"userName": {"type": "String"}}
+  },
+
+  "brosPick": "BRO'S PICK",
+  "@brosPick": {"description": "Bro's pick of the day badge"},
+
+  "quickActions": "QUICK ACTIONS",
+  "@quickActions": {"description": "Home quick actions section header"},
+
+  "pairAction": "Pair",
+  "@pairAction": {"description": "Quick action button"},
+
+  "scanAction": "Scan",
+  "@scanAction": {"description": "Quick action button"},
+
+  "aromaAction": "Aroma",
+  "@aromaAction": {"description": "Quick action button"},
+
+  "learnAction": "Learn",
+  "@learnAction": {"description": "Quick action button"},
+
+  "trendingNow": "TRENDING NOW",
+  "@trendingNow": {"description": "Home trending section header"},
+
+  "broTip": "Bro Tip",
+  "@broTip": {"description": "Home tip box heading"},
+
+  "broTipContent": "When pairing with spicy Indian food, reach for an off-dry Riesling or a fruity Rosé. The residual sugar tames the heat while the acidity keeps your palate refreshed. High-tannin reds will amplify the burn — avoid them!",
+  "@broTipContent": {"description": "Home tip text about wine pairing"},
+
+  "quizFoodQuestion": "What's your all-time favourite Indian food?",
+  "@quizFoodQuestion": {"description": "Quiz step 1 heading"},
+
+  "pickUpTo2": "Pick up to 2",
+  "@pickUpTo2": {"description": "Quiz step 1 subtitle"},
+
+  "chaatQuestion": "You love chaat! What's the best part about it?",
+  "@chaatQuestion": {"description": "Quiz step 2 heading"},
+
+  "drinkQuestion": "What's your go-to drink when you're out?",
+  "@drinkQuestion": {"description": "Quiz step 3 heading"},
+
+  "fineTunePalate": "Fine-tune your palate, Bro",
+  "@fineTunePalate": {"description": "Quiz slider step heading"},
+
+  "adjustSliders": "Adjust these sliders to match your preferences",
+  "@adjustSliders": {"description": "Quiz slider step subtitle"},
+
+  "seeMyProfile": "See My Profile",
+  "@seeMyProfile": {"description": "Quiz final step button"},
+
+  "nextButton": "Next",
+  "@nextButton": {"description": "Quiz next button"},
+
+  "yourPalateProfile": "Your Palate Profile",
+  "@yourPalateProfile": {"description": "Quiz result heading"},
+
+  "letsGoBro": "Let's Go, Bro!",
+  "@letsGoBro": {"description": "Quiz result CTA button"},
+
+  "sliderDry": "Dry",
+  "@sliderDry": {"description": "Fruit slider low label"},
+
+  "sliderSweet": "Sweet",
+  "@sliderSweet": {"description": "Fruit slider high label"},
+
+  "sliderSmooth": "Smooth",
+  "@sliderSmooth": {"description": "Acidity slider low label"},
+
+  "sliderTangy": "Tangy",
+  "@sliderTangy": {"description": "Acidity slider high label"},
+
+  "sliderLight": "Light",
+  "@sliderLight": {"description": "Body slider low label"},
+
+  "sliderRich": "Rich",
+  "@sliderRich": {"description": "Body slider high label"},
+
+  "sliderMild": "Mild",
+  "@sliderMild": {"description": "Tannin slider low label"},
+
+  "sliderFiery": "Fiery",
+  "@sliderFiery": {"description": "Tannin slider high label"},
+
+  "stepOf": "{step} of {total}",
+  "@stepOf": {
+    "description": "Progress indicator",
+    "placeholders": {
+      "step": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+
+  "pairTitle": "Pair",
+  "@pairTitle": {"description": "Pair screen app bar title"},
+
+  "foodToDrink": "Food → Drink",
+  "@foodToDrink": {"description": "Pair tab 1"},
+
+  "drinkToFood": "Drink → Food",
+  "@drinkToFood": {"description": "Pair tab 2"},
+
+  "occasionTab": "Occasion",
+  "@occasionTab": {"description": "Pair tab 3"},
+
+  "whatAreYouEating": "What are you eating, Bro?",
+  "@whatAreYouEating": {"description": "Food-to-drink heading"},
+
+  "pickDishForDrink": "Pick a dish and I'll find the perfect drink",
+  "@pickDishForDrink": {"description": "Food-to-drink subtitle"},
+
+  "bestPairings": "Best Pairings",
+  "@bestPairings": {"description": "Pairing results heading"},
+
+  "noPairingsQuiz": "No pairings found. Complete the quiz first!",
+  "@noPairingsQuiz": {"description": "Empty pairing state"},
+
+  "whatAreYouDrinking": "What are you drinking?",
+  "@whatAreYouDrinking": {"description": "Drink-to-food heading"},
+
+  "goesGreatWith": "Goes great with...",
+  "@goesGreatWith": {"description": "Drink-to-food results heading"},
+
+  "whatsTheOccasion": "What's the occasion?",
+  "@whatsTheOccasion": {"description": "Occasion tab heading"},
+
+  "perfectFor": "Perfect for {occasion}",
+  "@perfectFor": {
+    "description": "Occasion results heading",
+    "placeholders": {"occasion": {"type": "String"}}
+  },
+
+  "completeQuizSuggestions": "Complete the quiz to get personalized suggestions!",
+  "@completeQuizSuggestions": {"description": "Empty occasion state"},
+
+  "scanTitle": "Scan",
+  "@scanTitle": {"description": "Scanner app bar title"},
+
+  "tapToScan": "Tap to scan a label",
+  "@tapToScan": {"description": "Scanner CTA text"},
+
+  "pointCamera": "Point your camera at any wine or spirit bottle",
+  "@pointCamera": {"description": "Scanner instruction"},
+
+  "orSearchByName": "Or search by name",
+  "@orSearchByName": {"description": "Search fallback label"},
+
+  "searchPlaceholder": "Search wines, spirits, beers...",
+  "@searchPlaceholder": {"description": "Search field placeholder"},
+
+  "cameraRequiresDevice": "Camera requires a physical device. Use search below to find your bottle.",
+  "@cameraRequiresDevice": {"description": "Camera unavailable snackbar"},
+
+  "noTextDetected": "No text detected on the label. Try again or search manually.",
+  "@noTextDetected": {"description": "Scanner OCR found no text"},
+
+  "productFound": "Product Found!",
+  "@productFound": {"description": "Scan match badge"},
+
+  "addToJournal": "Add to Journal",
+  "@addToJournal": {"description": "Scan result action"},
+
+  "findPairingsButton": "Find Pairings",
+  "@findPairingsButton": {"description": "Scan result action"},
+
+  "journalTitle": "Journal",
+  "@journalTitle": {"description": "Journal app bar title"},
+
+  "errorLoadingJournal": "Error loading journal",
+  "@errorLoadingJournal": {"description": "Journal error state"},
+
+  "journalEmpty": "Your journal is empty",
+  "@journalEmpty": {"description": "Journal empty heading"},
+
+  "startLoggingTastings": "Start logging your tastings, Bro!\nTap the + button to create your first BroCard.",
+  "@startLoggingTastings": {"description": "Journal empty subtitle"},
+
+  "broCardTitle": "BroCard",
+  "@broCardTitle": {"description": "BroCard sheet heading"},
+
+  "broCardStepOf": "Step {step} of 6",
+  "@broCardStepOf": {
+    "description": "BroCard step indicator",
+    "placeholders": {"step": {"type": "int"}}
+  },
+
+  "whatAreYouTasting": "What are you tasting?",
+  "@whatAreYouTasting": {"description": "BroCard step 1 heading"},
+
+  "drinkNameHint": "Drink name",
+  "@drinkNameHint": {"description": "BroCard name input hint"},
+
+  "regionOptionalHint": "Region (optional)",
+  "@regionOptionalHint": {"description": "BroCard region input hint"},
+
+  "appearanceTitle": "Appearance",
+  "@appearanceTitle": {"description": "BroCard step 2 heading"},
+
+  "colourLabel": "Colour",
+  "@colourLabel": {"description": "BroCard appearance field"},
+
+  "clarityLabel": "Clarity",
+  "@clarityLabel": {"description": "BroCard appearance field"},
+
+  "intensityLabel": "Intensity",
+  "@intensityLabel": {"description": "BroCard nose/appearance field"},
+
+  "noseTitle": "Nose",
+  "@noseTitle": {"description": "BroCard step 3 heading"},
+
+  "aromasSelectLabel": "Aromas (tap to select)",
+  "@aromasSelectLabel": {"description": "BroCard nose aromas instruction"},
+
+  "palateTitle": "Palate",
+  "@palateTitle": {"description": "BroCard step 4 heading"},
+
+  "sweetnessLabel": "Sweetness",
+  "@sweetnessLabel": {"description": "BroCard palate field"},
+
+  "acidityLabel": "Acidity",
+  "@acidityLabel": {"description": "BroCard palate field"},
+
+  "tanninLabel": "Tannin",
+  "@tanninLabel": {"description": "BroCard palate field"},
+
+  "bodyLabel": "Body",
+  "@bodyLabel": {"description": "BroCard palate field"},
+
+  "finishAndRating": "Finish & Rating",
+  "@finishAndRating": {"description": "BroCard step 5 heading"},
+
+  "finishLengthLabel": "Finish Length",
+  "@finishLengthLabel": {"description": "BroCard finish field"},
+
+  "yourRating": "Your Rating",
+  "@yourRating": {"description": "BroCard rating label"},
+
+  "wouldBuyAgain": "Would buy again?",
+  "@wouldBuyAgain": {"description": "BroCard toggle label"},
+
+  "personalNotesHint": "Personal notes (optional)",
+  "@personalNotesHint": {"description": "BroCard notes placeholder"},
+
+  "yourBroCard": "Your BroCard",
+  "@yourBroCard": {"description": "BroCard summary heading"},
+
+  "backButton": "Back",
+  "@backButton": {"description": "BroCard back button"},
+
+  "saveBroCard": "Save BroCard",
+  "@saveBroCard": {"description": "BroCard save button"},
+
+  "aromaExplorerTitle": "Aroma Explorer",
+  "@aromaExplorerTitle": {"description": "Aroma wheel app bar title"},
+
+  "broAromaWheel": "Bro Aroma Wheel",
+  "@broAromaWheel": {"description": "Aroma wheel main heading"},
+
+  "tapCategoryToExplore": "Tap a category to explore",
+  "@tapCategoryToExplore": {"description": "Aroma wheel instruction"},
+
+  "tapToExploreAromas": "Tap to explore individual aromas",
+  "@tapToExploreAromas": {"description": "Aroma subcategory instruction"},
+
+  "groupsAndAromas": "{groups} groups · {aromas} aromas",
+  "@groupsAndAromas": {
+    "description": "Aroma category stats",
+    "placeholders": {
+      "groups": {"type": "int"},
+      "aromas": {"type": "int"}
+    }
+  },
+
+  "profileTitle": "Profile",
+  "@profileTitle": {"description": "Profile app bar title"},
+
+  "levelLabel": "Level {level}",
+  "@levelLabel": {
+    "description": "Profile level indicator",
+    "placeholders": {"level": {"type": "int"}}
+  },
+
+  "xpProgress": "{xp} / {nextXp} XP",
+  "@xpProgress": {
+    "description": "XP progress text",
+    "placeholders": {
+      "xp": {"type": "int"},
+      "nextXp": {"type": "int"}
+    }
+  },
+
+  "xpMax": "{xp} XP (MAX)",
+  "@xpMax": {
+    "description": "Max level XP text",
+    "placeholders": {"xp": {"type": "int"}}
+  },
+
+  "yourPalate": "Your Palate",
+  "@yourPalate": {"description": "Profile palate section heading"},
+
+  "achievements": "Achievements",
+  "@achievements": {"description": "Profile badges section heading"},
+
+  "tastingsLabel": "Tastings",
+  "@tastingsLabel": {"description": "Profile stat label"},
+
+  "streakLabel": "Streak",
+  "@streakLabel": {"description": "Profile stat label"},
+
+  "badgesLabel": "Badges",
+  "@badgesLabel": {"description": "Profile stat label"},
+
+  "scansLabel": "Scans",
+  "@scansLabel": {"description": "Profile stat label"},
+
+  "pairingsLabel": "Pairings",
+  "@pairingsLabel": {"description": "Profile stat label"},
+
+  "challengesLabel": "Challenges",
+  "@challengesLabel": {"description": "Profile stat label"},
+
+  "communityTitle": "Community",
+  "@communityTitle": {"description": "Community app bar title"},
+
+  "theBrotherhood": "The Brotherhood",
+  "@theBrotherhood": {"description": "Community main heading"},
+
+  "communityDescription": "Social features, tasting circles, and leaderboards arrive in Phase 2. For now, focus on building your palate profile — your community reputation starts with how many tastings you've logged.",
+  "@communityDescription": {"description": "Community placeholder text"},
+
+  "phase2Info": "Phase 2 will include: Follow users, share pairings, create tasting circles, community ratings, and integration with The Cask Circle events.",
+  "@phase2Info": {"description": "Community Phase 2 info box"},
+
+  "navHome": "Home",
+  "@navHome": {"description": "Bottom nav home tab"},
+
+  "navPair": "Pair",
+  "@navPair": {"description": "Bottom nav pair tab"},
+
+  "navScan": "Scan",
+  "@navScan": {"description": "Bottom nav scan tab"},
+
+  "navJournal": "Journal",
+  "@navJournal": {"description": "Bottom nav journal tab"},
+
+  "navCommunity": "Community",
+  "@navCommunity": {"description": "Bottom nav community tab"},
+
+  "navProfile": "Profile",
+  "@navProfile": {"description": "Bottom nav profile tab"},
+
+  "selectLanguage": "Language",
+  "@selectLanguage": {"description": "Language picker label"},
+
+  "errorGeneric": "Error: {error}",
+  "@errorGeneric": {
+    "description": "Generic error display",
+    "placeholders": {"error": {"type": "String"}}
+  }
+}

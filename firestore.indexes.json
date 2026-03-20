@@ -1,0 +1,13 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "gamification",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "streak", "order": "ASCENDING" },
+        { "fieldPath": "lastActiveDate", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

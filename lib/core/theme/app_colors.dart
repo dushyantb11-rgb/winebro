@@ -1,0 +1,228 @@
+import 'package:flutter/material.dart';
+
+class AppColors extends ThemeExtension<AppColors> {
+  const AppColors({
+    required this.paprika,
+    required this.paprikaLight,
+    required this.paprikaDark,
+    required this.thunder,
+    required this.thunderLight,
+    required this.salem,
+    required this.salemLight,
+    required this.gold,
+    required this.goldLight,
+    required this.goldDark,
+    required this.charcoal,
+    required this.surface1,
+    required this.surface2,
+    required this.surface3,
+    required this.surface4,
+    required this.textPrimary,
+    required this.textSecondary,
+    required this.textTertiary,
+    required this.borderSubtle,
+    required this.borderDefault,
+    required this.borderStrong,
+    required this.success,
+    required this.warning,
+    required this.error,
+    required this.info,
+    required this.charcoalDeep,
+    required this.navBarBackground,
+  });
+
+  final Color paprika;
+  final Color paprikaLight;
+  final Color paprikaDark;
+  final Color thunder;
+  final Color thunderLight;
+  final Color salem;
+  final Color salemLight;
+  final Color gold;
+  final Color goldLight;
+  final Color goldDark;
+
+  final Color charcoal;
+  final Color surface1;
+  final Color surface2;
+  final Color surface3;
+  final Color surface4;
+
+  final Color textPrimary;
+  final Color textSecondary;
+  final Color textTertiary;
+
+  final Color borderSubtle;
+  final Color borderDefault;
+  final Color borderStrong;
+
+  final Color success;
+  final Color warning;
+  final Color error;
+  final Color info;
+
+  final Color charcoalDeep;
+  final Color navBarBackground;
+
+  static const light = AppColors(
+    paprika: Color(0xFF93003C),
+    paprikaLight: Color(0xFFB8145E),
+    paprikaDark: Color(0xFF6E002D),
+    thunder: Color(0xFF252122),
+    thunderLight: Color(0xFF3A3536),
+    salem: Color(0xFF0F8044),
+    salemLight: Color(0xFF14A358),
+    gold: Color(0xFFC9A003),
+    goldLight: Color(0xFFEFBF04),
+    goldDark: Color(0xFFA68300),
+    charcoal: Color(0xFFFAF8F5),
+    surface1: Color(0x0A000000),
+    surface2: Color(0x0F000000),
+    surface3: Color(0x14000000),
+    surface4: Color(0x1F000000),
+    textPrimary: Color(0xDE000000),
+    textSecondary: Color(0x99000000),
+    textTertiary: Color(0x61000000),
+    borderSubtle: Color(0x0F000000),
+    borderDefault: Color(0x1A000000),
+    borderStrong: Color(0x29000000),
+    success: Color(0xFF0F8044),
+    warning: Color(0xFFD4960A),
+    error: Color(0xFFC4342A),
+    info: Color(0xFF3B6FD4),
+    charcoalDeep: Color(0xFFF2EDED),
+    navBarBackground: Color(0xF5FFFFFF),
+  );
+
+  static const dark = AppColors(
+    paprika: Color(0xFF93003C),
+    paprikaLight: Color(0xFFB8145E),
+    paprikaDark: Color(0xFF6E002D),
+    thunder: Color(0xFF252122),
+    thunderLight: Color(0xFF3A3536),
+    salem: Color(0xFF0F8044),
+    salemLight: Color(0xFF14A358),
+    gold: Color(0xFFEFBF04),
+    goldLight: Color(0xFFF5D442),
+    goldDark: Color(0xFFC9A003),
+    charcoal: Color(0xFF252122),
+    surface1: Color(0x0AFFFFFF),
+    surface2: Color(0x12FFFFFF),
+    surface3: Color(0x1AFFFFFF),
+    surface4: Color(0x24FFFFFF),
+    textPrimary: Color(0xDEFFFFFF),
+    textSecondary: Color(0x99FFFFFF),
+    textTertiary: Color(0x61FFFFFF),
+    borderSubtle: Color(0x0FFFFFFF),
+    borderDefault: Color(0x1AFFFFFF),
+    borderStrong: Color(0x29FFFFFF),
+    success: Color(0xFF14A358),
+    warning: Color(0xFFE8A838),
+    error: Color(0xFFD4544A),
+    info: Color(0xFF5B8DEF),
+    charcoalDeep: Color(0xFF1A1517),
+    navBarBackground: Color(0xEB252122),
+  );
+
+  @override
+  AppColors copyWith({
+    Color? paprika,
+    Color? paprikaLight,
+    Color? paprikaDark,
+    Color? thunder,
+    Color? thunderLight,
+    Color? salem,
+    Color? salemLight,
+    Color? gold,
+    Color? goldLight,
+    Color? goldDark,
+    Color? charcoal,
+    Color? surface1,
+    Color? surface2,
+    Color? surface3,
+    Color? surface4,
+    Color? textPrimary,
+    Color? textSecondary,
+    Color? textTertiary,
+    Color? borderSubtle,
+    Color? borderDefault,
+    Color? borderStrong,
+    Color? success,
+    Color? warning,
+    Color? error,
+    Color? info,
+    Color? charcoalDeep,
+    Color? navBarBackground,
+  }) {
+    return AppColors(
+      paprika: paprika ?? this.paprika,
+      paprikaLight: paprikaLight ?? this.paprikaLight,
+      paprikaDark: paprikaDark ?? this.paprikaDark,
+      thunder: thunder ?? this.thunder,
+      thunderLight: thunderLight ?? this.thunderLight,
+      salem: salem ?? this.salem,
+      salemLight: salemLight ?? this.salemLight,
+      gold: gold ?? this.gold,
+      goldLight: goldLight ?? this.goldLight,
+      goldDark: goldDark ?? this.goldDark,
+      charcoal: charcoal ?? this.charcoal,
+      surface1: surface1 ?? this.surface1,
+      surface2: surface2 ?? this.surface2,
+      surface3: surface3 ?? this.surface3,
+      surface4: surface4 ?? this.surface4,
+      textPrimary: textPrimary ?? this.textPrimary,
+      textSecondary: textSecondary ?? this.textSecondary,
+      textTertiary: textTertiary ?? this.textTertiary,
+      borderSubtle: borderSubtle ?? this.borderSubtle,
+      borderDefault: borderDefault ?? this.borderDefault,
+      borderStrong: borderStrong ?? this.borderStrong,
+      success: success ?? this.success,
+      warning: warning ?? this.warning,
+      error: error ?? this.error,
+      info: info ?? this.info,
+      charcoalDeep: charcoalDeep ?? this.charcoalDeep,
+      navBarBackground: navBarBackground ?? this.navBarBackground,
+    );
+  }
+
+  @override
+  AppColors lerp(AppColors? other, double t) {
+    if (other is! AppColors) return this;
+    return AppColors(
+      paprika: Color.lerp(paprika, other.paprika, t)!,
+      paprikaLight: Color.lerp(paprikaLight, other.paprikaLight, t)!,
+      paprikaDark: Color.lerp(paprikaDark, other.paprikaDark, t)!,
+      thunder: Color.lerp(thunder, other.thunder, t)!,
+      thunderLight: Color.lerp(thunderLight, other.thunderLight, t)!,
+      salem: Color.lerp(salem, other.salem, t)!,
+      salemLight: Color.lerp(salemLight, other.salemLight, t)!,
+      gold: Color.lerp(gold, other.gold, t)!,
+      goldLight: Color.lerp(goldLight, other.goldLight, t)!,
+      goldDark: Color.lerp(goldDark, other.goldDark, t)!,
+      charcoal: Color.lerp(charcoal, other.charcoal, t)!,
+      surface1: Color.lerp(surface1, other.surface1, t)!,
+      surface2: Color.lerp(surface2, other.surface2, t)!,
+      surface3: Color.lerp(surface3, other.surface3, t)!,
+      surface4: Color.lerp(surface4, other.surface4, t)!,
+      textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,
+      textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
+      textTertiary: Color.lerp(textTertiary, other.textTertiary, t)!,
+      borderSubtle: Color.lerp(borderSubtle, other.borderSubtle, t)!,
+      borderDefault: Color.lerp(borderDefault, other.borderDefault, t)!,
+      borderStrong: Color.lerp(borderStrong, other.borderStrong, t)!,
+      success: Color.lerp(success, other.success, t)!,
+      warning: Color.lerp(warning, other.warning, t)!,
+      error: Color.lerp(error, other.error, t)!,
+      info: Color.lerp(info, other.info, t)!,
+      charcoalDeep: Color.lerp(charcoalDeep, other.charcoalDeep, t)!,
+      navBarBackground:
+          Color.lerp(navBarBackground, other.navBarBackground, t)!,
+    );
+  }
+}
+
+extension AppColorsExtension on BuildContext {
+  AppColors get appColors =>
+      Theme.of(this).extension<AppColors>() ?? AppColors.dark;
+}
+

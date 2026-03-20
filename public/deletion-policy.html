@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WineBro — Account Deletion Policy</title>
+  <style>
+    :root { --paprika: #93003C; --charcoal: #1A1A2E; --text: #E8E8E8; --muted: #9A9A9A; --salem: #14A358; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--charcoal); color: var(--text); line-height: 1.8; padding: 40px 20px; }
+    .container { max-width: 720px; margin: 0 auto; }
+    h1 { font-size: 28px; color: white; margin-bottom: 8px; }
+    h2 { font-size: 20px; color: var(--paprika); margin-top: 32px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
+    p, li { font-size: 15px; margin-bottom: 12px; }
+    ul, ol { padding-left: 24px; }
+    .date { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+    .step { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; border-left: 3px solid var(--salem); }
+    .step-num { color: var(--salem); font-weight: 700; font-size: 14px; }
+    .warning { background: rgba(147,0,60,0.1); border-radius: 12px; padding: 16px 20px; margin: 24px 0; border-left: 3px solid var(--paprika); }
+    a { color: var(--paprika); }
+    .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); color: var(--muted); font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Account &amp; Data Deletion Policy</h1>
+    <p class="date">Last updated: March 14, 2026</p>
+
+    <p>WineBro respects your right to delete your account and all associated personal data. This page explains how to request deletion and what happens when you do.</p>
+
+    <h2>1. How to Delete Your Account</h2>
+
+    <div class="step">
+      <p><span class="step-num">Step 1</span> — Open the WineBro app and go to the <strong>Profile</strong> tab (last tab in the bottom navigation).</p>
+    </div>
+    <div class="step">
+      <p><span class="step-num">Step 2</span> — Scroll to the bottom and tap <strong>"Delete Account"</strong>.</p>
+    </div>
+    <div class="step">
+      <p><span class="step-num">Step 3</span> — Confirm your decision in the dialog. This action is <strong>irreversible</strong>.</p>
+    </div>
+    <div class="step">
+      <p><span class="step-num">Step 4</span> — Your account and all data will be permanently deleted immediately.</p>
+    </div>
+
+    <h2>2. What Gets Deleted</h2>
+    <p>When you delete your account, the following data is <strong>permanently and irreversibly</strong> removed:</p>
+    <ul>
+      <li><strong>Your user profile</strong> — display name, email/phone number, age verification status</li>
+      <li><strong>Your palate profile</strong> — quiz answers, 6-axis radar scores, archetype classification</li>
+      <li><strong>Your tasting journal</strong> — all BroCard entries, ratings, tasting notes, favorites, and wishlist</li>
+      <li><strong>Your gamification data</strong> — XP, level, streak, all earned badges, challenge history</li>
+      <li><strong>Your daily recommendations</strong> — pre-computed Bro's Pick data</li>
+      <li><strong>Your Firebase Authentication record</strong> — login credentials are removed from Firebase Auth</li>
+    </ul>
+
+    <div class="warning">
+      <p><strong>This cannot be undone.</strong> Once deleted, your data cannot be recovered. If you want to use WineBro again, you will need to create a new account and start from scratch. Your XP, badges, journal entries, and palate profile will be gone.</p>
+    </div>
+
+    <h2>3. What Is NOT Deleted</h2>
+    <ul>
+      <li><strong>Anonymous analytics data</strong> — aggregated, non-identifiable usage statistics may be retained for product improvement. This data cannot be traced back to you.</li>
+      <li><strong>Crash reports</strong> — anonymized crash logs from Firebase Crashlytics may be retained for debugging.</li>
+    </ul>
+
+    <h2>4. Timeline</h2>
+    <p>Account deletion is <strong>immediate</strong>. All personal data is removed from our Firestore database as soon as you confirm deletion. There is no waiting period or cooling-off period.</p>
+
+    <h2>5. Alternative: Contact Us</h2>
+    <p>If you cannot access the app or prefer to request deletion by email:</p>
+    <p>Email: <strong>privacy@winebro.app</strong></p>
+    <p>Subject: <strong>Account Deletion Request</strong></p>
+    <p>Include the email address or phone number associated with your account. We will process your request within 72 hours.</p>
+
+    <h2>6. Legal Basis</h2>
+    <p>This deletion policy complies with:</p>
+    <ul>
+      <li><strong>Google Play Data Safety</strong> requirements for account deletion</li>
+      <li><strong>Apple App Store</strong> Review Guideline 5.1.1 (data deletion)</li>
+      <li><strong>DPDPA 2023</strong> (India) — right to erasure</li>
+      <li><strong>GDPR</strong> Article 17 — right to be forgotten (for EU users)</li>
+    </ul>
+
+    <div class="footer">
+      &copy; 2026 Culinary Happiness Ventures (CHV). All rights reserved.<br>
+      WineBro — Your elder brother in wine &amp; spirits.
+    </div>
+  </div>
+</body>
+</html>
