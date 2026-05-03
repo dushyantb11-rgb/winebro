@@ -3,8 +3,12 @@ name: iOS App Store Release
 on:
   workflow_dispatch:
     inputs:
+      build_name:
+        description: 'Marketing version (CFBundleShortVersionString, e.g. 0.1.0)'
+        required: true
+        default: '0.1.0'
       build_number:
-        description: 'Build number (e.g. 1, 2, 3)'
+        description: 'Build number (CFBundleVersion, must increment per upload)'
         required: true
         default: '1'
 
@@ -26,6 +30,12 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
+
+      - name: Static analysis
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run unit tests
+        run: flutter test
 
       - name: Install CocoaPods
         run: |
@@ -90,6 +100,7 @@ jobs:
         run: |
           flutter build ipa \
             --release \
+            --build-name=${{ github.event.inputs.build_name }} \
             --build-number=${{ github.event.inputs.build_number }} \
             --export-options-plist=ios/Runner/ExportOptions.plist
 
