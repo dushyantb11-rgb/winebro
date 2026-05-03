@@ -1,4 +1,19 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!-- WineBro does not use the Android Advertising ID. Firebase Analytics
+         auto-injects this permission into the merged manifest; we explicitly
+         remove it so Play Console's advertising-ID declaration ("No") matches
+         the actual binary. Required since Android 13 (API 33). -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"
+        tools:node="remove" />
+    <!-- Android 13+ Privacy Sandbox variant. Firebase Analytics auto-injects
+         this too; remove so Play Console "No" answer matches the binary. -->
+    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_AD_ID"
+        tools:node="remove" />
+    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_ATTRIBUTION"
+        tools:node="remove" />
+    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_TOPICS"
+        tools:node="remove" />
     <application
         android:label="winebro"
         android:name="${applicationName}"
