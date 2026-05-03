@@ -1,13 +1,26 @@
-// generate-play-store-assets.js — Renders designed Play Store assets to
-// PNG via headless Chromium. Brand-true to CHV's Paprika/Thunder/Salem
-// palette. Produces 6 phone screenshots (1080×1920) and a 1024×500
-// feature graphic. Output goes to app/store-assets/play-store/.
+// generate-play-store-assets.js — Renders the FULL set of Play Store
+// assets to PNG via headless Chromium. Brand-true to CHV's Paprika /
+// Thunder / Salem palette.
+//
+// Outputs (under app/store-assets/play-store/):
+//   app-icon.png                       512x512  (Play Store listing icon)
+//   feature-graphic.png                1024x500 (required hero banner)
+//   phone/screenshot-0[1-6]-*.png      1080x1920 (phone screenshots)
+//   tablet-7in/screenshot-0[1-6]-*.png 1200x1920 (7-inch tablet)
+//   tablet-10in/screenshot-0[1-6]-*.png 1600x2560 (10-inch tablet)
+//
+// Run:  cd D:\AIMinds\WineBro\scripts && node generate-play-store-assets.js
 
 const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
 
-const OUT_DIR = path.resolve(__dirname, '..', 'app', 'store-assets', 'play-store');
+const REPO_ROOT = path.resolve(__dirname, '..');
+const APP_ROOT = path.resolve(REPO_ROOT, 'app');
+const OUT_DIR = path.resolve(APP_ROOT, 'store-assets', 'play-store');
+const PHONE_DIR = path.join(OUT_DIR, 'phone');
+const TAB7_DIR = path.join(OUT_DIR, 'tablet-7in');
+const TAB10_DIR = path.join(OUT_DIR, 'tablet-10in');
 
 // Brand
 const PAPRIKA = '#93003C';
@@ -16,132 +29,9 @@ const SALEM = '#0F8044';
 const CREAM = '#FAF7F2';
 const GOLD = '#D4A24C';
 
-// Common phone frame + base CSS shared by every screenshot
-function shell(content, { headline, subline, accent = PAPRIKA, bgFrom, bgTo }) {
-  const fromColor = bgFrom || THUNDER;
-  const toColor = bgTo || PAPRIKA;
-  return `<!doctype html>
-<html><head><meta charset="utf-8">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { width: 1080px; height: 1920px; overflow: hidden; }
-  body {
-    background: linear-gradient(160deg, ${fromColor} 0%, ${toColor} 100%);
-    font-family: 'Montserrat', system-ui, sans-serif;
-    color: #fff;
-    position: relative;
-    padding: 80px 60px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  body::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      radial-gradient(circle at 85% 15%, rgba(212,162,76,0.18), transparent 40%),
-      radial-gradient(circle at 15% 90%, rgba(15,128,68,0.12), transparent 35%);
-    pointer-events: none;
-  }
-  .headline {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-weight: 900;
-    font-size: 96px;
-    line-height: 1.05;
-    text-align: center;
-    margin-bottom: 24px;
-    letter-spacing: -1px;
-    text-shadow: 0 4px 24px rgba(0,0,0,0.4);
-    z-index: 2;
-  }
-  .headline .accent { color: ${GOLD}; font-style: italic; }
-  .subline {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-    font-size: 36px;
-    line-height: 1.3;
-    text-align: center;
-    opacity: 0.92;
-    margin-bottom: 60px;
-    max-width: 900px;
-    z-index: 2;
-  }
-  .phone {
-    width: 620px;
-    height: 1280px;
-    border-radius: 64px;
-    background: #000;
-    padding: 16px;
-    box-shadow: 0 60px 120px rgba(0,0,0,0.5), 0 0 0 4px rgba(255,255,255,0.08);
-    position: relative;
-    z-index: 2;
-  }
-  .phone::before {
-    content: '';
-    position: absolute;
-    top: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 180px;
-    height: 32px;
-    background: #000;
-    border-radius: 16px;
-    z-index: 10;
-  }
-  .screen {
-    width: 100%;
-    height: 100%;
-    border-radius: 50px;
-    overflow: hidden;
-    background: ${CREAM};
-    color: ${THUNDER};
-    position: relative;
-    font-family: 'Montserrat', sans-serif;
-  }
-  .footer-tag {
-    position: absolute;
-    bottom: 50px;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    font-style: italic;
-    font-size: 28px;
-    color: ${GOLD};
-    z-index: 2;
-    letter-spacing: 2px;
-  }
-  .badge {
-    display: inline-block;
-    background: ${accent};
-    color: #fff;
-    padding: 12px 28px;
-    border-radius: 999px;
-    font-weight: 700;
-    font-size: 24px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 24px;
-    z-index: 2;
-  }
-</style></head>
-<body>
-  ${content.badge ? `<div class="badge">${content.badge}</div>` : ''}
-  <h1 class="headline">${headline}</h1>
-  ${subline ? `<p class="subline">${subline}</p>` : ''}
-  <div class="phone"><div class="screen">${content.screen}</div></div>
-  <div class="footer-tag">WineBro · Your elder bro in wine</div>
-</body></html>`;
-}
+// ============= Phone-screen content (used inside the mockup phone frame) =============
 
-// ============= Screen content templates =============
-
-const screen1Hero = `
+const screenHero = `
 <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 40px; text-align:center; background: linear-gradient(180deg, ${CREAM} 0%, #fff 100%);">
   <div style="width:200px; height:200px; border-radius:50%; background:${PAPRIKA}; display:flex; align-items:center; justify-content:center; margin-bottom:48px; box-shadow: 0 20px 40px rgba(147,0,60,0.3);">
     <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M8 2h8l-1 7c0 2-1.5 4-4 4s-4-2-4-4l1-7zM12 13v7M9 22h6"/></svg>
@@ -152,23 +42,15 @@ const screen1Hero = `
   <p style="margin-top:48px; font-size:20px; color:${THUNDER}; opacity:0.5;">Wine · Whisky · Gin · Rum · Cocktails</p>
 </div>`;
 
-const screen2Quiz = `
+const screenQuiz = `
 <div style="height:100%; display:flex; flex-direction:column; padding:80px 40px 40px; background:${CREAM};">
   <p style="font-size:22px; color:${PAPRIKA}; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px;">Question 3 of 10</p>
   <h2 style="font-family:'Playfair Display'; font-weight:900; font-size:48px; color:${THUNDER}; margin-bottom:48px; line-height:1.1;">Which best describes your<br/>ideal Sunday afternoon?</h2>
   <div style="display:flex; flex-direction:column; gap:20px;">
-    <div style="background:#fff; border:2px solid ${PAPRIKA}; border-radius:24px; padding:28px; box-shadow:0 8px 24px rgba(147,0,60,0.15);">
-      <div style="display:flex; align-items:center; gap:20px;"><span style="font-size:36px;">🍷</span><span style="font-size:24px; font-weight:600; color:${THUNDER};">Slow lunch with a bold red</span></div>
-    </div>
-    <div style="background:#fff; border:2px solid #e0d8d2; border-radius:24px; padding:28px;">
-      <div style="display:flex; align-items:center; gap:20px;"><span style="font-size:36px;">🥃</span><span style="font-size:24px; font-weight:600; color:${THUNDER}; opacity:0.7;">Single malt by the window</span></div>
-    </div>
-    <div style="background:#fff; border:2px solid #e0d8d2; border-radius:24px; padding:28px;">
-      <div style="display:flex; align-items:center; gap:20px;"><span style="font-size:36px;">🍸</span><span style="font-size:24px; font-weight:600; color:${THUNDER}; opacity:0.7;">A crisp gin & tonic outdoors</span></div>
-    </div>
-    <div style="background:#fff; border:2px solid #e0d8d2; border-radius:24px; padding:28px;">
-      <div style="display:flex; align-items:center; gap:20px;"><span style="font-size:36px;">🍺</span><span style="font-size:24px; font-weight:600; color:${THUNDER}; opacity:0.7;">Cold beer, no thinking</span></div>
-    </div>
+    <div style="background:#fff; border:2px solid ${PAPRIKA}; border-radius:24px; padding:28px; box-shadow:0 8px 24px rgba(147,0,60,0.15);"><div style="display:flex; align-items:center; gap:20px;"><span style="font-size:36px;">🍷</span><span style="font-size:24px; font-weight:600; color:${THUNDER};">Slow lunch with a bold red</span></div></div>
+    <div style="background:#fff; border:2px solid #e0d8d2; border-radius:24px; padding:28px;"><div style="display:flex; align-items:center; gap:20px;"><span style="font-size:36px;">🥃</span><span style="font-size:24px; font-weight:600; color:${THUNDER}; opacity:0.7;">Single malt by the window</span></div></div>
+    <div style="background:#fff; border:2px solid #e0d8d2; border-radius:24px; padding:28px;"><div style="display:flex; align-items:center; gap:20px;"><span style="font-size:36px;">🍸</span><span style="font-size:24px; font-weight:600; color:${THUNDER}; opacity:0.7;">A crisp gin & tonic outdoors</span></div></div>
+    <div style="background:#fff; border:2px solid #e0d8d2; border-radius:24px; padding:28px;"><div style="display:flex; align-items:center; gap:20px;"><span style="font-size:36px;">🍺</span><span style="font-size:24px; font-weight:600; color:${THUNDER}; opacity:0.7;">Cold beer, no thinking</span></div></div>
   </div>
   <div style="margin-top:auto; padding-top:40px;">
     <div style="background:#e0d8d2; height:8px; border-radius:4px; overflow:hidden;"><div style="background:${PAPRIKA}; height:100%; width:30%;"></div></div>
@@ -176,11 +58,9 @@ const screen2Quiz = `
   </div>
 </div>`;
 
-const screen3Scanner = `
+const screenScanner = `
 <div style="height:100%; background:#0a0a0a; position:relative; display:flex; flex-direction:column;">
-  <div style="height:90px; background:rgba(0,0,0,0.6); display:flex; align-items:center; padding:0 32px;">
-    <p style="color:white; font-size:24px; font-weight:600;">📷  Point at a label</p>
-  </div>
+  <div style="height:90px; background:rgba(0,0,0,0.6); display:flex; align-items:center; padding:0 32px;"><p style="color:white; font-size:24px; font-weight:600;">📷  Point at a label</p></div>
   <div style="flex:1; background: radial-gradient(ellipse at center, #1a1a1a 0%, #000 100%); display:flex; align-items:center; justify-content:center; position:relative;">
     <div style="width:380px; height:540px; border:3px solid ${GOLD}; border-radius:24px; position:relative;">
       <div style="position:absolute; top:-3px; left:-3px; width:60px; height:60px; border-top:6px solid ${GOLD}; border-left:6px solid ${GOLD}; border-radius:24px 0 0 0;"></div>
@@ -197,93 +77,58 @@ const screen3Scanner = `
   </div>
   <div style="background:${PAPRIKA}; padding:32px; display:flex; align-items:center; gap:20px;">
     <span style="font-size:36px;">✨</span>
-    <div>
-      <p style="color:white; font-weight:700; font-size:22px; margin-bottom:4px;">Recognised in 0.4s</p>
-      <p style="color:#fff; opacity:0.85; font-size:18px;">Tap to see pairings →</p>
-    </div>
+    <div><p style="color:white; font-weight:700; font-size:22px; margin-bottom:4px;">Recognised in 0.4s</p><p style="color:#fff; opacity:0.85; font-size:18px;">Tap to see pairings →</p></div>
   </div>
 </div>`;
 
-const screen4Pairing = `
+const screenPairing = `
 <div style="height:100%; background:${CREAM}; padding:60px 32px 32px; display:flex; flex-direction:column;">
   <p style="font-size:20px; color:${PAPRIKA}; font-weight:700; letter-spacing:2px; text-transform:uppercase;">Pairing for</p>
   <h2 style="font-family:'Playfair Display'; font-weight:900; font-size:42px; color:${THUNDER}; margin-bottom:32px; line-height:1.1;">Butter Chicken</h2>
   <div style="background:linear-gradient(135deg, ${PAPRIKA} 0%, #6b002a 100%); border-radius:24px; padding:28px; color:white; margin-bottom:20px; box-shadow:0 12px 32px rgba(147,0,60,0.3);">
-    <div style="display:flex; align-items:start; gap:16px;">
-      <div style="background:${GOLD}; color:${THUNDER}; padding:6px 14px; border-radius:999px; font-weight:700; font-size:16px; letter-spacing:1px;">BRO'S PICK</div>
-    </div>
+    <div style="display:flex; align-items:start; gap:16px;"><div style="background:${GOLD}; color:${THUNDER}; padding:6px 14px; border-radius:999px; font-weight:700; font-size:16px; letter-spacing:1px;">BRO'S PICK</div></div>
     <h3 style="font-family:'Playfair Display'; font-weight:700; font-size:32px; margin-top:16px;">Sula Rasa Shiraz</h3>
     <p style="font-size:18px; opacity:0.85; margin-top:8px;">Indian · ₹650 · Medium body</p>
     <p style="font-size:18px; line-height:1.5; margin-top:18px; opacity:0.95;">The pepper notes cut through the cream, while the dark fruit echoes the tomato base.</p>
-    <div style="display:flex; gap:8px; margin-top:18px;">
-      <span style="background:rgba(255,255,255,0.2); padding:8px 16px; border-radius:999px; font-size:16px;">★ 94% match</span>
-    </div>
+    <div style="display:flex; gap:8px; margin-top:18px;"><span style="background:rgba(255,255,255,0.2); padding:8px 16px; border-radius:999px; font-size:16px;">★ 94% match</span></div>
   </div>
-  <div style="background:#fff; border-radius:20px; padding:24px; margin-bottom:14px; border:1px solid #e0d8d2;">
-    <h4 style="font-family:'Playfair Display'; font-weight:700; font-size:24px; color:${THUNDER};">Jacob's Creek Shiraz Cabernet</h4>
-    <p style="font-size:16px; color:${THUNDER}; opacity:0.6; margin-top:6px;">Australian · ₹950 · 88% match</p>
-  </div>
-  <div style="background:#fff; border-radius:20px; padding:24px; margin-bottom:14px; border:1px solid #e0d8d2;">
-    <h4 style="font-family:'Playfair Display'; font-weight:700; font-size:24px; color:${THUNDER};">Old Monk on the rocks</h4>
-    <p style="font-size:16px; color:${THUNDER}; opacity:0.6; margin-top:6px;">Indian rum · ₹220 · 81% match</p>
-  </div>
-  <div style="background:#fff; border-radius:20px; padding:24px; border:1px solid #e0d8d2;">
-    <h4 style="font-family:'Playfair Display'; font-weight:700; font-size:24px; color:${THUNDER};">Bombay Sapphire & Tonic</h4>
-    <p style="font-size:16px; color:${THUNDER}; opacity:0.6; margin-top:6px;">Gin · ₹180 · 76% match</p>
-  </div>
+  <div style="background:#fff; border-radius:20px; padding:24px; margin-bottom:14px; border:1px solid #e0d8d2;"><h4 style="font-family:'Playfair Display'; font-weight:700; font-size:24px; color:${THUNDER};">Jacob's Creek Shiraz Cabernet</h4><p style="font-size:16px; color:${THUNDER}; opacity:0.6; margin-top:6px;">Australian · ₹950 · 88% match</p></div>
+  <div style="background:#fff; border-radius:20px; padding:24px; margin-bottom:14px; border:1px solid #e0d8d2;"><h4 style="font-family:'Playfair Display'; font-weight:700; font-size:24px; color:${THUNDER};">Old Monk on the rocks</h4><p style="font-size:16px; color:${THUNDER}; opacity:0.6; margin-top:6px;">Indian rum · ₹220 · 81% match</p></div>
+  <div style="background:#fff; border-radius:20px; padding:24px; border:1px solid #e0d8d2;"><h4 style="font-family:'Playfair Display'; font-weight:700; font-size:24px; color:${THUNDER};">Bombay Sapphire & Tonic</h4><p style="font-size:16px; color:${THUNDER}; opacity:0.6; margin-top:6px;">Gin · ₹180 · 76% match</p></div>
 </div>`;
 
-const screen5BroCard = `
+const screenBroCard = `
 <div style="height:100%; background:linear-gradient(180deg, ${THUNDER} 0%, #1a1717 100%); padding:60px 32px; color:white;">
   <p style="font-size:18px; color:${GOLD}; font-weight:700; letter-spacing:3px; text-transform:uppercase;">BroCard #47</p>
   <h2 style="font-family:'Playfair Display'; font-weight:900; font-size:42px; margin:8px 0 4px; line-height:1.1;">Antinori Tignanello</h2>
   <p style="font-size:18px; opacity:0.7; margin-bottom:32px;">Tuscany, Italy · 2019 · ₹12,500</p>
   <div style="background:${PAPRIKA}; border-radius:24px; padding:32px; margin-bottom:24px;">
     <div style="display:flex; justify-content:space-between; align-items:end; margin-bottom:24px;">
-      <div>
-        <p style="font-size:18px; opacity:0.8;">Your score</p>
-        <p style="font-family:'Playfair Display'; font-weight:900; font-size:72px; line-height:1;">9.2</p>
-      </div>
-      <div style="text-align:right;">
-        <p style="font-size:18px; opacity:0.8;">Tasted</p>
-        <p style="font-size:24px; font-weight:700;">28 Apr 2026</p>
-      </div>
+      <div><p style="font-size:18px; opacity:0.8;">Your score</p><p style="font-family:'Playfair Display'; font-weight:900; font-size:72px; line-height:1;">9.2</p></div>
+      <div style="text-align:right;"><p style="font-size:18px; opacity:0.8;">Tasted</p><p style="font-size:24px; font-weight:700;">28 Apr 2026</p></div>
     </div>
     <p style="font-family:'Playfair Display'; font-style:italic; font-size:22px; line-height:1.4; opacity:0.95;">"Layers of dark cherry and tobacco, with that signature Tuscan dusty finish. Drinks like a memory."</p>
   </div>
   <p style="font-size:18px; color:${GOLD}; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:14px;">Aromas detected</p>
-  <div style="display:flex; flex-wrap:wrap; gap:10px;">
-    ${['Dark cherry', 'Tobacco', 'Leather', 'Vanilla', 'Dried herbs', 'Plum', 'Cedar'].map(t => `<span style="background:rgba(255,255,255,0.1); border:1px solid ${GOLD}; padding:10px 18px; border-radius:999px; font-size:18px;">${t}</span>`).join('')}
-  </div>
+  <div style="display:flex; flex-wrap:wrap; gap:10px;">${['Dark cherry', 'Tobacco', 'Leather', 'Vanilla', 'Dried herbs', 'Plum', 'Cedar'].map(t => `<span style="background:rgba(255,255,255,0.1); border:1px solid ${GOLD}; padding:10px 18px; border-radius:999px; font-size:18px;">${t}</span>`).join('')}</div>
   <div style="display:flex; gap:16px; margin-top:32px;">
-    <div style="flex:1; background:rgba(15,128,68,0.15); border:1px solid ${SALEM}; border-radius:16px; padding:20px; text-align:center;">
-      <p style="font-size:14px; opacity:0.7; letter-spacing:1px;">PAIRED WITH</p>
-      <p style="font-weight:700; font-size:20px; margin-top:6px;">Aged parmesan</p>
-    </div>
-    <div style="flex:1; background:rgba(212,162,76,0.15); border:1px solid ${GOLD}; border-radius:16px; padding:20px; text-align:center;">
-      <p style="font-size:14px; opacity:0.7; letter-spacing:1px;">+250 XP</p>
-      <p style="font-weight:700; font-size:20px; margin-top:6px;">Cellar Master Lv4</p>
-    </div>
+    <div style="flex:1; background:rgba(15,128,68,0.15); border:1px solid ${SALEM}; border-radius:16px; padding:20px; text-align:center;"><p style="font-size:14px; opacity:0.7; letter-spacing:1px;">PAIRED WITH</p><p style="font-weight:700; font-size:20px; margin-top:6px;">Aged parmesan</p></div>
+    <div style="flex:1; background:rgba(212,162,76,0.15); border:1px solid ${GOLD}; border-radius:16px; padding:20px; text-align:center;"><p style="font-size:14px; opacity:0.7; letter-spacing:1px;">+250 XP</p><p style="font-weight:700; font-size:20px; margin-top:6px;">Cellar Master Lv4</p></div>
   </div>
 </div>`;
 
-const screen6AromaWheel = `
+const screenAroma = `
 <div style="height:100%; background:${CREAM}; padding:60px 32px; display:flex; flex-direction:column;">
   <p style="font-size:20px; color:${PAPRIKA}; font-weight:700; letter-spacing:2px; text-transform:uppercase;">Your palate</p>
   <h2 style="font-family:'Playfair Display'; font-weight:900; font-size:42px; color:${THUNDER}; margin-bottom:32px; line-height:1.1;">Built from 47 tastings</h2>
   <div style="display:flex; justify-content:center; margin:20px 0 40px;">
     <svg width="440" height="440" viewBox="0 0 200 200">
-      <defs>
-        <radialGradient id="g1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="${PAPRIKA}" stop-opacity="0.2"/><stop offset="100%" stop-color="${PAPRIKA}" stop-opacity="0.6"/></radialGradient>
-      </defs>
-      <!-- radar grid -->
+      <defs><radialGradient id="g1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="${PAPRIKA}" stop-opacity="0.2"/><stop offset="100%" stop-color="${PAPRIKA}" stop-opacity="0.6"/></radialGradient></defs>
       <polygon points="100,20 168,60 168,140 100,180 32,140 32,60" fill="none" stroke="${THUNDER}" stroke-opacity="0.1" stroke-width="0.5"/>
       <polygon points="100,40 152,70 152,130 100,160 48,130 48,70" fill="none" stroke="${THUNDER}" stroke-opacity="0.1" stroke-width="0.5"/>
       <polygon points="100,60 136,80 136,120 100,140 64,120 64,80" fill="none" stroke="${THUNDER}" stroke-opacity="0.1" stroke-width="0.5"/>
       <polygon points="100,80 120,90 120,110 100,120 80,110 80,90" fill="none" stroke="${THUNDER}" stroke-opacity="0.1" stroke-width="0.5"/>
-      <!-- user shape -->
       <polygon points="100,30 162,68 158,135 100,168 42,138 38,62" fill="url(#g1)" stroke="${PAPRIKA}" stroke-width="1.5"/>
-      <!-- axis labels -->
       <text x="100" y="14" text-anchor="middle" font-family="Montserrat" font-size="9" font-weight="700" fill="${THUNDER}">FRUITY</text>
       <text x="180" y="58" text-anchor="middle" font-family="Montserrat" font-size="9" font-weight="700" fill="${THUNDER}">SMOKY</text>
       <text x="180" y="148" text-anchor="middle" font-family="Montserrat" font-size="9" font-weight="700" fill="${THUNDER}">BOLD</text>
@@ -293,29 +138,158 @@ const screen6AromaWheel = `
     </svg>
   </div>
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px;">
-    <div style="background:#fff; padding:20px; border-radius:16px; border-left:4px solid ${PAPRIKA};">
-      <p style="font-size:14px; color:${THUNDER}; opacity:0.6; letter-spacing:1px;">YOUR LEAN</p>
-      <p style="font-family:'Playfair Display'; font-weight:700; font-size:22px; color:${THUNDER}; margin-top:4px;">Bold & Smoky</p>
-    </div>
-    <div style="background:#fff; padding:20px; border-radius:16px; border-left:4px solid ${SALEM};">
-      <p style="font-size:14px; color:${THUNDER}; opacity:0.6; letter-spacing:1px;">LEVEL</p>
-      <p style="font-family:'Playfair Display'; font-weight:700; font-size:22px; color:${THUNDER}; margin-top:4px;">Cellar Master</p>
-    </div>
+    <div style="background:#fff; padding:20px; border-radius:16px; border-left:4px solid ${PAPRIKA};"><p style="font-size:14px; color:${THUNDER}; opacity:0.6; letter-spacing:1px;">YOUR LEAN</p><p style="font-family:'Playfair Display'; font-weight:700; font-size:22px; color:${THUNDER}; margin-top:4px;">Bold & Smoky</p></div>
+    <div style="background:#fff; padding:20px; border-radius:16px; border-left:4px solid ${SALEM};"><p style="font-size:14px; color:${THUNDER}; opacity:0.6; letter-spacing:1px;">LEVEL</p><p style="font-family:'Playfair Display'; font-weight:700; font-size:22px; color:${THUNDER}; margin-top:4px;">Cellar Master</p></div>
   </div>
   <div style="background:${PAPRIKA}; color:white; padding:18px 24px; border-radius:14px; text-align:center; font-weight:700; font-size:18px;">🏆 New badge: "Tuscan Soul"</div>
 </div>`;
 
-// ============= Six screenshots =============
-const SCREENSHOTS = [
-  { name: '01-hero', headline: 'Your elder bro<br/>in <span class="accent">wine</span>', subline: 'Wine, spirits and food pairing for grown-ups.', content: { screen: screen1Hero }, bgFrom: THUNDER, bgTo: PAPRIKA },
-  { name: '02-quiz', headline: 'Find your <span class="accent">taste DNA</span>', subline: 'A 6-axis palate quiz that learns what you actually like.', content: { badge: 'Palate Quiz', screen: screen2Quiz }, bgFrom: '#3a0518', bgTo: PAPRIKA },
-  { name: '03-scanner', headline: 'Scan any <span class="accent">label</span>', subline: 'Point. Read. Pair. On-device, 0.4 seconds.', content: { badge: 'Label Scanner', screen: screen3Scanner }, bgFrom: '#1a0808', bgTo: '#3a0a0a' },
-  { name: '04-pairing', headline: 'What goes with <span class="accent">this?</span>', subline: 'Smart pairing for any dish, occasion or mood.', content: { badge: 'Bro Pairings', screen: screen4Pairing }, bgFrom: PAPRIKA, bgTo: '#5a002a' },
-  { name: '05-brocard', headline: 'Every sip,<br/><span class="accent">remembered</span>', subline: 'Tasting journal that builds your palate over time.', content: { badge: 'BroCard Journal', screen: screen5BroCard }, bgFrom: THUNDER, bgTo: '#1a1717' },
-  { name: '06-aromawheel', headline: 'Build a <span class="accent">real</span> palate', subline: 'Aroma wheel + radar that grows with every BroCard.', content: { badge: 'Aroma Wheel', screen: screen6AromaWheel }, bgFrom: '#3a2010', bgTo: PAPRIKA },
+const SCREENS = [
+  { name: '01-hero', headline: 'Your elder bro<br/>in <span class="accent">wine</span>', subline: 'Wine, spirits and food pairing for grown-ups.', screen: screenHero, badge: null, bgFrom: THUNDER, bgTo: PAPRIKA },
+  { name: '02-quiz', headline: 'Find your <span class="accent">taste DNA</span>', subline: 'A 6-axis palate quiz that learns what you actually like.', screen: screenQuiz, badge: 'Palate Quiz', bgFrom: '#3a0518', bgTo: PAPRIKA },
+  { name: '03-scanner', headline: 'Scan any <span class="accent">label</span>', subline: 'Point. Read. Pair. On-device, 0.4 seconds.', screen: screenScanner, badge: 'Label Scanner', bgFrom: '#1a0808', bgTo: '#3a0a0a' },
+  { name: '04-pairing', headline: 'What goes with <span class="accent">this?</span>', subline: 'Smart pairing for any dish, occasion or mood.', screen: screenPairing, badge: 'Bro Pairings', bgFrom: PAPRIKA, bgTo: '#5a002a' },
+  { name: '05-brocard', headline: 'Every sip,<br/><span class="accent">remembered</span>', subline: 'Tasting journal that builds your palate over time.', screen: screenBroCard, badge: 'BroCard Journal', bgFrom: THUNDER, bgTo: '#1a1717' },
+  { name: '06-aromawheel', headline: 'Build a <span class="accent">real</span> palate', subline: 'Aroma wheel + radar that grows with every BroCard.', screen: screenAroma, badge: 'Aroma Wheel', bgFrom: '#3a2010', bgTo: PAPRIKA },
 ];
 
-// ============= Feature graphic 1024×500 =============
+// ============= Templated shell that scales by canvas size =============
+
+function shell({ width, height, headline, subline, screen, badge, bgFrom, bgTo, layout = 'phone' }) {
+  // Scale typography to canvas height so the same templates look right on phone, 7" tablet, and 10" tablet.
+  const scale = height / 1920;
+  const headlineFs = Math.round(96 * scale);
+  const sublineFs = Math.round(36 * scale);
+  const badgeFs = Math.round(24 * scale);
+  const footerFs = Math.round(28 * scale);
+
+  // Phone frame size: tablet versions get a slightly larger frame in the middle, with extra surrounding chrome.
+  let phoneW, phoneH;
+  if (layout === 'phone') { phoneW = 620; phoneH = 1280; }
+  else if (layout === 'tablet-7') { phoneW = 700; phoneH = 1200; }
+  else { phoneW = 880; phoneH = 1600; } // tablet-10
+
+  return `<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: ${width}px; height: ${height}px; overflow: hidden; }
+  body {
+    background: linear-gradient(160deg, ${bgFrom} 0%, ${bgTo} 100%);
+    font-family: 'Montserrat', system-ui, sans-serif;
+    color: #fff;
+    position: relative;
+    padding: ${Math.round(80 * scale)}px ${Math.round(60 * scale)}px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 85% 15%, rgba(212,162,76,0.18), transparent 40%),
+      radial-gradient(circle at 15% 90%, rgba(15,128,68,0.12), transparent 35%);
+    pointer-events: none;
+  }
+  .badge {
+    display: inline-block;
+    background: ${PAPRIKA};
+    color: #fff;
+    padding: ${Math.round(12 * scale)}px ${Math.round(28 * scale)}px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: ${badgeFs}px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: ${Math.round(24 * scale)}px;
+    z-index: 2;
+  }
+  .headline {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 900;
+    font-size: ${headlineFs}px;
+    line-height: 1.05;
+    text-align: center;
+    margin-bottom: ${Math.round(24 * scale)}px;
+    letter-spacing: -1px;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    z-index: 2;
+  }
+  .headline .accent { color: ${GOLD}; font-style: italic; }
+  .subline {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: ${sublineFs}px;
+    line-height: 1.3;
+    text-align: center;
+    opacity: 0.92;
+    margin-bottom: ${Math.round(60 * scale)}px;
+    max-width: ${Math.round(900 * scale)}px;
+    z-index: 2;
+  }
+  .phone {
+    width: ${phoneW}px;
+    height: ${phoneH}px;
+    border-radius: ${Math.round(64 * scale)}px;
+    background: #000;
+    padding: ${Math.round(16 * scale)}px;
+    box-shadow: 0 ${Math.round(60 * scale)}px ${Math.round(120 * scale)}px rgba(0,0,0,0.5), 0 0 0 4px rgba(255,255,255,0.08);
+    position: relative;
+    z-index: 2;
+  }
+  .phone::before {
+    content: '';
+    position: absolute;
+    top: ${Math.round(24 * scale)}px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: ${Math.round(180 * scale)}px;
+    height: ${Math.round(32 * scale)}px;
+    background: #000;
+    border-radius: ${Math.round(16 * scale)}px;
+    z-index: 10;
+  }
+  .screen {
+    width: 100%;
+    height: 100%;
+    border-radius: ${Math.round(50 * scale)}px;
+    overflow: hidden;
+    background: ${CREAM};
+    color: ${THUNDER};
+    position: relative;
+    font-family: 'Montserrat', sans-serif;
+  }
+  .footer-tag {
+    position: absolute;
+    bottom: ${Math.round(50 * scale)}px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: ${footerFs}px;
+    color: ${GOLD};
+    z-index: 2;
+    letter-spacing: 2px;
+  }
+</style></head>
+<body>
+  ${badge ? `<div class="badge">${badge}</div>` : ''}
+  <h1 class="headline">${headline}</h1>
+  ${subline ? `<p class="subline">${subline}</p>` : ''}
+  <div class="phone"><div class="screen">${screen}</div></div>
+  <div class="footer-tag">WineBro · Your elder bro in wine</div>
+</body></html>`;
+}
+
+// ============= Feature graphic =============
+
 function featureGraphicHTML() {
   return `<!doctype html><html><head><meta charset="utf-8">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
@@ -343,47 +317,86 @@ function featureGraphicHTML() {
           <linearGradient id="wine" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c61856"/><stop offset="100%" stop-color="${PAPRIKA}"/></linearGradient>
           <radialGradient id="rim" cx="50%" cy="0%" r="60%"><stop offset="0%" stop-color="${GOLD}" stop-opacity="0.6"/><stop offset="100%" stop-color="${GOLD}" stop-opacity="0"/></radialGradient>
         </defs>
-        <!-- bowl outline -->
         <path d="M 30 10 L 70 10 Q 80 10 80 30 Q 80 60 50 65 Q 20 60 20 30 Q 20 10 30 10 Z" fill="url(#wine)" stroke="${GOLD}" stroke-width="0.8" opacity="0.95"/>
-        <!-- rim shine -->
         <ellipse cx="50" cy="14" rx="22" ry="3" fill="url(#rim)"/>
-        <!-- stem -->
         <line x1="50" y1="65" x2="50" y2="115" stroke="${GOLD}" stroke-width="2"/>
-        <!-- base -->
         <ellipse cx="50" cy="120" rx="22" ry="4" fill="none" stroke="${GOLD}" stroke-width="2"/>
-        <!-- vine leaf -->
         <path d="M 75 35 Q 90 40 88 55 Q 85 50 78 50 Q 80 45 75 35 Z" fill="${SALEM}" opacity="0.85"/>
       </svg>
     </div>
   </body></html>`;
 }
 
+// ============= App icon (512x512) =============
+
+function appIconHTML() {
+  return `<!doctype html><html><head><meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing:border-box; margin:0; padding:0; }
+    html, body { width:512px; height:512px; overflow:hidden; }
+    body { background: radial-gradient(circle at 30% 25%, #b30048 0%, ${PAPRIKA} 55%, #6b002a 100%); display:flex; align-items:center; justify-content:center; position:relative; }
+    body::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 80% 80%, rgba(0,0,0,0.25), transparent 60%); }
+    .ring { width:380px; height:380px; border-radius:50%; border:6px solid ${GOLD}; display:flex; align-items:center; justify-content:center; position:relative; box-shadow:0 12px 32px rgba(0,0,0,0.35), inset 0 0 0 4px rgba(255,255,255,0.06); }
+    svg { width:200px; height:200px; }
+    .leaf { position:absolute; width:80px; height:80px; }
+    .leaf-tl { top:24px; left:32px; transform:rotate(-30deg); }
+    .leaf-br { bottom:24px; right:32px; transform:rotate(150deg); }
+  </style></head><body>
+    <div class="ring">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 2h8l-1 7c0 2.2-1.8 4-4 4s-4-1.8-4-4l1-7z"/>
+        <path d="M12 13v7"/>
+        <path d="M9 22h6"/>
+      </svg>
+      <svg class="leaf leaf-tl" viewBox="0 0 100 100"><path d="M 50 10 Q 80 30 75 65 Q 60 50 30 55 Q 35 35 50 10 Z" fill="${SALEM}" opacity="0.85"/></svg>
+      <svg class="leaf leaf-br" viewBox="0 0 100 100"><path d="M 50 10 Q 80 30 75 65 Q 60 50 30 55 Q 35 35 50 10 Z" fill="${SALEM}" opacity="0.85"/></svg>
+    </div>
+  </body></html>`;
+}
+
+// ============= Main =============
+
+async function renderToFile(browser, html, file, width, height) {
+  const page = await browser.newPage({ viewport: { width, height } });
+  await page.setContent(html, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(800);
+  await page.screenshot({ path: file, clip: { x: 0, y: 0, width, height } });
+  await page.close();
+  console.log('[gen] wrote', file);
+}
+
 async function main() {
-  if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
-  console.log('[gen] Output:', OUT_DIR);
+  for (const d of [OUT_DIR, PHONE_DIR, TAB7_DIR, TAB10_DIR]) {
+    if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
+  }
+  console.log('[gen] Output root:', OUT_DIR);
 
   const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
 
-  for (const sc of SCREENSHOTS) {
-    const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
-    const html = shell(sc.content, { headline: sc.headline, subline: sc.subline, accent: PAPRIKA, bgFrom: sc.bgFrom, bgTo: sc.bgTo });
-    await page.setContent(html, { waitUntil: 'networkidle' });
-    // give Google Fonts a beat to apply
-    await page.waitForTimeout(800);
-    const out = path.join(OUT_DIR, `screenshot-${sc.name}.png`);
-    await page.screenshot({ path: out, omitBackground: false, fullPage: false, clip: { x: 0, y: 0, width: 1080, height: 1920 } });
-    await page.close();
-    console.log('[gen] wrote', out);
+  // 1. App icon
+  await renderToFile(browser, appIconHTML(), path.join(OUT_DIR, 'app-icon.png'), 512, 512);
+
+  // 2. Feature graphic
+  await renderToFile(browser, featureGraphicHTML(), path.join(OUT_DIR, 'feature-graphic.png'), 1024, 500);
+
+  // 3. Phone screenshots 1080x1920
+  for (const sc of SCREENS) {
+    const html = shell({ width: 1080, height: 1920, ...sc, layout: 'phone' });
+    await renderToFile(browser, html, path.join(PHONE_DIR, `screenshot-${sc.name}.png`), 1080, 1920);
   }
 
-  // Feature graphic
-  const fgPage = await browser.newPage({ viewport: { width: 1024, height: 500 } });
-  await fgPage.setContent(featureGraphicHTML(), { waitUntil: 'networkidle' });
-  await fgPage.waitForTimeout(800);
-  const fgOut = path.join(OUT_DIR, 'feature-graphic.png');
-  await fgPage.screenshot({ path: fgOut, clip: { x: 0, y: 0, width: 1024, height: 500 } });
-  await fgPage.close();
-  console.log('[gen] wrote', fgOut);
+  // 4. 7-inch tablet 1200x1920
+  for (const sc of SCREENS) {
+    const html = shell({ width: 1200, height: 1920, ...sc, layout: 'tablet-7' });
+    await renderToFile(browser, html, path.join(TAB7_DIR, `screenshot-${sc.name}.png`), 1200, 1920);
+  }
+
+  // 5. 10-inch tablet 1600x2560
+  for (const sc of SCREENS) {
+    const html = shell({ width: 1600, height: 2560, ...sc, layout: 'tablet-10' });
+    await renderToFile(browser, html, path.join(TAB10_DIR, `screenshot-${sc.name}.png`), 1600, 2560);
+  }
 
   await browser.close();
   console.log('[gen] Done.');
