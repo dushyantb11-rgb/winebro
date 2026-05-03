@@ -56,6 +56,9 @@ ios/Runner/ExportOptions.plist
 *.cer
 *.certSigningRequest
 
+# Playwright orchestrator state
+.playwright-userdata/
+
 # Screenshots & generated assets
 assets/screenshots/
 
