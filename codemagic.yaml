@@ -1,0 +1,103 @@
+workflows:
+  ios-app-store-release:
+    name: iOS App Store Release
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    integrations:
+      app_store_connect: WineBroAppStoreConnect
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.chv.winebro
+      vars:
+        APP_ID: com.chv.winebro
+        XCODE_WORKSPACE: ios/Runner.xcworkspace
+        XCODE_SCHEME: Runner
+        APP_STORE_APPLE_ID: "REPLACE_WITH_NUMERIC_APP_ID"
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+      cancel_previous_builds: true
+
+    scripts:
+      - name: Set up Flutter
+        script: flutter --version
+
+      - name: Get Flutter packages
+        script: flutter pub get
+
+      - name: Static analysis
+        script: flutter analyze --no-fatal-infos
+
+      - name: Run unit tests
+        script: flutter test
+
+      - name: Pod install
+        script: |
+          cd ios
+          pod install
+
+      - name: Set bundle id
+        script: |
+          /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $APP_ID" ios/Runner/Info.plist || true
+
+      - name: Increment build number
+        script: |
+          cd ios
+          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || echo "0")
+          NEW_BUILD_NUMBER=$(($LATEST_BUILD_NUMBER + 1))
+          echo "Latest in App Store Connect: $LATEST_BUILD_NUMBER  →  Building: $NEW_BUILD_NUMBER"
+          agvtool new-version -all $NEW_BUILD_NUMBER
+
+      - name: Build iOS IPA
+        script: |
+          flutter build ipa --release \
+            --export-options-plist=/Users/builder/export_options.plist
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups:
+          - WineBro Internal
+        submit_to_app_store: false
+
+  ios-pr-validation:
+    name: iOS PR Validation
+    instance_type: mac_mini_m2
+    max_build_duration: 30
+    environment:
+      flutter: stable
+      xcode: latest
+
+    triggering:
+      events:
+        - pull_request
+      branch_patterns:
+        - pattern: '*'
+          include: true
+          source: true
+      cancel_previous_builds: true
+
+    scripts:
+      - name: Get Flutter packages
+        script: flutter pub get
+
+      - name: Static analysis
+        script: flutter analyze --no-fatal-infos
+
+      - name: Run unit tests
+        script: flutter test
