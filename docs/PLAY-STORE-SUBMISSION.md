@@ -52,9 +52,11 @@ flutter build appbundle --release
 ### Step 5 — Fill the Store Listing
 Play Console → WineBro → **Grow → Store presence → Main store listing**. Paste fields from §3 below.
 Upload from `app/store-assets/play-store/`:
-- App icon: `app/assets/icon/app_icon.png` (512×512)
+- App icon: `app-icon.png` (512×512)
 - Feature graphic: `feature-graphic.png` (1024×500)
-- Phone screenshots: all six `screenshot-0*.png` (1080×1920)
+- Phone screenshots: `phone/screenshot-0[1-6]-*.png` (1080×1920)
+- 7-inch tablet screenshots: `tablet-7in/screenshot-0[1-6]-*.png` (1200×1920)
+- 10-inch tablet screenshots: `tablet-10in/screenshot-0[1-6]-*.png` (1600×2560)
 
 ### Step 6 — Complete the Compliance Forms
 Three forms gate production rollout:
