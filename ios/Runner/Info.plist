@@ -66,5 +66,35 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>WineBro uses the camera so you can scan wine and spirit labels for instant pairing suggestions and tasting notes.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>WineBro needs access to your photos so you can attach label images to your tasting journal entries.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>WineBro saves your tasting BroCards to your photo library when you choose to share or download them.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>WineBro does not record audio. This permission is requested only by the camera plugin and is never used.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>WineBro does not track you across apps or websites owned by other companies.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>https</string>
+		<string>mailto</string>
+	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.chv.winebro.googleauth</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.REVERSED_CLIENT_ID_REPLACE_ME</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
