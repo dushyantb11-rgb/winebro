@@ -1,393 +1,807 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
-import 'package:winebro/core/theme/app_icons.dart';
+import 'package:winebro/core/theme/app_elevation.dart';
+import 'package:winebro/core/theme/app_motion.dart';
+import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/features/auth/domain/auth_state.dart';
 import 'package:winebro/features/auth/presentation/providers/auth_provider.dart';
 import 'package:winebro/features/home/presentation/providers/home_providers.dart';
-import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/features/journal/presentation/screens/journal_screen.dart';
-import 'package:winebro/shared/widgets/product_card.dart';
+import 'package:winebro/features/pairing/domain/product.dart';
+import 'package:winebro/shared/widgets/emotion_tile.dart';
+import 'package:winebro/shared/widgets/hero_photo_card.dart';
 
+/// Redesigned 2026 Home.
+///
+/// Five blocks, each earning its space:
+///   1. Sticky header — logo PNG, avatar circle right
+///   2. Time-aware greeting + serif-italic byline
+///   3. Tonight's Pour — full-bleed cinematic hero card
+///   4. Three emotion tiles — Cooking / Hosting / Just sipping
+///   5. Continue your story (only if user has journal entries)
+///   6. Bro Circle — community signals strip
+///   7. Bro Tip — full-bleed paprika card with serif quote
+///
+/// No 4-icon QuickActions row (functions live in nav + emotion tiles).
+/// No region-grouped chip wall (lives on Pair).
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.appColors;
-    final l10n = context.l10n;
     final authState = ref.watch(authStateProvider);
-    final userName = authState is Authenticated
-        ? authState.user.displayName
-        : 'Bro';
-    final brosPick = ref.watch(brosPickProvider);
-    final trending = ref.watch(trendingProductsProvider);
+    final firstName = switch (authState) {
+      Authenticated(:final user) => user.displayName.split(' ').first,
+      _ => 'Bro',
+    };
+    final tonight = ref.watch(tonightsPourProvider);
+    final continueStory = ref.watch(continueStoryProvider);
+    final circle = ref.watch(broCircleProvider);
+    final hour = DateTime.now().hour;
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-
-          SliverAppBar(
-            floating: true,
-            backgroundColor: colors.charcoal,
-            title: Image.asset(
-              'assets/images/logo.png',
-              height: 32,
-              fit: BoxFit.contain,
-            ),
-            centerTitle: true,
+      body: RefreshIndicator(
+        color: colors.paprika,
+        onRefresh: () async {
+          HapticFeedback.lightImpact();
+          ref.invalidate(tonightsPourProvider);
+          ref.invalidate(continueStoryProvider);
+          await Future<void>.delayed(const Duration(milliseconds: 600));
+        },
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
           ),
-
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
-              child: Text(
-                l10n.greeting(userName),
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: colors.textPrimary,
-                ),
+          slivers: [
+            // ====== Sticky header — official logo asset ======
+            SliverAppBar(
+              floating: true,
+              backgroundColor: colors.charcoal,
+              elevation: 0,
+              centerTitle: true,
+              title: Image.asset(
+                'assets/images/logo.png',
+                height: 32,
+                fit: BoxFit.contain,
               ),
-            ),
-          ),
-
-          SliverToBoxAdapter(
-            child: brosPick.when(
-              loading: () => const _PlaceholderCard(),
-              error: (_, __) => const SizedBox(),
-              data: (product) => product != null
-                  ? GestureDetector(
-                      onTap: () => _showProductDetail(context, product),
-                      child: _BrosPickCard(product: product),
-                    )
-                  : const SizedBox(),
-            ),
-          ),
-
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
-              child: Text(
-                l10n.quickActions,
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: colors.textTertiary,
-                  letterSpacing: 1.5,
-                ),
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: 80,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                children: [
-                  _QuickAction(
-                    icon: Icons.restaurant_menu,
-                    label: l10n.pairAction,
-                    color: colors.paprika,
-                    onTap: () => context.go('/pair'),
-                  ),
-                  _QuickAction(
-                    icon: Icons.qr_code_scanner,
-                    label: l10n.scanAction,
-                    color: colors.salem,
-                    onTap: () => context.go('/scan'),
-                  ),
-                  _QuickAction(
-                    icon: Icons.donut_large,
-                    label: l10n.aromaAction,
-                    color: colors.gold,
-                    onTap: () => context.push('/aroma'),
-                  ),
-                  _QuickAction(
-                    icon: Icons.school,
-                    label: l10n.learnAction,
-                    color: colors.info,
-                    onTap: () => context.push('/aroma'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
-              child: Text(
-                l10n.trendingNow,
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: colors.textTertiary,
-                  letterSpacing: 1.5,
-                ),
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: 170,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: trending.length,
-                itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: ProductCard(
-                    product: trending[index],
-                    compact: true,
-                    onTap: () => _showProductDetail(context, trending[index]),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: _AvatarButton(
+                    initial: firstName.isNotEmpty ? firstName[0] : 'B',
+                    onTap: () => context.go('/profile'),
                   ),
                 ),
-              ),
+              ],
             ),
-          ),
 
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: colors.surface1,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border(
-                    left: BorderSide(color: colors.paprika, width: 3),
-                  ),
-                ),
+            // ====== Greeting ======
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Icon(AppIcons.broTip, size: 14, color: colors.gold),
-                        const SizedBox(width: 6),
-                        Text(l10n.broTip,
-                      style: TextStyle(
-                        color: colors.gold,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                      )),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
                     Text(
-                      l10n.broTipContent,
+                      '${greetingForHour(hour)},',
                       style: TextStyle(
-                        fontFamily: 'OpenSans',
-                        fontSize: 13,
-                        fontStyle: FontStyle.italic,
+                        fontFamily: 'Montserrat',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: colors.textTertiary,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      firstName,
+                      style: TextStyle(
+                        fontFamily: 'PlayfairDisplay',
+                        fontSize: 36,
+                        fontWeight: FontWeight.w900,
+                        color: colors.textPrimary,
+                        letterSpacing: -1,
+                        height: 1.1,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      _bylineFor(hour),
+                      style: context.serifQuote.copyWith(
                         color: colors.textSecondary,
-                        height: 1.5,
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-          ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 80)),
-        ],
+            // ====== Tonight's Pour — hero card ======
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
+                child: tonight.when(
+                  loading: () => _HeroSkeleton(colors: colors),
+                  error: (_, __) => const SizedBox(),
+                  data: (product) {
+                    if (product == null) return const SizedBox();
+                    return _TonightsPourCard(
+                      product: product,
+                      onTap: () => _showProductDetail(context, product),
+                    );
+                  },
+                ),
+              ),
+            ),
+
+            // ====== Section eyebrow ======
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                child: Text(
+                  'TONIGHT, YOU ARE…',
+                  style: context.eyebrow.copyWith(color: colors.textTertiary),
+                ),
+              ),
+            ),
+
+            // ====== Three emotion tiles ======
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: EmotionTile(
+                        label: 'Cooking',
+                        icon: Icons.outdoor_grill,
+                        gradient: [colors.paprika, colors.paprikaDeep],
+                        onTap: () => context.go('/pair'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: EmotionTile(
+                        label: 'Hosting',
+                        icon: Icons.celebration_outlined,
+                        gradient: [colors.thunder, colors.paprikaDark],
+                        onTap: () => context.go('/pair'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: EmotionTile(
+                        label: 'Just sipping',
+                        icon: Icons.nightlight_round,
+                        gradient: [colors.paprikaDark, colors.thunderLight],
+                        onTap: () => context.go('/pair'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // ====== Continue Your Story (gated on journal data) ======
+            SliverToBoxAdapter(
+              child: continueStory.when(
+                loading: () => const SizedBox(),
+                error: (_, __) => const SizedBox(),
+                data: (data) {
+                  if (data == null) return const SizedBox();
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
+                    child: _ContinueStoryCard(
+                      lastTasted: data.last.productName,
+                      lastDate: data.last.createdAt,
+                      next: data.next,
+                      onTap: () => _showProductDetail(context, data.next),
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            // ====== Bro Circle — community signals ======
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                child: Text(
+                  'BRO CIRCLE',
+                  style: context.eyebrow.copyWith(color: colors.textTertiary),
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 140,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.fromLTRB(20, 0, 8, 0),
+                  itemCount: circle.length,
+                  itemBuilder: (context, i) {
+                    final signal = circle[i];
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: _BroCircleCard(
+                        signal: signal,
+                        onTap: () =>
+                            _showProductDetail(context, signal.product),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 28)),
+
+            // ====== Bro Tip ======
+            const SliverToBoxAdapter(child: _BroTipCard()),
+
+            const SliverToBoxAdapter(child: SizedBox(height: 120)),
+          ],
+        ),
       ),
     );
+  }
+
+  String _bylineFor(int hour) {
+    if (hour < 12) return 'Slow morning. What\'s pouring?';
+    if (hour < 17) return 'Afternoon. A glass with what?';
+    if (hour < 22) return 'Your night begins here.';
+    return 'Late and lovely.';
   }
 
   void _showProductDetail(BuildContext context, Product product) {
     final colors = context.appColors;
-    final l10n = context.l10n;
 
     showModalBottomSheet<void>(
       context: context,
+      isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: colors.charcoal,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40, height: 4,
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: colors.surface4,
-                  borderRadius: BorderRadius.circular(2),
+      builder: (_) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.5,
+        maxChildSize: 0.92,
+        expand: false,
+        builder: (_, controller) => Container(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+          decoration: BoxDecoration(
+            color: colors.charcoal,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          child: ListView(
+            controller: controller,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
+                    color: colors.borderStrong,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-            ),
-            Text(
-              product.name,
-              style: TextStyle(
-                fontFamily: 'PlayfairDisplay',
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                color: colors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '${product.subcategory} · ${product.region}',
-              style: TextStyle(color: colors.textSecondary, fontSize: 13),
-            ),
-            if (product.abv != null) ...[
-              const SizedBox(height: 2),
               Text(
-                '${product.abv}% ABV',
-                style: TextStyle(color: colors.textTertiary, fontSize: 12),
-              ),
-            ],
-            const SizedBox(height: 16),
-            Text(
-              product.tastingNotes,
-              style: TextStyle(
-                fontFamily: 'OpenSans',
-                fontSize: 14,
-                fontStyle: FontStyle.italic,
-                color: colors.textSecondary,
-                height: 1.5,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 6, runSpacing: 6,
-              children: product.aromas.take(6).map((aroma) => Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: colors.borderDefault),
+                product.name,
+                style: TextStyle(
+                  fontFamily: 'PlayfairDisplay',
+                  fontSize: 28,
+                  fontWeight: FontWeight.w800,
+                  color: colors.textPrimary,
+                  height: 1.05,
+                  letterSpacing: -0.5,
                 ),
-                child: Text(aroma, style: TextStyle(color: colors.textSecondary, fontSize: 11)),
-              )).toList(),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      BroCardSheet.show(
-                        context,
-                        productName: product.name,
-                        category: product.category.group,
-                        region: product.region,
-                      );
-                    },
-                    icon: const Icon(Icons.book, size: 16),
-                    label: Text(l10n.addToJournal),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      context.go('/pair');
-                    },
-                    icon: const Icon(Icons.restaurant_menu, size: 16),
-                    label: Text(l10n.findPairingsButton),
-                  ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                '${product.subcategory} · ${product.region}',
+                style: TextStyle(
+                    color: colors.textSecondary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600),
+              ),
+              if (product.abv != null) ...[
+                const SizedBox(height: 4),
+                Text(
+                  '${product.abv}% ABV  ·  ₹${product.price.toStringAsFixed(0)}',
+                  style: TextStyle(color: colors.textTertiary, fontSize: 13),
                 ),
               ],
-            ),
-            const SizedBox(height: 16),
-          ],
+              const SizedBox(height: 20),
+              Text(
+                product.tastingNotes,
+                style: context.serifQuote.copyWith(
+                  color: colors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: product.aromas
+                    .take(8)
+                    .map((aroma) => Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(999),
+                            border:
+                                Border.all(color: colors.borderDefault),
+                            color: colors.surface1,
+                          ),
+                          child: Text(aroma,
+                              style: TextStyle(
+                                color: colors.textSecondary,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              )),
+                        ))
+                    .toList(),
+              ),
+              const SizedBox(height: 28),
+              // Bro Circle social proof one-liner
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                decoration: BoxDecoration(
+                  color: colors.surface1,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border(
+                    left: BorderSide(color: colors.salem, width: 3),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.people_outline,
+                        size: 18, color: colors.salem),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        '82% of bros pair this with Indian food',
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: colors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        BroCardSheet.show(
+                          context,
+                          productName: product.name,
+                          category: product.category.group,
+                          region: product.region,
+                        );
+                      },
+                      icon: const Icon(Icons.book_outlined, size: 18),
+                      label: const Text('Add to journal'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        context.go('/pair');
+                      },
+                      icon: const Icon(Icons.restaurant_menu_outlined,
+                          size: 18),
+                      label: const Text('Pair'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _BrosPickCard extends StatelessWidget {
-  const _BrosPickCard({required this.product});
+// ============================================================
+// Tonight's Pour card
+// ============================================================
+
+class _TonightsPourCard extends StatelessWidget {
+  const _TonightsPourCard({required this.product, required this.onTap});
   final Product product;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final l10n = context.l10n;
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+    return HeroPhotoCard(
+      imageUrl: product.imageUrl,
+      onTap: onTap,
+      gradientColors: [
+        colors.paprikaDeep,
+        colors.paprikaDark,
+        colors.thunder,
+      ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: colors.goldWarm,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.emoji_events_outlined,
+                    size: 14, color: colors.thunder),
+                const SizedBox(width: 6),
+                Text(
+                  'TONIGHT\'S POUR',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w800,
+                    color: colors.thunder,
+                    fontSize: 11,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            product.name,
+            style: TextStyle(
+              fontFamily: 'PlayfairDisplay',
+              fontSize: 28,
+              fontWeight: FontWeight.w900,
+              color: colors.inkOnHero,
+              letterSpacing: -0.5,
+              height: 1.05,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 6),
+          Text(
+            '${product.subcategory} · ${product.region}',
+            style: TextStyle(
+              color: colors.inkOnHero.withValues(alpha: 0.78),
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 14),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: colors.inkOnHero.withValues(alpha: 0.18),
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(
+                  color: colors.inkOnHero.withValues(alpha: 0.3)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Why this tonight',
+                  style: TextStyle(
+                    color: colors.inkOnHero,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(Icons.arrow_forward_ios,
+                    size: 12, color: colors.inkOnHero),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+// Continue your story card
+// ============================================================
+
+class _ContinueStoryCard extends StatelessWidget {
+  const _ContinueStoryCard({
+    required this.lastTasted,
+    required this.lastDate,
+    required this.next,
+    required this.onTap,
+  });
+
+  final String lastTasted;
+  final DateTime lastDate;
+  final Product next;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final ago = _ago(lastDate);
+
+    return GestureDetector(
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [colors.thunder, colors.paprikaDark],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: colors.surface1,
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: colors.borderSubtle),
+          boxShadow: AppElevation.e1(dark: isDark),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'CONTINUE YOUR STORY',
+              style: context.eyebrow.copyWith(color: colors.gold),
+            ),
+            const SizedBox(height: 12),
+            Text.rich(
+              TextSpan(
+                style: TextStyle(
+                  fontFamily: 'PlayfairDisplay',
+                  fontSize: 18,
+                  color: colors.textSecondary,
+                  height: 1.4,
+                ),
+                children: [
+                  const TextSpan(text: 'You logged '),
+                  TextSpan(
+                    text: lastTasted,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  TextSpan(text: ' $ago. Try this next →'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: colors.paprika,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(Icons.wine_bar,
+                      color: colors.inkOnHero, size: 24),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        next.name,
+                        style: TextStyle(
+                          fontFamily: 'PlayfairDisplay',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: colors.textPrimary,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '${next.subcategory} · ${next.region}',
+                        style: TextStyle(
+                          color: colors.textTertiary,
+                          fontSize: 12,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: colors.salem.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    '78% match',
+                    style: TextStyle(
+                      color: colors.salem,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _ago(DateTime d) {
+    final diff = DateTime.now().difference(d);
+    if (diff.inDays >= 7) return '${diff.inDays ~/ 7} weeks ago';
+    if (diff.inDays >= 1) return '${diff.inDays} days ago';
+    if (diff.inHours >= 1) return '${diff.inHours} hours ago';
+    return 'just now';
+  }
+}
+
+// ============================================================
+// Bro Circle card
+// ============================================================
+
+class _BroCircleCard extends StatelessWidget {
+  const _BroCircleCard({required this.signal, required this.onTap});
+  final BroCircleSignal signal;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 260,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: colors.surface1,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: colors.borderSubtle),
+          boxShadow: AppElevation.e1(dark: isDark),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: colors.gold.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(AppIcons.brosPick, size: 12, color: colors.gold),
-                      const SizedBox(width: 4),
-                      Text(l10n.brosPick,
+                Icon(Icons.people_outline,
+                    size: 16, color: colors.salem),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    signal.headline,
                     style: TextStyle(
-                      color: colors.gold,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1,
-                    )),
-                    ],
+                      fontFamily: 'Montserrat',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: colors.salem,
+                      letterSpacing: 0.3,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
+            Expanded(
+              child: Text(
+                signal.subline,
+                style: TextStyle(
+                  fontFamily: 'PlayfairDisplay',
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  color: colors.textPrimary,
+                  height: 1.2,
+                ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Icon(Icons.arrow_forward,
+                    size: 16, color: colors.textTertiary),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// Bro Tip — full-bleed paprika card with serif quote
+// ============================================================
+
+class _BroTipCard extends StatelessWidget {
+  const _BroTipCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.paprika, colors.paprikaDeep],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: AppElevation.e2(dark: isDark),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.lightbulb_outline,
+                    size: 16, color: colors.goldWarm),
+                const SizedBox(width: 8),
+                Text(
+                  'BRO TIP OF THE DAY',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    color: colors.goldWarm,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
             Text(
-              product.name,
-              style: const TextStyle(
+              '"When pairing with spicy Indian food, reach for an off-dry Riesling or fruity Rosé. The residual sugar tames the heat while the acidity keeps your palate refreshed."',
+              style: TextStyle(
                 fontFamily: 'PlayfairDisplay',
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '${product.subcategory} · ${product.region}',
-              style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.7),
-                fontSize: 13,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              product.tastingNotes,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: 'OpenSans',
-                fontSize: 12,
                 fontStyle: FontStyle.italic,
-                color: Colors.white.withValues(alpha: 0.5),
+                fontSize: 18,
+                height: 1.4,
+                color: colors.inkOnHero,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            const SizedBox(height: 14),
+            Text(
+              '— High-tannin reds amplify the burn. Avoid them.',
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: colors.inkOnHero.withValues(alpha: 0.7),
+                letterSpacing: 0.3,
               ),
             ),
           ],
@@ -397,17 +811,31 @@ class _BrosPickCard extends StatelessWidget {
   }
 }
 
-class _QuickAction extends StatelessWidget {
-  const _QuickAction({
-    required this.icon,
-    required this.label,
-    required this.color,
-    required this.onTap,
-  });
+// ============================================================
+// Skeleton + avatar helpers
+// ============================================================
 
-  final IconData icon;
-  final String label;
-  final Color color;
+class _HeroSkeleton extends StatelessWidget {
+  const _HeroSkeleton({required this.colors});
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 16 / 11,
+      child: Container(
+        decoration: BoxDecoration(
+          color: colors.surface2,
+          borderRadius: BorderRadius.circular(24),
+        ),
+      ),
+    );
+  }
+}
+
+class _AvatarButton extends StatelessWidget {
+  const _AvatarButton({required this.initial, required this.onTap});
+  final String initial;
   final VoidCallback onTap;
 
   @override
@@ -416,50 +844,30 @@ class _QuickAction extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        width: 80,
-        margin: const EdgeInsets.symmetric(horizontal: 4),
+      child: AnimatedContainer(
+        duration: AppMotion.fast,
+        width: 36,
+        height: 36,
         decoration: BoxDecoration(
-          color: colors.surface1,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: colors.borderSubtle),
+          shape: BoxShape.circle,
+          gradient: LinearGradient(
+            colors: [colors.paprika, colors.paprikaLight],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 6),
-            Text(
-              label,
-              style: TextStyle(
-                color: colors.textSecondary,
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-              ),
+        child: Center(
+          child: Text(
+            initial.toUpperCase(),
+            style: TextStyle(
+              fontFamily: 'PlayfairDisplay',
+              fontWeight: FontWeight.w900,
+              color: colors.inkOnHero,
+              fontSize: 16,
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
-
-class _PlaceholderCard extends StatelessWidget {
-  const _PlaceholderCard();
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Container(
-        height: 120,
-        decoration: BoxDecoration(
-          color: colors.surface1,
-          borderRadius: BorderRadius.circular(14),
-        ),
-      ),
-    );
-  }
-}
-
