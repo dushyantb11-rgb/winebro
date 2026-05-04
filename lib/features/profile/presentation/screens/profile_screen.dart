@@ -2,9 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
-import 'package:winebro/core/providers/locale_provider.dart';
-import 'package:winebro/core/providers/theme_provider.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_icons.dart';
 import 'package:winebro/features/auth/domain/auth_state.dart';
@@ -51,39 +50,9 @@ class ProfileScreen extends ConsumerWidget {
         title: Text(l10n.profileTitle),
         actions: [
           IconButton(
-            icon: Icon(
-              ref.watch(themeProvider) == ThemeMode.dark
-                  ? Icons.light_mode
-                  : Icons.dark_mode,
-              color: colors.textSecondary,
-            ),
-            onPressed: () => ref.read(themeProvider.notifier).toggle(),
-          ),
-          PopupMenuButton<Locale>(
-            icon: Icon(Icons.language, color: colors.textSecondary),
-            onSelected: (locale) =>
-                ref.read(localeProvider.notifier).setLocale(locale),
-            itemBuilder: (_) => kSupportedLocales.map((locale) {
-              final name = kLocaleNames[locale.languageCode] ?? locale.languageCode;
-              final current = ref.read(localeProvider);
-              return PopupMenuItem(
-                value: locale,
-                child: Row(
-                  children: [
-                    Text(name),
-                    if (current?.languageCode == locale.languageCode) ...[
-                      const Spacer(),
-                      Icon(Icons.check, size: 18, color: colors.paprika),
-                    ],
-                  ],
-                ),
-              );
-            }).toList(),
-          ),
-          IconButton(
-            icon: Icon(Icons.logout, color: colors.textSecondary),
-            onPressed: () =>
-                ref.read(authStateProvider.notifier).signOut(),
+            icon: Icon(Icons.settings_outlined, color: colors.textSecondary),
+            tooltip: 'Settings',
+            onPressed: () => context.push('/settings'),
           ),
         ],
       ),

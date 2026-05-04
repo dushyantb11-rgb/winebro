@@ -8,13 +8,13 @@ import 'package:winebro/features/auth/presentation/screens/name_screen.dart';
 import 'package:winebro/features/auth/presentation/screens/otp_screen.dart';
 import 'package:winebro/features/auth/presentation/screens/splash_screen.dart';
 import 'package:winebro/features/aroma_wheel/presentation/screens/aroma_wheel_screen.dart';
-import 'package:winebro/features/community/presentation/screens/community_screen.dart';
 import 'package:winebro/features/home/presentation/screens/home_screen.dart';
 import 'package:winebro/features/journal/presentation/screens/journal_screen.dart';
 import 'package:winebro/features/onboarding/presentation/screens/quiz_screen.dart';
 import 'package:winebro/features/pairing/presentation/screens/pair_screen.dart';
 import 'package:winebro/features/profile/presentation/screens/profile_screen.dart';
 import 'package:winebro/features/scanner/presentation/screens/scanner_screen.dart';
+import 'package:winebro/features/settings/presentation/screens/settings_screen.dart';
 import 'package:winebro/shared/widgets/shell_scaffold.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -45,46 +45,32 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       return switch (authState) {
         Unauthenticated() =>
           path.startsWith('/login') ? null : '/login',
-        OtpSent() =>
-          path == '/otp' ? null : '/otp',
-        NeedsProfile() =>
-          path == '/name' ? null : '/name',
-        NeedsOnboarding() =>
-          path == '/quiz' ? null : '/quiz',
+        OtpSent() => path == '/otp' ? null : '/otp',
+        NeedsProfile() => path == '/name' ? null : '/name',
+        NeedsOnboarding() => path == '/quiz' ? null : '/quiz',
         AuthLoading() => null,
         AuthError() =>
           path.startsWith('/login') ? null : '/login',
-        Authenticated() =>
-          path.startsWith('/login') ||
-                  path == '/otp' ||
-                  path == '/name' ||
-                  path == '/quiz' ||
-                  path == '/splash'
-              ? '/'
-              : null,
+        Authenticated() => path.startsWith('/login') ||
+                path == '/otp' ||
+                path == '/name' ||
+                path == '/quiz' ||
+                path == '/splash'
+            ? '/'
+            : null,
       };
     },
     routes: [
-      GoRoute(
-        path: '/splash',
-        builder: (_, __) => const SplashScreen(),
-      ),
-      GoRoute(
-        path: '/login',
-        builder: (_, __) => const LoginScreen(),
-      ),
-      GoRoute(
-        path: '/otp',
-        builder: (_, __) => const OtpScreen(),
-      ),
-      GoRoute(
-        path: '/name',
-        builder: (_, __) => const NameScreen(),
-      ),
-      GoRoute(
-        path: '/quiz',
-        builder: (_, __) => const QuizScreen(),
-      ),
+      GoRoute(path: '/splash', builder: (_, __) => const SplashScreen()),
+      GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
+      GoRoute(path: '/otp', builder: (_, __) => const OtpScreen()),
+      GoRoute(path: '/name', builder: (_, __) => const NameScreen()),
+      GoRoute(path: '/quiz', builder: (_, __) => const QuizScreen()),
+
+      // 4-tab shell. Scan and Settings are full-screen push routes,
+      // not branches. Community removed in the 2026 redesign — its
+      // function moves to surfaces inside Home (Bro Circle) and the
+      // product detail sheet ("82% of bros pair this with...").
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => ShellScaffold(shell: shell),
         branches: [
@@ -95,25 +81,40 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             GoRoute(path: '/pair', builder: (_, __) => const PairScreen()),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/scan', builder: (_, __) => const ScannerScreen()),
+            GoRoute(
+              path: '/journal',
+              builder: (_, __) => const JournalScreen(),
+            ),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/journal', builder: (_, __) => const JournalScreen()),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/community', builder: (_, __) => const CommunityScreen()),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/profile', builder: (_, __) => const ProfileScreen()),
+            GoRoute(
+              path: '/profile',
+              builder: (_, __) => const ProfileScreen(),
+            ),
           ]),
         ],
+      ),
+
+      // Full-screen push routes (above the bottom nav)
+      GoRoute(
+        path: '/scan',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (_, __) => const ScannerScreen(),
       ),
       GoRoute(
         path: '/aroma',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (_, __) => const AromaWheelScreen(),
       ),
+      GoRoute(
+        path: '/settings',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (_, __) => const SettingsScreen(),
+      ),
+
+      // Legacy /community route — redirect to home so any cached deep
+      // links degrade gracefully.
+      GoRoute(path: '/community', redirect: (_, __) => '/'),
     ],
   );
 });
-

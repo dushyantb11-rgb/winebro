@@ -32,25 +32,12 @@ class HomeScreen extends ConsumerWidget {
           SliverAppBar(
             floating: true,
             backgroundColor: colors.charcoal,
-            title: RichText(
-              text: TextSpan(
-                style: const TextStyle(
-                  fontFamily: 'PlayfairDisplay',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                ),
-                children: [
-                  TextSpan(
-                    text: 'Wine',
-                    style: TextStyle(color: colors.textPrimary),
-                  ),
-                  TextSpan(
-                    text: 'Bro',
-                    style: TextStyle(color: colors.salemLight),
-                  ),
-                ],
-              ),
+            title: Image.asset(
+              'assets/images/logo.png',
+              height: 32,
+              fit: BoxFit.contain,
             ),
+            centerTitle: true,
           ),
 
           SliverToBoxAdapter(
