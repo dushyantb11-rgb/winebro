@@ -80,6 +80,8 @@ flutter:
     - assets/images/drinks/
     - assets/images/food/
     - assets/svg/
+    - assets/products/
+    - assets/dishes/
 
   fonts:
     - family: PlayfairDisplay
