@@ -10,6 +10,7 @@ import 'package:winebro/features/auth/presentation/screens/splash_screen.dart';
 import 'package:winebro/features/aroma_wheel/presentation/screens/aroma_wheel_screen.dart';
 import 'package:winebro/features/home/presentation/screens/home_screen.dart';
 import 'package:winebro/features/journal/presentation/screens/journal_screen.dart';
+import 'package:winebro/features/onboarding/presentation/screens/onboarding_intro_screen.dart';
 import 'package:winebro/features/onboarding/presentation/screens/quiz_screen.dart';
 import 'package:winebro/features/pairing/presentation/screens/pair_screen.dart';
 import 'package:winebro/features/profile/presentation/screens/profile_screen.dart';
@@ -47,7 +48,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           path.startsWith('/login') ? null : '/login',
         OtpSent() => path == '/otp' ? null : '/otp',
         NeedsProfile() => path == '/name' ? null : '/name',
-        NeedsOnboarding() => path == '/quiz' ? null : '/quiz',
+        NeedsOnboarding() => path == '/quiz' || path == '/onboarding-intro'
+            ? null
+            : '/onboarding-intro',
         AuthLoading() => null,
         AuthError() =>
           path.startsWith('/login') ? null : '/login',
@@ -55,6 +58,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path == '/otp' ||
                 path == '/name' ||
                 path == '/quiz' ||
+                path == '/onboarding-intro' ||
                 path == '/splash'
             ? '/'
             : null,
@@ -65,6 +69,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
       GoRoute(path: '/otp', builder: (_, __) => const OtpScreen()),
       GoRoute(path: '/name', builder: (_, __) => const NameScreen()),
+      GoRoute(
+        path: '/onboarding-intro',
+        builder: (_, __) => const OnboardingIntroScreen(),
+      ),
       GoRoute(path: '/quiz', builder: (_, __) => const QuizScreen()),
 
       // 4-tab shell. Scan and Settings are full-screen push routes,
