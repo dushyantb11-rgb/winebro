@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
 import 'package:winebro/core/services/firebase_providers.dart';
