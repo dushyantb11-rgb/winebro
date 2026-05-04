@@ -1,18 +1,29 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:winebro/core/l10n/l10n_extension.dart';
+import 'package:string_similarity/string_similarity.dart';
 import 'package:winebro/core/theme/app_colors.dart';
+import 'package:winebro/core/theme/app_motion.dart';
+import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/features/journal/presentation/screens/journal_screen.dart';
 import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
-import 'package:winebro/shared/widgets/product_card.dart';
-import 'package:string_similarity/string_similarity.dart';
 
+/// Redesigned 2026 Scan modal.
+///
+/// Full-bleed black canvas with gold corner brackets framing a 9:14
+/// finder. The bottom sheet "magnetises" upward as detection progresses:
+///   collapsed   "Tap finder to scan a label"
+///   scanning    Indeterminate sweep + "Looking…"
+///   matched     Bottle name + match% + actions (sheet at 60% height)
+///
+/// Top bar has only an X close + a flashlight placeholder. No tabs,
+/// no bottom nav (it's a push route above the shell).
 class ScannerScreen extends ConsumerStatefulWidget {
   const ScannerScreen({super.key});
 
@@ -20,28 +31,42 @@ class ScannerScreen extends ConsumerStatefulWidget {
   ConsumerState<ScannerScreen> createState() => _ScannerScreenState();
 }
 
-class _ScannerScreenState extends ConsumerState<ScannerScreen> {
-  final _searchController = TextEditingController();
+enum _ScanPhase { idle, scanning, matched, noMatch, error }
+
+class _ScannerScreenState extends ConsumerState<ScannerScreen>
+    with SingleTickerProviderStateMixin {
   final _imagePicker = ImagePicker();
   final _textRecognizer = TextRecognizer();
+  late final AnimationController _sweepController;
 
-  bool _isScanning = false;
-  Product? _matchedProduct;
-  List<Product> _searchResults = [];
-  String? _scanError;
+  _ScanPhase _phase = _ScanPhase.idle;
+  Product? _matched;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _sweepController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1800),
+    );
+  }
 
   @override
   void dispose() {
-    _searchController.dispose();
+    _sweepController.dispose();
     _textRecognizer.close();
     super.dispose();
   }
 
-  Future<void> _scanLabel() async {
+  Future<void> _scan() async {
+    HapticFeedback.lightImpact();
     setState(() {
-      _isScanning = true;
-      _scanError = null;
+      _phase = _ScanPhase.scanning;
+      _errorMessage = null;
+      _matched = null;
     });
+    _sweepController.repeat();
 
     try {
       final image = await _imagePicker.pickImage(
@@ -51,365 +76,141 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
       );
 
       if (image == null) {
-
-        setState(() => _isScanning = false);
+        _sweepController.stop();
+        setState(() => _phase = _ScanPhase.idle);
         return;
       }
 
       final inputImage = InputImage.fromFilePath(image.path);
       final recognized = await _textRecognizer.processImage(inputImage);
-
       try {
         await File(image.path).delete();
       } on FileSystemException {
-
+        // ignore
       }
+
+      _sweepController.stop();
 
       if (recognized.text.isEmpty) {
         setState(() {
-          _isScanning = false;
-          _scanError = 'noTextFound';
+          _phase = _ScanPhase.noMatch;
+          _errorMessage = 'No text detected on the label.';
         });
         return;
       }
 
       final allText = recognized.blocks.map((b) => b.text).join(' ');
-      final match = _matchProductFromText(allText);
+      final match = _matchProduct(allText);
 
-      setState(() {
-        _isScanning = false;
-        if (match != null) {
-          _matchedProduct = match;
-          _searchResults = [];
-          _searchController.clear();
-        } else {
-
-          final longestBlock = recognized.blocks
-              .reduce((a, b) => a.text.length > b.text.length ? a : b);
-          _searchController.text = longestBlock.text;
-          _search(longestBlock.text);
-        }
-      });
+      if (match != null) {
+        HapticFeedback.heavyImpact();
+        setState(() {
+          _phase = _ScanPhase.matched;
+          _matched = match;
+        });
+      } else {
+        setState(() {
+          _phase = _ScanPhase.noMatch;
+          _errorMessage = 'No matching bottle in our catalogue yet.';
+        });
+      }
     } on Exception catch (e) {
+      _sweepController.stop();
       setState(() {
-        _isScanning = false;
-        _scanError = e.toString();
+        _phase = _ScanPhase.error;
+        _errorMessage = e.toString();
       });
     }
   }
 
-  Product? _matchProductFromText(String ocrText) {
+  Product? _matchProduct(String ocrText) {
     final normalized = ocrText.toLowerCase();
+    Product? best;
+    var bestScore = 0.0;
 
-    Product? bestMatch;
-    double bestScore = 0;
-
-    for (final product in kSeedProducts) {
-
-      final nameScore = StringSimilarity.compareTwoStrings(
-        product.name.toLowerCase(),
-        normalized,
-      );
-
+    for (final p in kSeedProducts) {
+      final nameScore =
+          StringSimilarity.compareTwoStrings(p.name.toLowerCase(), normalized);
       final containsName =
-          normalized.contains(product.name.toLowerCase()) ? 0.8 : 0.0;
-
-      final subScore = StringSimilarity.compareTwoStrings(
-        product.subcategory.toLowerCase(),
-        normalized,
-      );
-
-      final regionScore = StringSimilarity.compareTwoStrings(
-        product.region.toLowerCase(),
-        normalized,
-      );
-
-      final score = [nameScore, containsName, subScore * 0.5, regionScore * 0.3]
-          .reduce((a, b) => a > b ? a : b);
-
+          normalized.contains(p.name.toLowerCase()) ? 0.8 : 0.0;
+      final score = nameScore > containsName ? nameScore : containsName;
       if (score > bestScore) {
         bestScore = score;
-        bestMatch = product;
+        best = p;
       }
     }
-
-    return bestScore >= 0.25 ? bestMatch : null;
-  }
-
-  void _search(String query) {
-    if (query.trim().length < 2) {
-      setState(() => _searchResults = []);
-      return;
-    }
-
-    final results = kSeedProducts.map((product) {
-      final nameSimilarity = StringSimilarity.compareTwoStrings(
-        query.toLowerCase(),
-        product.name.toLowerCase(),
-      );
-      final subSimilarity = StringSimilarity.compareTwoStrings(
-        query.toLowerCase(),
-        product.subcategory.toLowerCase(),
-      );
-      final regionSimilarity = StringSimilarity.compareTwoStrings(
-        query.toLowerCase(),
-        product.region.toLowerCase(),
-      );
-      final score = [nameSimilarity, subSimilarity, regionSimilarity]
-          .reduce((a, b) => a > b ? a : b);
-      return (product: product, score: score);
-    }).toList()
-      ..sort((a, b) => b.score.compareTo(a.score));
-
-    setState(() {
-      _searchResults = results
-          .where((r) => r.score > 0.15)
-          .take(5)
-          .map((r) => r.product)
-          .toList();
-    });
+    return bestScore >= 0.25 ? best : null;
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final l10n = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.scanTitle)),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-
-            GestureDetector(
-              onTap: _isScanning ? null : _scanLabel,
-              child: Container(
-                height: 280,
-                decoration: BoxDecoration(
-                  color: colors.surface1,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: colors.borderDefault),
-                ),
-                child: _isScanning
-                    ? Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Icon(
-                            Icons.qr_code_scanner,
-                            size: 80,
-                            color: colors.paprika.withValues(alpha: 0.3),
-                          ),
-                          CircularProgressIndicator(color: colors.paprika),
-                        ],
-                      )
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.camera_alt_outlined,
-                            size: 48,
-                            color: colors.textTertiary,
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            l10n.tapToScan,
-                            style: TextStyle(
-                              color: colors.textSecondary,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            l10n.pointCamera,
-                            style: TextStyle(
-                              color: colors.textTertiary,
-                              fontSize: 12,
-                            ),
-                          ),
-                          if (_scanError == 'noTextFound') ...[
-                            const SizedBox(height: 12),
-                            Text(
-                              l10n.noTextDetected,
-                              style: TextStyle(
-                                color: colors.error,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                          if (_scanError != null && _scanError != 'noTextFound') ...[
-                            const SizedBox(height: 12),
-                            Text(
-                              _scanError!,
-                              style: TextStyle(color: colors.error, fontSize: 12),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ],
-                      ),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            Text(
-              l10n.orSearchByName,
-              style: TextStyle(
-                color: colors.textSecondary,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _searchController,
-              style: TextStyle(color: colors.textPrimary),
-              decoration: InputDecoration(
-                hintText: l10n.searchPlaceholder,
-                prefixIcon: Icon(Icons.search, color: colors.textTertiary),
-              ),
-              onChanged: _search,
-            ),
-            const SizedBox(height: 16),
-
-            ..._searchResults.map((product) => Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: ProductCard(
-                    product: product,
-                    onTap: () => setState(() {
-                      _matchedProduct = product;
-                      _searchResults = [];
-                      _searchController.clear();
-                    }),
-                  ),
-                )),
-
-            if (_matchedProduct != null) ...[
-              const SizedBox(height: 16),
-              _ScanResultCard(product: _matchedProduct!),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ScanResultCard extends StatelessWidget {
-  const _ScanResultCard({required this.product});
-  final Product product;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final l10n = context.l10n;
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: colors.surface1,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colors.salemLight, width: 2),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: const Color(0xFF050505),
+      body: Stack(
         children: [
-          Row(
-            children: [
-              Icon(Icons.check_circle, color: colors.salemLight, size: 20),
-              const SizedBox(width: 8),
-              Text(
-                l10n.productFound,
-                style: TextStyle(
-                  color: colors.salemLight,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            product.name,
-            style: TextStyle(
-              fontFamily: 'PlayfairDisplay',
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: colors.textPrimary,
+          // ====== Camera canvas ======
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: _phase == _ScanPhase.scanning ? null : _scan,
+              child: const _CameraCanvas(),
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            '${product.subcategory} · ${product.region}',
-            style: TextStyle(color: colors.textSecondary, fontSize: 13),
-          ),
-          if (product.abv != null) ...[
-            const SizedBox(height: 2),
-            Text(
-              '${product.abv}% ABV',
-              style: TextStyle(color: colors.textTertiary, fontSize: 12),
-            ),
-          ],
-          const SizedBox(height: 12),
-          Text(
-            product.tastingNotes,
-            style: TextStyle(
-              fontFamily: 'OpenSans',
-              fontSize: 13,
-              fontStyle: FontStyle.italic,
-              color: colors.textSecondary,
-              height: 1.4,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: product.aromas.take(6).map((aroma) {
-              return Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: colors.borderDefault),
-                ),
-                child: Text(
-                  aroma,
-                  style: TextStyle(
-                    color: colors.textSecondary,
-                    fontSize: 11,
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () => BroCardSheet.show(
-                    context,
-                    productName: product.name,
-                    category: product.category.group,
-                    region: product.region,
-                  ),
-                  icon: const Icon(Icons.book, size: 16),
-                  label: Text(l10n.addToJournal),
+
+          // ====== Gold finder brackets ======
+          const Positioned.fill(child: _GoldFinder()),
+
+          // ====== Animated sweep ======
+          if (_phase == _ScanPhase.scanning)
+            Positioned.fill(child: _SweepLine(controller: _sweepController)),
+
+          // ====== Top bar ======
+          Positioned(
+            top: 0, left: 0, right: 0,
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.flash_off, color: Colors.white70, size: 24),
+                      tooltip: 'Flashlight (coming soon)',
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Flashlight in v1.1, Bro.')),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () => context.go('/pair'),
-                  icon: const Icon(Icons.restaurant_menu, size: 16),
-                  label: Text(l10n.findPairingsButton),
-                ),
+            ),
+          ),
+
+          // ====== Magnetic bottom sheet ======
+          Positioned(
+            left: 0, right: 0, bottom: 0,
+            child: AnimatedSwitcher(
+              duration: AppMotion.gentle,
+              switchInCurve: AppMotion.spring,
+              switchOutCurve: AppMotion.exit,
+              child: _MagneticSheet(
+                key: ValueKey(_phase),
+                phase: _phase,
+                matched: _matched,
+                errorMessage: _errorMessage,
+                onScan: _scan,
+                onRetry: _scan,
+                colors: colors,
               ),
-            ],
+            ),
           ),
         ],
       ),
@@ -417,3 +218,439 @@ class _ScanResultCard extends StatelessWidget {
   }
 }
 
+// ============================================================
+// Visual primitives
+// ============================================================
+
+class _CameraCanvas extends StatelessWidget {
+  const _CameraCanvas();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: RadialGradient(
+          center: Alignment.center,
+          radius: 1.4,
+          colors: [Color(0xFF1A0408), Color(0xFF050505)],
+        ),
+      ),
+      child: const Center(
+        child: Icon(
+          Icons.center_focus_weak,
+          color: Color(0xFF1F1A1B),
+          size: 220,
+        ),
+      ),
+    );
+  }
+}
+
+class _GoldFinder extends StatelessWidget {
+  const _GoldFinder();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Center(
+      child: SizedBox(
+        width: 280,
+        height: 380,
+        child: CustomPaint(
+          painter: _CornerBracketPainter(color: colors.goldWarm),
+        ),
+      ),
+    );
+  }
+}
+
+class _CornerBracketPainter extends CustomPainter {
+  _CornerBracketPainter({required this.color});
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 4
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+    const len = 36.0;
+
+    // Top-left
+    canvas.drawLine(const Offset(0, 0), const Offset(len, 0), paint);
+    canvas.drawLine(const Offset(0, 0), const Offset(0, len), paint);
+    // Top-right
+    canvas.drawLine(Offset(size.width - len, 0), Offset(size.width, 0), paint);
+    canvas.drawLine(Offset(size.width, 0), Offset(size.width, len), paint);
+    // Bottom-left
+    canvas.drawLine(Offset(0, size.height - len), Offset(0, size.height), paint);
+    canvas.drawLine(Offset(0, size.height), Offset(len, size.height), paint);
+    // Bottom-right
+    canvas.drawLine(Offset(size.width, size.height - len),
+        Offset(size.width, size.height), paint);
+    canvas.drawLine(Offset(size.width - len, size.height),
+        Offset(size.width, size.height), paint);
+  }
+
+  @override
+  bool shouldRepaint(_) => false;
+}
+
+class _SweepLine extends StatelessWidget {
+  const _SweepLine({required this.controller});
+  final AnimationController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Center(
+      child: SizedBox(
+        width: 280,
+        height: 380,
+        child: AnimatedBuilder(
+          animation: controller,
+          builder: (_, __) {
+            final t = controller.value;
+            return CustomPaint(
+              painter: _SweepPainter(progress: t, color: colors.goldWarm),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _SweepPainter extends CustomPainter {
+  _SweepPainter({required this.progress, required this.color});
+  final double progress;
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final y = size.height * progress;
+    final paint = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+        colors: [Colors.transparent, color, Colors.transparent],
+      ).createShader(Rect.fromLTWH(0, y - 10, size.width, 20))
+      ..strokeWidth = 2;
+    canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+  }
+
+  @override
+  bool shouldRepaint(_SweepPainter old) => old.progress != progress;
+}
+
+// ============================================================
+// Magnetic bottom sheet (changes by phase)
+// ============================================================
+
+class _MagneticSheet extends StatelessWidget {
+  const _MagneticSheet({
+    super.key,
+    required this.phase,
+    required this.matched,
+    required this.errorMessage,
+    required this.onScan,
+    required this.onRetry,
+    required this.colors,
+  });
+
+  final _ScanPhase phase;
+  final Product? matched;
+  final String? errorMessage;
+  final VoidCallback onScan;
+  final VoidCallback onRetry;
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    final shape = BorderRadius.vertical(top: Radius.circular(28));
+
+    Widget child;
+    switch (phase) {
+      case _ScanPhase.idle:
+      case _ScanPhase.error:
+      case _ScanPhase.noMatch:
+        child = _IdleOrErrorSheet(
+          phase: phase,
+          message: errorMessage,
+          onScan: onScan,
+          colors: colors,
+        );
+      case _ScanPhase.scanning:
+        child = _ScanningSheet(colors: colors);
+      case _ScanPhase.matched:
+        child = _MatchedSheet(product: matched!, colors: colors);
+    }
+
+    return ClipRRect(
+      borderRadius: shape,
+      child: BackdropContainer(child: child),
+    );
+  }
+}
+
+class BackdropContainer extends StatelessWidget {
+  const BackdropContainer({required this.child, super.key});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.charcoal,
+        borderRadius:
+            const BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+      child: SafeArea(
+        top: false,
+        child: child,
+      ),
+    );
+  }
+}
+
+class _DragHandle extends StatelessWidget {
+  const _DragHandle({required this.colors});
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 40,
+        height: 4,
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: colors.borderStrong,
+          borderRadius: BorderRadius.circular(2),
+        ),
+      ),
+    );
+  }
+}
+
+class _IdleOrErrorSheet extends StatelessWidget {
+  const _IdleOrErrorSheet({
+    required this.phase,
+    required this.message,
+    required this.onScan,
+    required this.colors,
+  });
+
+  final _ScanPhase phase;
+  final String? message;
+  final VoidCallback onScan;
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    final isError = phase == _ScanPhase.error || phase == _ScanPhase.noMatch;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _DragHandle(colors: colors),
+        if (isError && message != null) ...[
+          Row(
+            children: [
+              Icon(Icons.info_outline, color: colors.warning, size: 18),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  message!,
+                  style: TextStyle(
+                    fontFamily: 'PlayfairDisplay',
+                    fontStyle: FontStyle.italic,
+                    fontSize: 16,
+                    color: colors.textSecondary,
+                    height: 1.3,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+        ] else ...[
+          Text(
+            'Tap the finder to scan',
+            style: TextStyle(
+              fontFamily: 'PlayfairDisplay',
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              color: colors.textPrimary,
+              letterSpacing: -0.5,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'Point your camera at any wine or spirit label.',
+            style: context.serifQuote.copyWith(color: colors.textSecondary),
+          ),
+          const SizedBox(height: 18),
+        ],
+        ElevatedButton.icon(
+          onPressed: onScan,
+          icon: const Icon(Icons.camera_alt, size: 20),
+          label: Text(isError ? 'Try again' : 'Open camera'),
+        ),
+      ],
+    );
+  }
+}
+
+class _ScanningSheet extends StatelessWidget {
+  const _ScanningSheet({required this.colors});
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _DragHandle(colors: colors),
+        Row(
+          children: [
+            SizedBox(
+              width: 18,
+              height: 18,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+                color: colors.goldWarm,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'Looking…',
+              style: TextStyle(
+                fontFamily: 'PlayfairDisplay',
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                color: colors.textPrimary,
+                letterSpacing: -0.5,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Reading label, matching to catalogue.',
+          style: context.serifQuote.copyWith(color: colors.textSecondary),
+        ),
+      ],
+    );
+  }
+}
+
+class _MatchedSheet extends StatelessWidget {
+  const _MatchedSheet({required this.product, required this.colors});
+  final Product product;
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _DragHandle(colors: colors),
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: colors.salem.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.check_circle, size: 14, color: colors.salem),
+                  const SizedBox(width: 6),
+                  Text(
+                    'MATCHED',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                      color: colors.salem,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Text(
+          product.name,
+          style: TextStyle(
+            fontFamily: 'PlayfairDisplay',
+            fontSize: 24,
+            fontWeight: FontWeight.w900,
+            color: colors.textPrimary,
+            letterSpacing: -0.5,
+            height: 1.05,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          '${product.subcategory} · ${product.region}',
+          style: TextStyle(
+            fontFamily: 'Montserrat',
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: colors.textSecondary,
+          ),
+        ),
+        const SizedBox(height: 14),
+        Text(
+          product.tastingNotes,
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+          style: context.serifQuote.copyWith(color: colors.textSecondary),
+        ),
+        const SizedBox(height: 18),
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  BroCardSheet.show(
+                    context,
+                    productName: product.name,
+                    category: product.category.group,
+                    region: product.region,
+                  );
+                },
+                icon: const Icon(Icons.book_outlined, size: 18),
+                label: const Text('Add to journal'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  context.go('/pair');
+                },
+                icon: const Icon(Icons.restaurant_menu_outlined, size: 18),
+                label: const Text('Pair'),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
