@@ -1,12 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
-import 'package:winebro/core/theme/app_icons.dart';
+import 'package:winebro/core/theme/app_elevation.dart';
+import 'package:winebro/core/theme/app_motion.dart';
+import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/core/utils/formatters.dart';
 import 'package:winebro/features/journal/domain/journal_entry.dart';
+import 'package:winebro/shared/widgets/hero_photo_card.dart';
 import 'package:winebro/shared/widgets/segmented_chip_selector.dart';
 import 'package:winebro/shared/widgets/star_rating.dart';
 
@@ -27,112 +31,308 @@ final journalEntriesProvider =
           .toList());
 });
 
-class JournalScreen extends ConsumerWidget {
+/// Redesigned 2026 Journal.
+///
+/// Three blocks:
+///   1. Hero stat strip — N Tastings · N Wines · N Spirits with
+///      ticker count animation on first load
+///   2. Filter chips — All / Wine / Whisky / Gin / Rum / Beer
+///   3. BroCard timeline — full-width cards, score badge right,
+///      compact metadata, tap → detail (future v1.1)
+///
+/// Empty state: full-bleed cinematic gradient + "Start your tasting story"
+/// + dual CTA (Scan a bottle / Pick from popular wines). Beautiful, not
+/// apologetic.
+class JournalScreen extends ConsumerStatefulWidget {
   const JournalScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<JournalScreen> createState() => _JournalScreenState();
+}
+
+class _JournalScreenState extends ConsumerState<JournalScreen> {
+  String _filter = 'All';
+  static const _filterOptions = ['All', 'Wine', 'Spirits', 'Beer', 'Cocktails'];
+
+  @override
+  Widget build(BuildContext context) {
     final colors = context.appColors;
     final l10n = context.l10n;
     final entries = ref.watch(journalEntriesProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.journalTitle)),
-      body: entries.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(
-          child: Text(l10n.errorLoadingJournal, style: TextStyle(color: colors.error)),
-        ),
-        data: (items) {
-          if (items.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.book_outlined,
-                    size: 64,
-                    color: colors.textTertiary,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    l10n.journalEmpty,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: colors.textPrimary,
+      body: SafeArea(
+        child: entries.when(
+          loading: () => Center(child: CircularProgressIndicator(color: colors.paprika)),
+          error: (e, _) => Center(
+            child: Text(l10n.errorLoadingJournal, style: TextStyle(color: colors.error)),
+          ),
+          data: (items) {
+            if (items.isEmpty) return _EmptyState();
+
+            final filtered = _filter == 'All'
+                ? items
+                : items
+                    .where((e) =>
+                        e.category.toLowerCase().contains(_filter.toLowerCase()))
+                    .toList();
+
+            final stats = _Stats.from(items);
+
+            return CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                    child: Text(
+                      'Your Story',
+                      style: TextStyle(
+                        fontFamily: 'PlayfairDisplay',
+                        fontSize: 36,
+                        fontWeight: FontWeight.w900,
+                        color: colors.textPrimary,
+                        letterSpacing: -1,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    l10n.startLoggingTastings,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: colors.textTertiary,
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                    child: Text(
+                      'Every sip, remembered.',
+                      style: context.serifQuote
+                          .copyWith(color: colors.textSecondary),
                     ),
                   ),
-                ],
-              ),
+                ),
+
+                // Hero stats
+                SliverToBoxAdapter(child: _HeroStats(stats: stats)),
+
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
+                // Filter pills
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 40,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      children: _filterOptions.map((opt) {
+                        final active = _filter == opt;
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: GestureDetector(
+                            onTap: () {
+                              HapticFeedback.selectionClick();
+                              setState(() => _filter = opt);
+                            },
+                            child: AnimatedContainer(
+                              duration: AppMotion.fast,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 18, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: active
+                                    ? colors.paprika
+                                    : colors.surface1,
+                                borderRadius: BorderRadius.circular(999),
+                                border: Border.all(
+                                  color: active
+                                      ? colors.paprika
+                                      : colors.borderDefault,
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  opt,
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: active
+                                        ? colors.inkOnHero
+                                        : colors.textSecondary,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+
+                const SliverToBoxAdapter(child: SizedBox(height: 16)),
+
+                // BroCard timeline
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 120),
+                  sliver: SliverList.builder(
+                    itemCount: filtered.length,
+                    itemBuilder: (context, index) =>
+                        _BroCardTimelineRow(entry: filtered[index]),
+                  ),
+                ),
+              ],
             );
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: items.length,
-            itemBuilder: (context, index) =>
-                _JournalCard(entry: items[index]),
-          );
-        },
+          },
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: colors.paprika,
-        onPressed: () => _showBroCardSheet(context, ref),
-        child: const Icon(Icons.add, color: Colors.white),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 60),
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            HapticFeedback.mediumImpact();
+            BroCardSheet.show(context);
+          },
+          backgroundColor: colors.paprika,
+          icon: const Icon(Icons.add, color: Colors.white),
+          label: const Text('New BroCard',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
-  }
-
-  void _showBroCardSheet(BuildContext context, WidgetRef ref) {
-    BroCardSheet.show(context);
   }
 }
 
-class _JournalCard extends StatelessWidget {
-  const _JournalCard({required this.entry});
+// ============================================================
+// Hero stats — three numbers with ticker animation
+// ============================================================
+
+class _Stats {
+  const _Stats({required this.total, required this.wines, required this.spirits});
+  final int total;
+  final int wines;
+  final int spirits;
+
+  factory _Stats.from(List<JournalEntry> entries) {
+    final wines = entries.where((e) => e.category.toLowerCase().contains('wine')).length;
+    final spirits = entries.where((e) {
+      final c = e.category.toLowerCase();
+      return c.contains('whisky') ||
+          c.contains('gin') ||
+          c.contains('rum') ||
+          c.contains('vodka') ||
+          c.contains('tequila') ||
+          c.contains('spirits');
+    }).length;
+    return _Stats(total: entries.length, wines: wines, spirits: spirits);
+  }
+}
+
+class _HeroStats extends StatelessWidget {
+  const _HeroStats({required this.stats});
+  final _Stats stats;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          Expanded(
+              child: _StatTile(label: 'TASTINGS', value: stats.total)),
+          Container(
+            width: 1,
+            height: 40,
+            color: context.appColors.borderSubtle,
+            margin: const EdgeInsets.symmetric(horizontal: 8),
+          ),
+          Expanded(child: _StatTile(label: 'WINES', value: stats.wines)),
+          Container(
+            width: 1,
+            height: 40,
+            color: context.appColors.borderSubtle,
+            margin: const EdgeInsets.symmetric(horizontal: 8),
+          ),
+          Expanded(child: _StatTile(label: 'SPIRITS', value: stats.spirits)),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatTile extends StatelessWidget {
+  const _StatTile({required this.label, required this.value});
+  final String label;
+  final int value;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Column(
+      children: [
+        TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: value.toDouble()),
+          duration: AppMotion.ticker,
+          curve: AppMotion.standard,
+          builder: (_, v, __) => Text(
+            v.round().toString(),
+            style: TextStyle(
+              fontFamily: 'PlayfairDisplay',
+              fontSize: 36,
+              fontWeight: FontWeight.w900,
+              color: colors.textPrimary,
+              height: 1,
+              letterSpacing: -1,
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: context.eyebrow.copyWith(color: colors.textTertiary),
+        ),
+      ],
+    );
+  }
+}
+
+// ============================================================
+// BroCard timeline row
+// ============================================================
+
+class _BroCardTimelineRow extends StatelessWidget {
+  const _BroCardTimelineRow({required this.entry});
   final JournalEntry entry;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final score = entry.rating * 2;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colors.surface1,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(color: colors.borderSubtle),
+        boxShadow: AppElevation.e1(dark: isDark),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Bottle thumb (gradient fallback until photo lands)
           Container(
-            width: 50,
-            height: 50,
+            width: 56,
+            height: 72,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  colors.paprikaDark.withValues(alpha: 0.3),
-                  colors.surface2,
-                ],
+                colors: [colors.paprika, colors.paprikaDeep],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Center(
-              child: Icon(AppIcons.journalEntry, size: 22, color: colors.paprikaLight),
-            ),
+            child: Icon(Icons.wine_bar, color: colors.inkOnHero, size: 24),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,27 +340,188 @@ class _JournalCard extends StatelessWidget {
                 Text(
                   entry.productName,
                   style: TextStyle(
+                    fontFamily: 'PlayfairDisplay',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
                     color: colors.textPrimary,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
+                    height: 1.1,
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 4),
                 Text(
-                  '${entry.region} · ${Formatters.shortDate(entry.createdAt)}',
+                  '${entry.category}${entry.region.isNotEmpty ? ' · ${entry.region}' : ''}',
                   style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
                     color: colors.textTertiary,
-                    fontSize: 11,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(Icons.event, size: 12, color: colors.textTertiary),
+                    const SizedBox(width: 4),
+                    Text(
+                      Formatters.shortDate(entry.createdAt),
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 11,
+                        color: colors.textTertiary,
+                      ),
+                    ),
+                    if (entry.buyAgain) ...[
+                      const SizedBox(width: 12),
+                      Icon(Icons.favorite, size: 12, color: colors.paprika),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Buy again',
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: colors.paprika,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ],
             ),
           ),
-          StarRating(rating: entry.rating),
-          const SizedBox(width: 8),
-          if (entry.buyAgain)
-            Icon(Icons.favorite, color: colors.paprika, size: 16),
+          // Score badge
+          Column(
+            children: [
+              Text(
+                score.toString(),
+                style: TextStyle(
+                  fontFamily: 'PlayfairDisplay',
+                  fontSize: 32,
+                  fontWeight: FontWeight.w900,
+                  color: colors.gold,
+                  height: 1,
+                  letterSpacing: -1,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                '/10',
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  color: colors.textTertiary,
+                  letterSpacing: 1,
+                ),
+              ),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+// Cinematic empty state — full-bleed photo + dual CTA
+// ============================================================
+
+class _EmptyState extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            const SizedBox(height: 24),
+            HeroPhotoCard(
+              aspectRatio: 1,
+              gradientColors: [
+                colors.paprikaDeep,
+                colors.paprika,
+                colors.thunder,
+              ],
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: colors.goldWarm,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      'YOUR FIRST CHAPTER',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        color: colors.thunder,
+                        letterSpacing: 1.5,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Text(
+                    'Start your\ntasting story.',
+                    style: TextStyle(
+                      fontFamily: 'PlayfairDisplay',
+                      fontSize: 32,
+                      fontWeight: FontWeight.w900,
+                      color: colors.inkOnHero,
+                      height: 1.05,
+                      letterSpacing: -1,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Every bottle becomes a BroCard.\nYour palate, in your pocket.',
+                    style: context.serifQuote.copyWith(
+                      color: colors.inkOnHero.withValues(alpha: 0.85),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 32),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.qr_code_scanner, size: 18),
+                    label: const Text('Scan a bottle'),
+                    onPressed: () {
+                      HapticFeedback.mediumImpact();
+                      Navigator.of(context, rootNavigator: true)
+                          .pushNamed('/scan');
+                    },
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    icon: const Icon(Icons.edit_outlined, size: 18),
+                    label: const Text('Log manually'),
+                    onPressed: () {
+                      HapticFeedback.mediumImpact();
+                      BroCardSheet.show(context);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

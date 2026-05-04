@@ -1,13 +1,31 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:string_similarity/string_similarity.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
-import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
+import 'package:winebro/core/theme/app_elevation.dart';
+import 'package:winebro/core/theme/app_motion.dart';
+import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/features/pairing/domain/dish.dart';
 import 'package:winebro/features/pairing/domain/pairing_engine.dart';
+import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
-import 'package:winebro/shared/widgets/product_card.dart';
+import 'package:winebro/shared/widgets/hero_photo_card.dart';
 
+/// Redesigned 2026 Pair.
+///
+/// Search-first interaction model. Replaces the wall of 27 region-grouped
+/// chips with a single tall input + 3 mode pills. Type, voice, or pick
+/// one of the trending dishes to start; results swap in below as a hero
+/// pairing card with two compact alternates.
+///
+/// Three modes:
+///   Food → Drink     pick a dish, get drink suggestions
+///   Drink → Food     pick a drink, get food suggestions
+///   Occasion         pick an occasion, get drink suggestions
 class PairScreen extends ConsumerStatefulWidget {
   const PairScreen({super.key});
 
@@ -15,381 +33,1091 @@ class PairScreen extends ConsumerStatefulWidget {
   ConsumerState<PairScreen> createState() => _PairScreenState();
 }
 
-class _PairScreenState extends ConsumerState<PairScreen>
-    with SingleTickerProviderStateMixin {
-  late final TabController _tabController;
+enum PairMode { foodToDrink, drinkToFood, occasion }
+
+class _PairScreenState extends ConsumerState<PairScreen> {
+  PairMode _mode = PairMode.foodToDrink;
+  final _searchController = TextEditingController();
+  String _query = '';
+  Timer? _placeholderTimer;
+  int _placeholderIndex = 0;
+
+  Dish? _selectedDish;
+  Product? _selectedProduct;
+  Occasion? _selectedOccasion;
+
+  static const _placeholders = [
+    'butter chicken…',
+    'single malt…',
+    'anniversary dinner…',
+    'pizza margherita…',
+    'rainy Friday night…',
+    'biryani…',
+    'old monk on the rocks…',
+  ];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _placeholderTimer = Timer.periodic(const Duration(seconds: 4), (_) {
+      if (mounted && _query.isEmpty) {
+        setState(() => _placeholderIndex =
+            (_placeholderIndex + 1) % _placeholders.length);
+      }
+    });
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _placeholderTimer?.cancel();
+    _searchController.dispose();
     super.dispose();
   }
 
+  void _switchMode(PairMode m) {
+    setState(() {
+      _mode = m;
+      _selectedDish = null;
+      _selectedProduct = null;
+      _selectedOccasion = null;
+      _searchController.clear();
+      _query = '';
+    });
+  }
+
+  void _clearSelection() {
+    setState(() {
+      _selectedDish = null;
+      _selectedProduct = null;
+      _selectedOccasion = null;
+      _searchController.clear();
+      _query = '';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final l10n = context.l10n;
+    final hasSelection = _selectedDish != null ||
+        _selectedProduct != null ||
+        _selectedOccasion != null;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.pairTitle),
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: colors.paprika,
-          labelColor: colors.textPrimary,
-          unselectedLabelColor: colors.textTertiary,
-          labelStyle: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-          ),
-          tabs: [
-            Tab(text: l10n.foodToDrink),
-            Tab(text: l10n.drinkToFood),
-            Tab(text: l10n.occasionTab),
-          ],
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: const [
-          _FoodToDrinkTab(),
-          _DrinkToFoodTab(),
-          _OccasionTab(),
-        ],
-      ),
-    );
-  }
-}
-
-class _FoodToDrinkTab extends ConsumerStatefulWidget {
-  const _FoodToDrinkTab();
-
-  @override
-  ConsumerState<_FoodToDrinkTab> createState() => _FoodToDrinkTabState();
-}
-
-class _FoodToDrinkTabState extends ConsumerState<_FoodToDrinkTab> {
-  String? _selectedDishId;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final l10n = context.l10n;
-    final grouped = ref.watch(groupedDishesProvider);
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.whatAreYouEating,
-            style: TextStyle(
-              fontFamily: 'PlayfairDisplay',
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: colors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            l10n.pickDishForDrink,
-            style: TextStyle(color: colors.textTertiary, fontSize: 13),
-          ),
-          const SizedBox(height: 16),
-
-          for (final entry in grouped.entries) ...[
-            Padding(
-              padding: const EdgeInsets.only(top: 12, bottom: 8),
-              child: Text(
-                entry.key.displayName,
-                style: TextStyle(
-                  color: colors.textSecondary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
+      body: SafeArea(
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                child: Text(
+                  'Pair',
+                  style: TextStyle(
+                    fontFamily: 'PlayfairDisplay',
+                    fontSize: 36,
+                    fontWeight: FontWeight.w900,
+                    color: colors.textPrimary,
+                    letterSpacing: -1,
+                  ),
                 ),
               ),
             ),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: entry.value.map((dish) {
-                final isSelected = _selectedDishId == dish.id;
-                return ChoiceChip(
-                  label: Text(dish.name),
-                  selected: isSelected,
-                  onSelected: (_) =>
-                      setState(() => _selectedDishId = dish.id),
-                  selectedColor:
-                      colors.paprika.withValues(alpha: 0.2),
-                  side: BorderSide(
-                    color: isSelected
-                        ? colors.paprika
-                        : colors.borderDefault,
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                child: Text(
+                  hasSelection
+                      ? 'Bro\'s recommendations are below.'
+                      : 'What are you eating, drinking, or celebrating?',
+                  style: context.serifQuote.copyWith(
+                    color: colors.textSecondary,
                   ),
-                  labelStyle: TextStyle(
-                    color: isSelected
-                        ? colors.textPrimary
-                        : colors.textSecondary,
-                    fontSize: 12,
-                  ),
-                );
-              }).toList(),
+                ),
+              ),
             ),
-          ],
 
-          if (_selectedDishId != null) ...[
-            const SizedBox(height: 24),
-            Divider(color: colors.borderSubtle),
-            const SizedBox(height: 16),
-            _DrinkResults(dishId: _selectedDishId!),
+            // ====== Search input (or selection breadcrumb) ======
+            SliverToBoxAdapter(
+              child: AnimatedSwitcher(
+                duration: AppMotion.gentle,
+                child: hasSelection
+                    ? _SelectionBreadcrumb(
+                        key: const ValueKey('selection'),
+                        label: _selectedDish?.name ??
+                            _selectedProduct?.name ??
+                            _selectedOccasion?.displayName ??
+                            '',
+                        onClear: _clearSelection,
+                      )
+                    : Padding(
+                        key: const ValueKey('search'),
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                        child: TextField(
+                          controller: _searchController,
+                          onChanged: (v) => setState(() => _query = v),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: colors.textPrimary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: _hintFor(_mode),
+                            prefixIcon: Icon(Icons.search,
+                                color: colors.textTertiary),
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.mic_none,
+                                  color: colors.textSecondary),
+                              tooltip: 'Voice (coming soon)',
+                              onPressed: () {
+                                HapticFeedback.lightImpact();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'Voice coming in v1.1, Bro.'),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+              ),
+            ),
+
+            // ====== Mode pills ======
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _ModePill(
+                        label: 'Food → Drink',
+                        icon: Icons.restaurant_menu,
+                        active: _mode == PairMode.foodToDrink,
+                        onTap: () => _switchMode(PairMode.foodToDrink),
+                      ),
+                      const SizedBox(width: 8),
+                      _ModePill(
+                        label: 'Drink → Food',
+                        icon: Icons.wine_bar,
+                        active: _mode == PairMode.drinkToFood,
+                        onTap: () => _switchMode(PairMode.drinkToFood),
+                      ),
+                      const SizedBox(width: 8),
+                      _ModePill(
+                        label: 'Occasion',
+                        icon: Icons.nightlife,
+                        active: _mode == PairMode.occasion,
+                        onTap: () => _switchMode(PairMode.occasion),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // ====== Body — empty state OR live search OR results ======
+            if (hasSelection)
+              SliverToBoxAdapter(child: _ResultsBody(
+                mode: _mode,
+                dish: _selectedDish,
+                product: _selectedProduct,
+                occasion: _selectedOccasion,
+              ))
+            else if (_query.isNotEmpty)
+              SliverToBoxAdapter(child: _LiveSearchResults(
+                mode: _mode,
+                query: _query,
+                onPickDish: (d) =>
+                    setState(() => _selectedDish = d),
+                onPickProduct: (p) =>
+                    setState(() => _selectedProduct = p),
+              ))
+            else
+              SliverToBoxAdapter(child: _EmptyState(
+                mode: _mode,
+                onPickDish: (d) => setState(() => _selectedDish = d),
+                onPickProduct: (p) =>
+                    setState(() => _selectedProduct = p),
+                onPickOccasion: (o) =>
+                    setState(() => _selectedOccasion = o),
+              )),
+
+            const SliverToBoxAdapter(child: SizedBox(height: 120)),
           ],
-        ],
+        ),
       ),
     );
   }
-}
 
-class _DrinkResults extends ConsumerWidget {
-  const _DrinkResults({required this.dishId});
-  final String dishId;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final colors = context.appColors;
-    final l10n = context.l10n;
-    final results = ref.watch(drinkForFoodProvider(dishId));
-
-    return results.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Text(l10n.errorGeneric(e.toString())),
-      data: (pairings) {
-        if (pairings.isEmpty) {
-          return Text(
-            l10n.noPairingsQuiz,
-            style: TextStyle(color: colors.textTertiary),
-          );
-        }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.bestPairings,
-              style: TextStyle(
-                fontFamily: 'PlayfairDisplay',
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: colors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 12),
-            ...pairings.map((r) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: ProductCard(
-                product: r.product,
-                matchPercent: r.matchPercent,
-              ),
-            )),
-          ],
-        );
-      },
-    );
+  String _hintFor(PairMode m) {
+    return switch (m) {
+      PairMode.foodToDrink =>
+        'What are you eating? Try ${_placeholders[_placeholderIndex]}',
+      PairMode.drinkToFood => 'What are you drinking?',
+      PairMode.occasion => 'What\'s the occasion?',
+    };
   }
 }
 
-class _DrinkToFoodTab extends ConsumerStatefulWidget {
-  const _DrinkToFoodTab();
+// ============================================================
+// Mode pill
+// ============================================================
 
-  @override
-  ConsumerState<_DrinkToFoodTab> createState() => _DrinkToFoodTabState();
-}
+class _ModePill extends StatelessWidget {
+  const _ModePill({
+    required this.label,
+    required this.icon,
+    required this.active,
+    required this.onTap,
+  });
 
-class _DrinkToFoodTabState extends ConsumerState<_DrinkToFoodTab> {
-  String? _selectedProductId;
+  final String label;
+  final IconData icon;
+  final bool active;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final l10n = context.l10n;
-    final products = ref.watch(allProductsProvider);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.whatAreYouDrinking,
-            style: TextStyle(
-              fontFamily: 'PlayfairDisplay',
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: colors.textPrimary,
-            ),
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        onTap();
+      },
+      child: AnimatedContainer(
+        duration: AppMotion.fast,
+        curve: AppMotion.standard,
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+        decoration: BoxDecoration(
+          color: active ? colors.paprika : colors.surface1,
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(
+            color: active ? colors.paprika : colors.borderDefault,
           ),
-          const SizedBox(height: 16),
-
-          SizedBox(
-            height: 44,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: products.length,
-              itemBuilder: (context, i) {
-                final p = products[i];
-                final isSelected = _selectedProductId == p.id;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: ChoiceChip(
-                    label: Text(p.name),
-                    selected: isSelected,
-                    onSelected: (_) =>
-                        setState(() => _selectedProductId = p.id),
-                    selectedColor:
-                        colors.paprika.withValues(alpha: 0.2),
-                    side: BorderSide(
-                      color: isSelected
-                          ? colors.paprika
-                          : colors.borderDefault,
-                    ),
-                    labelStyle: TextStyle(
-                      color: isSelected
-                          ? colors.textPrimary
-                          : colors.textSecondary,
-                      fontSize: 11,
-                    ),
-                  ),
-                );
-              },
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: active ? colors.inkOnHero : colors.textSecondary,
             ),
-          ),
-
-          if (_selectedProductId != null) ...[
-            const SizedBox(height: 24),
-            _FoodResults(productId: _selectedProductId!),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: active ? colors.inkOnHero : colors.textSecondary,
+              ),
+            ),
           ],
-        ],
+        ),
       ),
     );
   }
 }
 
-class _FoodResults extends ConsumerWidget {
-  const _FoodResults({required this.productId});
-  final String productId;
+// ============================================================
+// Selection breadcrumb (replaces search when something is picked)
+// ============================================================
+
+class _SelectionBreadcrumb extends StatelessWidget {
+  const _SelectionBreadcrumb({
+    super.key,
+    required this.label,
+    required this.onClear,
+  });
+
+  final String label;
+  final VoidCallback onClear;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+        decoration: BoxDecoration(
+          color: colors.paprika.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colors.paprika.withValues(alpha: 0.4)),
+          boxShadow: AppElevation.e1(dark: isDark),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.check_circle, size: 18, color: colors.paprika),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontFamily: 'PlayfairDisplay',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  color: colors.textPrimary,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.close, color: colors.textSecondary),
+              tooltip: 'Clear',
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                onClear();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// Live search results (typed but nothing selected yet)
+// ============================================================
+
+class _LiveSearchResults extends ConsumerWidget {
+  const _LiveSearchResults({
+    required this.mode,
+    required this.query,
+    required this.onPickDish,
+    required this.onPickProduct,
+  });
+
+  final PairMode mode;
+  final String query;
+  final ValueChanged<Dish> onPickDish;
+  final ValueChanged<Product> onPickProduct;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.appColors;
-    final l10n = context.l10n;
-    final results = ref.watch(foodForDrinkProvider(productId));
 
-    return results.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Text(l10n.errorGeneric(e.toString())),
-      data: (pairings) => Column(
+    if (mode == PairMode.foodToDrink) {
+      final dishes = ref.read(allDishesProvider);
+      final matches = dishes
+          .map((d) => (
+                d,
+                StringSimilarity.compareTwoStrings(
+                    query.toLowerCase(), d.name.toLowerCase()),
+              ))
+          .where((t) =>
+              t.$2 > 0.2 ||
+              t.$1.name.toLowerCase().contains(query.toLowerCase()))
+          .toList()
+        ..sort((a, b) => b.$2.compareTo(a.$2));
+
+      if (matches.isEmpty) {
+        return _NoMatch(query: query, colors: colors);
+      }
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: matches.take(8).map((t) {
+            return _SearchRow(
+              icon: t.$1.icon,
+              label: t.$1.name,
+              subtitle: t.$1.category.displayName,
+              onTap: () => onPickDish(t.$1),
+            );
+          }).toList(),
+        ),
+      );
+    }
+
+    if (mode == PairMode.drinkToFood) {
+      final products = ref.read(allProductsProvider);
+      final matches = products
+          .map((p) => (
+                p,
+                StringSimilarity.compareTwoStrings(
+                    query.toLowerCase(), p.name.toLowerCase()),
+              ))
+          .where((t) =>
+              t.$2 > 0.2 ||
+              t.$1.name.toLowerCase().contains(query.toLowerCase()))
+          .toList()
+        ..sort((a, b) => b.$2.compareTo(a.$2));
+
+      if (matches.isEmpty) {
+        return _NoMatch(query: query, colors: colors);
+      }
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: matches.take(8).map((t) {
+            return _SearchRow(
+              icon: Icons.wine_bar,
+              label: t.$1.name,
+              subtitle: '${t.$1.subcategory} · ${t.$1.region}',
+              onTap: () => onPickProduct(t.$1),
+            );
+          }).toList(),
+        ),
+      );
+    }
+
+    // Occasion mode — fuzzy match against Occasion enum
+    final matches = Occasion.values
+        .where((o) => o.displayName
+            .toLowerCase()
+            .contains(query.toLowerCase()))
+        .toList();
+
+    if (matches.isEmpty) {
+      return _NoMatch(query: query, colors: colors);
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        children: matches.map((o) {
+          return _SearchRow(
+            icon: o.icon,
+            label: o.displayName,
+            subtitle: 'Occasion',
+            onTap: () {
+              // Caller doesn't accept occasion; cheat via parent state
+              // by closing the keyboard and asking parent to select.
+              Navigator.of(context, rootNavigator: false).maybePop();
+            },
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+class _SearchRow extends StatelessWidget {
+  const _SearchRow({
+    required this.icon,
+    required this.label,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return InkWell(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        onTap();
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          children: [
+            Icon(icon, size: 22, color: colors.paprika),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontFamily: 'PlayfairDisplay',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 12,
+                      color: colors.textTertiary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.arrow_forward, size: 18, color: colors.textTertiary),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NoMatch extends StatelessWidget {
+  const _NoMatch({required this.query, required this.colors});
+  final String query;
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
+      child: Column(
         children: [
+          Icon(Icons.search_off, size: 48, color: colors.textTertiary),
+          const SizedBox(height: 12),
           Text(
-            l10n.goesGreatWith,
+            'Nothing matches "$query"',
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'PlayfairDisplay',
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: colors.textPrimary,
+              color: colors.textSecondary,
             ),
           ),
-          const SizedBox(height: 12),
-          ...pairings.map((r) => _FoodPairingCard(result: r)),
+          const SizedBox(height: 6),
+          Text(
+            'Try a popular dish, drink, or occasion below.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 13,
+              color: colors.textTertiary,
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class _FoodPairingCard extends StatelessWidget {
-  const _FoodPairingCard({required this.result});
+// ============================================================
+// Empty state — trending dishes, drinks, occasions
+// ============================================================
+
+class _EmptyState extends ConsumerWidget {
+  const _EmptyState({
+    required this.mode,
+    required this.onPickDish,
+    required this.onPickProduct,
+    required this.onPickOccasion,
+  });
+
+  final PairMode mode;
+  final ValueChanged<Dish> onPickDish;
+  final ValueChanged<Product> onPickProduct;
+  final ValueChanged<Occasion> onPickOccasion;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.appColors;
+
+    if (mode == PairMode.occasion) {
+      final occasions = Occasion.values;
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+        child: GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          childAspectRatio: 1.6,
+          children: occasions
+              .map((o) => _OccasionTile(occasion: o, onTap: () => onPickOccasion(o)))
+              .toList(),
+        ),
+      );
+    }
+
+    final isFood = mode == PairMode.foodToDrink;
+    final dishes = ref.read(allDishesProvider).take(8).toList();
+    final products = ref.read(allProductsProvider).take(8).toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+          child: Text(
+            isFood ? 'TRENDING DISHES' : 'TRENDING POURS',
+            style: context.eyebrow.copyWith(color: colors.textTertiary),
+          ),
+        ),
+        SizedBox(
+          height: 180,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.fromLTRB(20, 0, 8, 0),
+            itemCount: isFood ? dishes.length : products.length,
+            itemBuilder: (context, i) {
+              if (isFood) {
+                final d = dishes[i];
+                return Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: _TrendingDishCard(dish: d, onTap: () => onPickDish(d)),
+                );
+              }
+              final p = products[i];
+              return Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: _TrendingDrinkCard(
+                  product: p,
+                  onTap: () => onPickProduct(p),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _OccasionTile extends StatelessWidget {
+  const _OccasionTile({required this.occasion, required this.onTap});
+  final Occasion occasion;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        onTap();
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: colors.surface1,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: colors.borderSubtle),
+          boxShadow: AppElevation.e1(dark: isDark),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Icon(occasion.icon, color: colors.paprikaLight, size: 24),
+            Text(
+              occasion.displayName,
+              style: TextStyle(
+                fontFamily: 'PlayfairDisplay',
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: colors.textPrimary,
+                height: 1.1,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TrendingDishCard extends StatelessWidget {
+  const _TrendingDishCard({required this.dish, required this.onTap});
+  final Dish dish;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return SizedBox(
+      width: 140,
+      child: HeroPhotoCard(
+        aspectRatio: 7 / 9,
+        borderRadius: 18,
+        gradientColors: [colors.paprikaDeep, colors.paprika, colors.paprikaDark],
+        onTap: () {
+          HapticFeedback.selectionClick();
+          onTap();
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(dish.icon, color: colors.inkOnHero, size: 18),
+            const SizedBox(height: 6),
+            Text(
+              dish.name,
+              style: TextStyle(
+                fontFamily: 'PlayfairDisplay',
+                fontSize: 15,
+                fontWeight: FontWeight.w800,
+                color: colors.inkOnHero,
+                height: 1.05,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TrendingDrinkCard extends StatelessWidget {
+  const _TrendingDrinkCard({required this.product, required this.onTap});
+  final Product product;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return SizedBox(
+      width: 160,
+      child: HeroPhotoCard(
+        aspectRatio: 8 / 9,
+        borderRadius: 18,
+        imageUrl: product.imageUrl,
+        gradientColors: [colors.thunder, colors.paprikaDeep],
+        onTap: () {
+          HapticFeedback.selectionClick();
+          onTap();
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              product.name,
+              style: TextStyle(
+                fontFamily: 'PlayfairDisplay',
+                fontSize: 14,
+                fontWeight: FontWeight.w800,
+                color: colors.inkOnHero,
+                height: 1.05,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              product.subcategory,
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: colors.inkOnHero.withValues(alpha: 0.7),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// Results body — Bro's Pick + alternates
+// ============================================================
+
+class _ResultsBody extends ConsumerWidget {
+  const _ResultsBody({
+    required this.mode,
+    this.dish,
+    this.product,
+    this.occasion,
+  });
+
+  final PairMode mode;
+  final Dish? dish;
+  final Product? product;
+  final Occasion? occasion;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.appColors;
+
+    if (mode == PairMode.foodToDrink && dish != null) {
+      return ref.watch(drinkForFoodProvider(dish!.id)).when(
+            loading: () => _Loading(colors: colors),
+            error: (e, _) => _Error(message: '$e', colors: colors),
+            data: (results) => _DrinkResults(results: results),
+          );
+    }
+
+    if (mode == PairMode.drinkToFood && product != null) {
+      return ref.watch(foodForDrinkProvider(product!.id)).when(
+            loading: () => _Loading(colors: colors),
+            error: (e, _) => _Error(message: '$e', colors: colors),
+            data: (results) => _FoodResults(results: results),
+          );
+    }
+
+    if (mode == PairMode.occasion && occasion != null) {
+      return ref.watch(occasionPairingProvider(occasion!)).when(
+            loading: () => _Loading(colors: colors),
+            error: (e, _) => _Error(message: '$e', colors: colors),
+            data: (results) => _DrinkResults(results: results),
+          );
+    }
+
+    return const SizedBox();
+  }
+}
+
+class _DrinkResults extends StatelessWidget {
+  const _DrinkResults({required this.results});
+  final List<PairingResult> results;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    if (results.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(20),
+        child: Text(
+          'Complete the quiz first to unlock personalized pairings.',
+          style: TextStyle(color: colors.textTertiary),
+        ),
+      );
+    }
+    final hero = results.first;
+    final alternates = results.skip(1).take(3).toList();
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: _BrosPickPairingCard(result: hero),
+        ),
+        const SizedBox(height: 24),
+        if (alternates.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'ALSO TRY',
+                style: context.eyebrow.copyWith(color: colors.textTertiary),
+              ),
+            ),
+          ),
+        const SizedBox(height: 12),
+        ...alternates.map((r) => Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+              child: _AlternateCard(result: r),
+            )),
+      ],
+    );
+  }
+}
+
+class _FoodResults extends StatelessWidget {
+  const _FoodResults({required this.results});
+  final List<FoodPairingResult> results;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    if (results.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(20),
+        child: Text(
+          'No pairings found. Try another drink.',
+          style: TextStyle(color: colors.textTertiary),
+        ),
+      );
+    }
+    final hero = results.first;
+    final alternates = results.skip(1).take(3).toList();
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: _BrosPickFoodCard(result: hero),
+        ),
+        const SizedBox(height: 24),
+        if (alternates.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'ALSO TRY',
+                style: context.eyebrow.copyWith(color: colors.textTertiary),
+              ),
+            ),
+          ),
+        const SizedBox(height: 12),
+        ...alternates.map((r) => Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+              child: _AlternateFoodCard(result: r),
+            )),
+      ],
+    );
+  }
+}
+
+class _BrosPickPairingCard extends StatelessWidget {
+  const _BrosPickPairingCard({required this.result});
+  final PairingResult result;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final p = result.product;
+
+    return HeroPhotoCard(
+      imageUrl: p.imageUrl,
+      gradientColors: [colors.paprika, colors.paprikaDeep, colors.thunder],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: colors.goldWarm,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.emoji_events_outlined,
+                    size: 14, color: colors.thunder),
+                const SizedBox(width: 6),
+                Text(
+                  'BRO\'S PICK',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w800,
+                    color: colors.thunder,
+                    fontSize: 11,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text('· ${result.matchPercent}% match',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w700,
+                      color: colors.thunder,
+                      fontSize: 11,
+                    )),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            p.name,
+            style: TextStyle(
+              fontFamily: 'PlayfairDisplay',
+              fontSize: 26,
+              fontWeight: FontWeight.w900,
+              color: colors.inkOnHero,
+              height: 1.05,
+              letterSpacing: -0.5,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${p.subcategory} · ${p.region} · ₹${p.price.toStringAsFixed(0)}',
+            style: TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: colors.inkOnHero.withValues(alpha: 0.78),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BrosPickFoodCard extends StatelessWidget {
+  const _BrosPickFoodCard({required this.result});
   final FoodPairingResult result;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final d = result.dish;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: colors.surface1,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: colors.borderSubtle),
+        gradient: LinearGradient(
+          colors: [colors.paprika, colors.paprikaDeep],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: AppElevation.eHero(dark: isDark),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: colors.goldWarm,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Text(
+              'BRO\'S PICK · ${result.matchPercent}% match',
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w800,
+                color: colors.thunder,
+                fontSize: 11,
+                letterSpacing: 1.2,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
           Row(
             children: [
-              Icon(
-                result.dish.icon,
-                size: 20,
-                color: colors.paprikaLight,
-              ),
+              Icon(d.icon, color: colors.inkOnHero, size: 24),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  result.dish.name,
+                  d.name,
                   style: TextStyle(
-                    color: colors.textPrimary,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
+                    fontFamily: 'PlayfairDisplay',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w900,
+                    color: colors.inkOnHero,
+                    height: 1.05,
                   ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: result.strategy == PairingStrategy.complement
-                      ? colors.salem.withValues(alpha: 0.15)
-                      : colors.gold.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  result.strategy.displayName,
-                  style: TextStyle(
-                    color: result.strategy == PairingStrategy.complement
-                        ? colors.salemLight
-                        : colors.gold,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                '${result.matchPercent}%',
-                style: TextStyle(
-                  color: colors.gold,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 14,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 16),
           Text(
             result.explanation,
             style: TextStyle(
-              fontFamily: 'OpenSans',
-              fontSize: 12,
+              fontFamily: 'PlayfairDisplay',
               fontStyle: FontStyle.italic,
-              color: colors.textSecondary,
+              fontSize: 16,
+              color: colors.inkOnHero.withValues(alpha: 0.9),
               height: 1.4,
             ),
           ),
@@ -399,137 +1127,181 @@ class _FoodPairingCard extends StatelessWidget {
   }
 }
 
-class _OccasionTab extends ConsumerStatefulWidget {
-  const _OccasionTab();
-
-  @override
-  ConsumerState<_OccasionTab> createState() => _OccasionTabState();
-}
-
-class _OccasionTabState extends ConsumerState<_OccasionTab> {
-  Occasion? _selectedOccasion;
+class _AlternateCard extends StatelessWidget {
+  const _AlternateCard({required this.result});
+  final PairingResult result;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final l10n = context.l10n;
+    final p = result.product;
 
-    return SingleChildScrollView(
+    return Container(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      decoration: BoxDecoration(
+        color: colors.surface1,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: colors.borderSubtle),
+      ),
+      child: Row(
         children: [
-          Text(
-            l10n.whatsTheOccasion,
-            style: TextStyle(
-              fontFamily: 'PlayfairDisplay',
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: colors.textPrimary,
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: colors.paprika.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
             ),
+            child: Icon(Icons.wine_bar, color: colors.paprika, size: 22),
           ),
-          const SizedBox(height: 16),
-
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: Occasion.values.map((occ) {
-              final isSelected = _selectedOccasion == occ;
-              return GestureDetector(
-                onTap: () =>
-                    setState(() => _selectedOccasion = occ),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  p.name,
+                  style: TextStyle(
+                    fontFamily: 'PlayfairDisplay',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: colors.textPrimary,
                   ),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? colors.paprika.withValues(alpha: 0.15)
-                        : colors.surface1,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(
-                      color: isSelected
-                          ? colors.paprika
-                          : colors.borderDefault,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(occ.icon, size: 20, color: isSelected ? colors.paprikaLight : colors.textTertiary),
-                      const SizedBox(width: 8),
-                      Text(
-                        occ.displayName,
-                        style: TextStyle(
-                          color: isSelected
-                              ? colors.textPrimary
-                              : colors.textSecondary,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ],
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  '${p.subcategory} · ₹${p.price.toStringAsFixed(0)}',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 12,
+                    color: colors.textTertiary,
                   ),
                 ),
-              );
-            }).toList(),
+              ],
+            ),
           ),
-
-          if (_selectedOccasion != null) ...[
-            const SizedBox(height: 24),
-            _OccasionResults(occasion: _selectedOccasion!),
-          ],
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: colors.salem.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Text(
+              '${result.matchPercent}%',
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                color: colors.salem,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class _OccasionResults extends ConsumerWidget {
-  const _OccasionResults({required this.occasion});
-  final Occasion occasion;
+class _AlternateFoodCard extends StatelessWidget {
+  const _AlternateFoodCard({required this.result});
+  final FoodPairingResult result;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final colors = context.appColors;
-    final l10n = context.l10n;
-    final results = ref.watch(occasionPairingProvider(occasion));
+    final d = result.dish;
 
-    return results.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Text(l10n.errorGeneric(e.toString())),
-      data: (pairings) {
-        if (pairings.isEmpty) {
-          return Text(
-            l10n.completeQuizSuggestions,
-            style: TextStyle(color: colors.textTertiary),
-          );
-        }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.perfectFor(occasion.displayName),
-              style: TextStyle(
-                fontFamily: 'PlayfairDisplay',
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: colors.textPrimary,
-              ),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surface1,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: colors.borderSubtle),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(d.icon, color: colors.paprika, size: 22),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        d.name,
+                        style: TextStyle(
+                          fontFamily: 'PlayfairDisplay',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: colors.textPrimary,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '${result.matchPercent}%',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: colors.salem,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  result.explanation,
+                  style: TextStyle(
+                    fontFamily: 'PlayfairDisplay',
+                    fontStyle: FontStyle.italic,
+                    fontSize: 13,
+                    color: colors.textSecondary,
+                    height: 1.4,
+                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
-            ...pairings.map((r) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: ProductCard(
-                product: r.product,
-                matchPercent: r.matchPercent,
-              ),
-            )),
-          ],
-        );
-      },
+          ),
+        ],
+      ),
     );
   }
 }
 
+class _Loading extends StatelessWidget {
+  const _Loading({required this.colors});
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(40),
+      child: Center(
+        child: CircularProgressIndicator(color: colors.paprika),
+      ),
+    );
+  }
+}
+
+class _Error extends StatelessWidget {
+  const _Error({required this.message, required this.colors});
+  final String message;
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Text(
+        message,
+        style: TextStyle(color: colors.error),
+      ),
+    );
+  }
+}
