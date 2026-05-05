@@ -184,6 +184,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
                   children: [
                     IconButton(
                       icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                      tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                     const Spacer(),

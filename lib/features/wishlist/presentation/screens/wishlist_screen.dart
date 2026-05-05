@@ -23,6 +23,7 @@ class WishlistScreen extends ConsumerWidget {
         title: Text(context.l10n.wishlistTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
           onPressed: () => context.pop(),
         ),
       ),

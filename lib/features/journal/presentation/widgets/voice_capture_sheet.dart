@@ -158,6 +158,7 @@ class _VoiceCaptureSheetState extends ConsumerState<VoiceCaptureSheet>
                 ),
                 IconButton(
                   icon: Icon(Icons.close, color: colors.textSecondary),
+                  tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
                   onPressed: _cancel,
                 ),
               ],

@@ -35,6 +35,7 @@ class SettingsScreen extends ConsumerWidget {
             : 'Settings'), // intentionally hardcoded — "Settings" is universal app term
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
           onPressed: () => context.pop(),
         ),
       ),

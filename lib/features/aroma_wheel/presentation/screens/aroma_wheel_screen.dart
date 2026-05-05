@@ -26,6 +26,7 @@ class _AromaWheelScreenState extends State<AromaWheelScreen> {
         title: Text(l10n.aromaExplorerTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
           onPressed: () {
             if (_selectedSubIndex != null) {
               setState(() => _selectedSubIndex = null);
