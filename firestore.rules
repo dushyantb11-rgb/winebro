@@ -25,6 +25,14 @@ service cloud.firestore {
         allow delete: if request.auth != null && request.auth.uid == uid;
       }
 
+      // ─── AROMA CALIBRATION (D3) ───────────────────────
+      match /aroma_calibration/{sessionId} {
+        allow read: if request.auth != null && request.auth.uid == uid;
+        allow create: if request.auth != null && request.auth.uid == uid
+                      && request.resource.data.keys().hasAll(['sessionId', 'responses']);
+        allow update, delete: if false;
+      }
+
       // ─── GAMIFICATION STATE ───────────────────────────
       match /gamification/{docId} {
         allow read: if request.auth != null && request.auth.uid == uid;

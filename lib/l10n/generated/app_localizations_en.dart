@@ -839,4 +839,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeRestockReorder => 'Reorder';
+
+  @override
+  String get aromaCalibrationEyebrow => 'CALIBRATING YOUR NOSE';
+
+  @override
+  String aromaCalibrationPrompt(String aroma) {
+    return 'Have you smelled $aroma?';
+  }
+
+  @override
+  String get aromaCalibrationAssociationHint =>
+      'What does it remind you of? (optional)';
+
+  @override
+  String get aromaCalibrationFamiliar => 'Yes, I know this scent';
+
+  @override
+  String get aromaCalibrationSometimes => 'Sometimes — I think so';
+
+  @override
+  String get aromaCalibrationNever => 'Never — first time';
+
+  @override
+  String get aromaCalibrationThanks =>
+      'Bro just got better at reading your palate.';
+
+  @override
+  String get aromaCalibrationCta => 'Calibrate your nose · 60 seconds';
 }
