@@ -6,6 +6,8 @@ import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/dish.dart';
 import 'package:winebro/features/pairing/domain/palate_profile.dart';
 import 'package:winebro/features/pairing/domain/pairing_engine.dart';
+import 'package:winebro/features/pairing_feedback/data/pairing_aggregate_repository.dart';
+import 'package:winebro/features/pairing_feedback/domain/pairing_aggregate.dart';
 
 final pairingEngineProvider = Provider((_) => const PairingEngine());
 
@@ -43,11 +45,29 @@ final drinkForFoodProvider = FutureProvider.family<List<PairingResult>, String>(
     final dishes = ref.read(allDishesProvider);
     final dish = dishes.firstWhere((d) => d.id == dishId);
 
+    // Engine v1.1 — fold community feedback (D6) into the ranking.
+    // We fetch only the top ~30 products' aggregates rather than all
+    // ~100; pre-rank by engine v1.0 first to keep the read small.
+    final v10 = engine.suggestDrinkForFood(
+      userProfile: profile,
+      dish: dish,
+      products: products,
+      topN: 30,
+    );
+
+    final aggregates = await ref
+        .read(pairingAggregateRepositoryProvider)
+        .aggregatesForDish(
+          productIds: v10.map((r) => r.product.id).toList(),
+          dishKey: PairingAggregate.normalizeDishKey(dish.name),
+        );
+
     return engine.suggestDrinkForFood(
       userProfile: profile,
       dish: dish,
       products: products,
       topN: 5,
+      feedbackAggregates: aggregates,
     );
   },
 );
