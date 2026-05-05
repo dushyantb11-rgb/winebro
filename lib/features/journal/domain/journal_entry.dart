@@ -97,6 +97,8 @@ class JournalEntry {
     this.isFavorite = false,
     this.isWishlist = false,
     this.buyAgain = false,
+    this.bottlePhotoUrl,
+    this.labelPhotoUrl,
   });
 
   final String id;
@@ -123,6 +125,8 @@ class JournalEntry {
   final bool isFavorite;
   final bool isWishlist;
   final bool buyAgain;
+  final String? bottlePhotoUrl;
+  final String? labelPhotoUrl;
 
   bool get isDetailed =>
       appearance != null ||
@@ -155,6 +159,8 @@ class JournalEntry {
     bool? isFavorite,
     bool? isWishlist,
     bool? buyAgain,
+    String? bottlePhotoUrl,
+    String? labelPhotoUrl,
   }) {
     return JournalEntry(
       id: id ?? this.id,
@@ -192,6 +198,8 @@ class JournalEntry {
       isFavorite: isFavorite ?? this.isFavorite,
       isWishlist: isWishlist ?? this.isWishlist,
       buyAgain: buyAgain ?? this.buyAgain,
+      bottlePhotoUrl: bottlePhotoUrl ?? this.bottlePhotoUrl,
+      labelPhotoUrl: labelPhotoUrl ?? this.labelPhotoUrl,
     );
   }
 
@@ -219,6 +227,8 @@ class JournalEntry {
     'isFavorite': isFavorite,
     'isWishlist': isWishlist,
     'buyAgain': buyAgain,
+    if (bottlePhotoUrl != null) 'bottlePhotoUrl': bottlePhotoUrl,
+    if (labelPhotoUrl != null) 'labelPhotoUrl': labelPhotoUrl,
   };
 
   factory JournalEntry.fromMap(Map<String, dynamic> map) => JournalEntry(
@@ -279,6 +289,8 @@ class JournalEntry {
     isFavorite: map['isFavorite'] as bool? ?? false,
     isWishlist: map['isWishlist'] as bool? ?? false,
     buyAgain: map['buyAgain'] as bool? ?? false,
+    bottlePhotoUrl: map['bottlePhotoUrl'] as String?,
+    labelPhotoUrl: map['labelPhotoUrl'] as String?,
   );
 
   @override

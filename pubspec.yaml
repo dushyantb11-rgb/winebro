@@ -26,6 +26,7 @@ dependencies:
   firebase_messaging: ^15.2.4
   firebase_analytics: ^11.5.1
   firebase_crashlytics: ^4.3.3
+  firebase_storage: ^12.4.4
   google_sign_in: ^6.2.2
 
   # UI & Charts

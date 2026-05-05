@@ -1679,6 +1679,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Calibrate your nose · 60 seconds'**
   String get aromaCalibrationCta;
+
+  /// Photo slot label on BroCard
+  ///
+  /// In en, this message translates to:
+  /// **'Bottle photo'**
+  String get brocardPhotoBottle;
+
+  /// Photo slot label on BroCard
+  ///
+  /// In en, this message translates to:
+  /// **'Label closeup'**
+  String get brocardPhotoLabel;
+
+  /// Photo source picker
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get brocardPhotoCamera;
+
+  /// Photo source picker
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get brocardPhotoGallery;
+
+  /// Photo upload failure snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t upload that photo. Try again?'**
+  String get brocardPhotoUploadFailed;
 }
 
 class _AppLocalizationsDelegate

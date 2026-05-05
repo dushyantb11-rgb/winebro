@@ -868,4 +868,20 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get aromaCalibrationCta => 'Calibrate your nose · 60 seconds';
+
+  @override
+  String get brocardPhotoBottle => 'Bottle photo';
+
+  @override
+  String get brocardPhotoLabel => 'Label closeup';
+
+  @override
+  String get brocardPhotoCamera => 'Take photo';
+
+  @override
+  String get brocardPhotoGallery => 'Choose from gallery';
+
+  @override
+  String get brocardPhotoUploadFailed =>
+      'Couldn\'t upload that photo. Try again?';
 }
