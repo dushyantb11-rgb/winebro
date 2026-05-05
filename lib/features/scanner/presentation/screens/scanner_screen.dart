@@ -573,7 +573,8 @@ class _MatchedSheet extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.check_circle, size: 14, color: colors.salem),
+                  Icon(Icons.check_circle,
+                      size: 14, color: context.salemOnSurface),
                   const SizedBox(width: 6),
                   Text(
                     'MATCHED',
@@ -581,7 +582,7 @@ class _MatchedSheet extends StatelessWidget {
                       fontFamily: 'Montserrat',
                       fontSize: 10,
                       fontWeight: FontWeight.w800,
-                      color: colors.salem,
+                      color: context.salemOnSurface,
                       letterSpacing: 1.5,
                     ),
                   ),

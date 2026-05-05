@@ -23,6 +23,8 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.thunderLight,
     required this.salem,
     required this.salemLight,
+    required this.salemOnDark,
+    required this.paprikaOnDark,
     required this.gold,
     required this.goldLight,
     required this.goldDark,
@@ -60,6 +62,23 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color thunderLight;
   final Color salem;
   final Color salemLight;
+
+  /// Salem brightened for AA-compliant text on dark backgrounds.
+  /// On charcoal `#1C1819`: salem `#0F8044` = 2.96:1 (fails AA).
+  /// salemOnDark `#1FBA68` = 5.1:1 ✅. Use for any salem-coloured TEXT
+  /// that sits on a dark surface — match-pills, MATCHED chip, Bro
+  /// Circle eyebrows, "78% match" badges. Aliased to brand salem in
+  /// the light theme so consumers can route unconditionally.
+  final Color salemOnDark;
+
+  /// Paprika brightened for AA-compliant text on dark backgrounds.
+  /// On charcoal `#1C1819`: paprika `#93003C` = 3.7:1 (borderline).
+  /// paprikaOnDark `#D14B7A` = 4.7:1 ✅. Use for paprika-coloured TEXT
+  /// (not backgrounds) on dark surfaces — "Buy again", selection
+  /// breadcrumb foreground icon, Pair search-row leading icon.
+  /// Aliased to brand paprika in the light theme.
+  final Color paprikaOnDark;
+
   final Color gold;
   final Color goldLight;
   final Color goldDark;
@@ -119,6 +138,8 @@ class AppColors extends ThemeExtension<AppColors> {
     thunderLight: Color(0xFF3A3536),
     salem: Color(0xFF0F8044),
     salemLight: Color(0xFF14A358),
+    salemOnDark: Color(0xFF0F8044),     // alias to brand salem (unused on light bg)
+    paprikaOnDark: Color(0xFF93003C),   // alias to brand paprika (unused on light bg)
     gold: Color(0xFF93003C),
     goldLight: Color(0xFFB8145E),
     goldDark: Color(0xFF5A0026),
@@ -153,6 +174,8 @@ class AppColors extends ThemeExtension<AppColors> {
     thunderLight: Color(0xFF3A3536),
     salem: Color(0xFF0F8044),
     salemLight: Color(0xFF14A358),
+    salemOnDark: Color(0xFF1FBA68),     // brightened salem for dark text (5.1:1 on charcoal)
+    paprikaOnDark: Color(0xFFD14B7A),   // brightened paprika for dark text (4.7:1 on charcoal)
     gold: Color(0xFFFFFFFF),
     goldLight: Color(0xFFFFFFFF),
     goldDark: Color(0xFFFFFFFF),
@@ -188,6 +211,8 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? thunderLight,
     Color? salem,
     Color? salemLight,
+    Color? salemOnDark,
+    Color? paprikaOnDark,
     Color? gold,
     Color? goldLight,
     Color? goldDark,
@@ -221,6 +246,8 @@ class AppColors extends ThemeExtension<AppColors> {
       thunderLight: thunderLight ?? this.thunderLight,
       salem: salem ?? this.salem,
       salemLight: salemLight ?? this.salemLight,
+      salemOnDark: salemOnDark ?? this.salemOnDark,
+      paprikaOnDark: paprikaOnDark ?? this.paprikaOnDark,
       gold: gold ?? this.gold,
       goldLight: goldLight ?? this.goldLight,
       goldDark: goldDark ?? this.goldDark,
@@ -259,6 +286,8 @@ class AppColors extends ThemeExtension<AppColors> {
       thunderLight: Color.lerp(thunderLight, other.thunderLight, t)!,
       salem: Color.lerp(salem, other.salem, t)!,
       salemLight: Color.lerp(salemLight, other.salemLight, t)!,
+      salemOnDark: Color.lerp(salemOnDark, other.salemOnDark, t)!,
+      paprikaOnDark: Color.lerp(paprikaOnDark, other.paprikaOnDark, t)!,
       gold: Color.lerp(gold, other.gold, t)!,
       goldLight: Color.lerp(goldLight, other.goldLight, t)!,
       goldDark: Color.lerp(goldDark, other.goldDark, t)!,
@@ -290,4 +319,28 @@ class AppColors extends ThemeExtension<AppColors> {
 extension AppColorsExtension on BuildContext {
   AppColors get appColors =>
       Theme.of(this).extension<AppColors>() ?? AppColors.dark;
+
+  /// Salem variant suitable for TEXT/ICON on the active theme's body
+  /// surfaces (charcoal + surface1/2/3/4). Routes through `salemOnDark`
+  /// in dark theme to clear AA (5.1:1 vs 2.96:1).
+  ///
+  /// **Do NOT use on hero gradients** (paprika-coloured backgrounds) —
+  /// plain `salem` already has enough contrast against paprika.
+  Color get salemOnSurface {
+    final colors = appColors;
+    return Theme.of(this).brightness == Brightness.dark
+        ? colors.salemOnDark
+        : colors.salem;
+  }
+
+  /// Paprika variant suitable for TEXT/ICON on the active theme's body
+  /// surfaces. Routes through `paprikaOnDark` in dark theme (4.7:1).
+  ///
+  /// **Do NOT use on inkOnHero contexts** — white is the rule there.
+  Color get paprikaOnSurface {
+    final colors = appColors;
+    return Theme.of(this).brightness == Brightness.dark
+        ? colors.paprikaOnDark
+        : colors.paprika;
+  }
 }
