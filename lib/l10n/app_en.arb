@@ -878,5 +878,21 @@
   "@brocardPhotoGallery": {"description": "Photo source picker"},
 
   "brocardPhotoUploadFailed": "Couldn't upload that photo. Try again?",
-  "@brocardPhotoUploadFailed": {"description": "Photo upload failure snackbar"}
+  "@brocardPhotoUploadFailed": {"description": "Photo upload failure snackbar"},
+
+  "occasionPrompt": "Where are you tasting?",
+  "@occasionPrompt": {"description": "Occasion picker prompt"},
+
+  "contextHome": "Home",
+  "@contextHome": {"description": "Tasting context"},
+  "contextRestaurant": "Restaurant",
+  "@contextRestaurant": {"description": "Tasting context"},
+  "contextBar": "Bar / Lounge",
+  "@contextBar": {"description": "Tasting context"},
+  "contextParty": "Party",
+  "@contextParty": {"description": "Tasting context"},
+  "contextTravel": "Travel",
+  "@contextTravel": {"description": "Tasting context"},
+  "contextOther": "Other",
+  "@contextOther": {"description": "Tasting context"}
 }

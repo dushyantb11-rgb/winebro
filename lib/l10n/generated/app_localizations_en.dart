@@ -883,4 +883,25 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get brocardPhotoUploadFailed =>
       'Couldn\'t upload that photo. Try again?';
+
+  @override
+  String get occasionPrompt => 'Where are you tasting?';
+
+  @override
+  String get contextHome => 'Home';
+
+  @override
+  String get contextRestaurant => 'Restaurant';
+
+  @override
+  String get contextBar => 'Bar / Lounge';
+
+  @override
+  String get contextParty => 'Party';
+
+  @override
+  String get contextTravel => 'Travel';
+
+  @override
+  String get contextOther => 'Other';
 }

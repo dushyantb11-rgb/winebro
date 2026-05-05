@@ -1709,6 +1709,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t upload that photo. Try again?'**
   String get brocardPhotoUploadFailed;
+
+  /// Occasion picker prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Where are you tasting?'**
+  String get occasionPrompt;
+
+  /// Tasting context
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get contextHome;
+
+  /// Tasting context
+  ///
+  /// In en, this message translates to:
+  /// **'Restaurant'**
+  String get contextRestaurant;
+
+  /// Tasting context
+  ///
+  /// In en, this message translates to:
+  /// **'Bar / Lounge'**
+  String get contextBar;
+
+  /// Tasting context
+  ///
+  /// In en, this message translates to:
+  /// **'Party'**
+  String get contextParty;
+
+  /// Tasting context
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get contextTravel;
+
+  /// Tasting context
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get contextOther;
 }
 
 class _AppLocalizationsDelegate
