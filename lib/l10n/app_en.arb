@@ -449,5 +449,293 @@
   "@errorGeneric": {
     "description": "Generic error display",
     "placeholders": {"error": {"type": "String"}}
-  }
+  },
+
+  "homeGreetingMorning": "Good morning,",
+  "@homeGreetingMorning": {"description": "Time-aware greeting before name (5am-12pm)"},
+
+  "homeGreetingAfternoon": "Good afternoon,",
+  "@homeGreetingAfternoon": {"description": "Time-aware greeting (12pm-5pm)"},
+
+  "homeGreetingEvening": "Good evening,",
+  "@homeGreetingEvening": {"description": "Time-aware greeting (5pm-10pm)"},
+
+  "homeGreetingLate": "Up late,",
+  "@homeGreetingLate": {"description": "Time-aware greeting (10pm-5am)"},
+
+  "homeBylineMorning": "Slow morning. What's pouring?",
+  "@homeBylineMorning": {"description": "Italic byline, morning"},
+
+  "homeBylineAfternoon": "Afternoon. A glass with what?",
+  "@homeBylineAfternoon": {"description": "Italic byline, afternoon"},
+
+  "homeBylineEvening": "Your night begins here.",
+  "@homeBylineEvening": {"description": "Italic byline, evening"},
+
+  "homeBylineLate": "Late and lovely.",
+  "@homeBylineLate": {"description": "Italic byline, late night"},
+
+  "homeTonightsPourEyebrow": "TONIGHT'S POUR",
+  "@homeTonightsPourEyebrow": {"description": "Hero card eyebrow"},
+
+  "homeWhyThisTonight": "Why this tonight",
+  "@homeWhyThisTonight": {"description": "Pill CTA on Tonight's Pour"},
+
+  "homeEmotionEyebrow": "TONIGHT, YOU ARE…",
+  "@homeEmotionEyebrow": {"description": "Eyebrow above 3 emotion tiles"},
+
+  "homeEmotionCooking": "Cooking",
+  "@homeEmotionCooking": {"description": "Emotion tile"},
+
+  "homeEmotionHosting": "Hosting",
+  "@homeEmotionHosting": {"description": "Emotion tile"},
+
+  "homeEmotionJustSipping": "Just sipping",
+  "@homeEmotionJustSipping": {"description": "Emotion tile"},
+
+  "homeContinueStoryEyebrow": "CONTINUE YOUR STORY",
+  "@homeContinueStoryEyebrow": {"description": "Continue Your Story eyebrow"},
+
+  "homeMatchPercent": "{percent}% match",
+  "@homeMatchPercent": {
+    "description": "Match percentage badge",
+    "placeholders": {"percent": {"type": "int"}}
+  },
+
+  "homeBroCircleEyebrow": "BRO CIRCLE",
+  "@homeBroCircleEyebrow": {"description": "Bro Circle strip eyebrow"},
+
+  "homeBroCircleSocialProof": "{percent}% of bros pair this with Indian food",
+  "@homeBroCircleSocialProof": {
+    "description": "Social proof one-liner on product detail",
+    "placeholders": {"percent": {"type": "int"}}
+  },
+
+  "homeBroTipHeader": "BRO TIP OF THE DAY",
+  "@homeBroTipHeader": {"description": "Bro Tip card eyebrow"},
+
+  "actionAddToJournal": "Add to journal",
+  "@actionAddToJournal": {"description": "Button: add to journal"},
+
+  "actionPair": "Pair",
+  "@actionPair": {"description": "Button/label: pair"},
+
+  "actionBuyAgain": "Buy again",
+  "@actionBuyAgain": {"description": "BroCard repurchase indicator"},
+
+  "pairTitleHero": "Pair",
+  "@pairTitleHero": {"description": "Pair screen large title"},
+
+  "pairBylinePrompt": "What are you eating, drinking, or celebrating?",
+  "@pairBylinePrompt": {"description": "Italic byline before selection"},
+
+  "pairBylineResults": "Bro's recommendations are below.",
+  "@pairBylineResults": {"description": "Italic byline after selection"},
+
+  "journalTitleHero": "Your Story",
+  "@journalTitleHero": {"description": "Journal large title"},
+
+  "journalByline": "Every sip, remembered.",
+  "@journalByline": {"description": "Italic byline"},
+
+  "journalEmptyEyebrow": "YOUR FIRST CHAPTER",
+  "@journalEmptyEyebrow": {"description": "Empty-state eyebrow"},
+
+  "journalEmptyHeadline": "Start your\ntasting story.",
+  "@journalEmptyHeadline": {"description": "Empty-state headline"},
+
+  "journalEmptySubline": "Every bottle becomes a BroCard.\nYour palate, in your pocket.",
+  "@journalEmptySubline": {"description": "Empty-state subtitle"},
+
+  "journalCtaScan": "Scan a bottle",
+  "@journalCtaScan": {"description": "Empty-state primary CTA"},
+
+  "journalCtaLogManually": "Log manually",
+  "@journalCtaLogManually": {"description": "Empty-state secondary CTA"},
+
+  "journalNewBroCard": "New BroCard",
+  "@journalNewBroCard": {"description": "FAB label"},
+
+  "journalStatTastings": "TASTINGS",
+  "@journalStatTastings": {"description": "Hero stat eyebrow"},
+
+  "journalStatWines": "WINES",
+  "@journalStatWines": {"description": "Hero stat eyebrow"},
+
+  "journalStatSpirits": "SPIRITS",
+  "@journalStatSpirits": {"description": "Hero stat eyebrow"},
+
+  "profileTasteDnaEyebrow": "YOUR TASTE DNA",
+  "@profileTasteDnaEyebrow": {"description": "Eyebrow above palate radar"},
+
+  "profilePalateLearning": "We're learning your palate.",
+  "@profilePalateLearning": {"description": "Headline before 3 tastings logged"},
+
+  "profilePalateNeedsMore": "Log {remaining, plural, =1{1 more tasting} other{{remaining} more tastings}} to unlock your taste DNA radar.",
+  "@profilePalateNeedsMore": {
+    "description": "Subtitle in palate-gated state",
+    "placeholders": {"remaining": {"type": "int"}}
+  },
+
+  "profilePalateProgress": "{count} of 3 logged",
+  "@profilePalateProgress": {
+    "description": "Progress label",
+    "placeholders": {"count": {"type": "int"}}
+  },
+
+  "profilePalateBuiltFrom": "Built from {count} tastings",
+  "@profilePalateBuiltFrom": {
+    "description": "Headline with full radar",
+    "placeholders": {"count": {"type": "int"}}
+  },
+
+  "profileNextToUnlock": "NEXT TO UNLOCK",
+  "@profileNextToUnlock": {"description": "Eyebrow above next-2 badges"},
+
+  "profileViewAllBadges": "View all {total} →",
+  "@profileViewAllBadges": {
+    "description": "Link to full badge sheet",
+    "placeholders": {"total": {"type": "int"}}
+  },
+
+  "profileRecentlyEarned": "RECENTLY EARNED",
+  "@profileRecentlyEarned": {"description": "Eyebrow above recent badges"},
+
+  "profileAllAchievements": "All achievements",
+  "@profileAllAchievements": {"description": "Title of full-badge sheet"},
+
+  "profileEarnedAllBadges": "You've earned them all, Bro. Legendary.",
+  "@profileEarnedAllBadges": {"description": "Empty state when no badges remain"},
+
+  "profileLevelMax": "{xp} XP · MAX LEVEL",
+  "@profileLevelMax": {
+    "description": "XP label at max level",
+    "placeholders": {"xp": {"type": "int"}}
+  },
+
+  "scanLooking": "Looking…",
+  "@scanLooking": {"description": "Magnetic sheet label while OCR runs"},
+
+  "scanLookingSubtitle": "Reading label, matching to catalogue.",
+  "@scanLookingSubtitle": {"description": "Italic subtitle while scanning"},
+
+  "scanMatched": "MATCHED",
+  "@scanMatched": {"description": "Green chip after bottle match"},
+
+  "scanIdleHeadline": "Tap the finder to scan",
+  "@scanIdleHeadline": {"description": "Magnetic sheet idle headline"},
+
+  "scanIdleSubtitle": "Point your camera at any wine or spirit label.",
+  "@scanIdleSubtitle": {"description": "Idle italic subtitle"},
+
+  "scanOpenCamera": "Open camera",
+  "@scanOpenCamera": {"description": "Idle CTA"},
+
+  "scanTryAgain": "Try again",
+  "@scanTryAgain": {"description": "Error CTA"},
+
+  "scanNoMatch": "No matching bottle in our catalogue yet.",
+  "@scanNoMatch": {"description": "No-match error message"},
+
+  "scanNoText": "No text detected on the label.",
+  "@scanNoText": {"description": "OCR-empty error message"},
+
+  "onboardingSkip": "Skip",
+  "@onboardingSkip": {"description": "Skip onboarding"},
+
+  "onboardingNext": "Next",
+  "@onboardingNext": {"description": "Next slide button"},
+
+  "onboardingBegin": "Begin the quiz",
+  "@onboardingBegin": {"description": "Final onboarding CTA"},
+
+  "onboardingSlide1Eyebrow": "PALATE QUIZ",
+  "@onboardingSlide1Eyebrow": {"description": "Onboarding slide 1 eyebrow"},
+
+  "onboardingSlide1Headline": "Find your\ntaste DNA",
+  "@onboardingSlide1Headline": {"description": "Onboarding slide 1 hero copy"},
+
+  "onboardingSlide1Byline": "Six axes of flavour learn whether you lean sweet or dry, fruity or smoky, light or full-bodied.",
+  "@onboardingSlide1Byline": {"description": "Onboarding slide 1 byline"},
+
+  "onboardingSlide2Eyebrow": "LABEL SCANNER",
+  "@onboardingSlide2Eyebrow": {"description": "Onboarding slide 2 eyebrow"},
+
+  "onboardingSlide2Headline": "Scan any\nbottle",
+  "@onboardingSlide2Headline": {"description": "Onboarding slide 2 hero copy"},
+
+  "onboardingSlide2Byline": "Point your camera at a label. WineBro reads, identifies, and suggests what to eat with it.",
+  "@onboardingSlide2Byline": {"description": "Onboarding slide 2 byline"},
+
+  "onboardingSlide3Eyebrow": "BROCARD JOURNAL",
+  "@onboardingSlide3Eyebrow": {"description": "Onboarding slide 3 eyebrow"},
+
+  "onboardingSlide3Headline": "Every sip,\nremembered",
+  "@onboardingSlide3Headline": {"description": "Onboarding slide 3 hero copy"},
+
+  "onboardingSlide3Byline": "A beautiful tasting card for every bottle. Watch your palate evolve over time.",
+  "@onboardingSlide3Byline": {"description": "Onboarding slide 3 byline"},
+
+  "settingsAppearance": "APPEARANCE",
+  "@settingsAppearance": {"description": "Settings section header"},
+
+  "settingsAccount": "ACCOUNT",
+  "@settingsAccount": {"description": "Settings section header"},
+
+  "settingsAbout": "ABOUT",
+  "@settingsAbout": {"description": "Settings section header"},
+
+  "settingsTheme": "Theme",
+  "@settingsTheme": {"description": "Theme toggle row"},
+
+  "settingsLanguageRow": "Language",
+  "@settingsLanguageRow": {"description": "Language picker row"},
+
+  "settingsSignOut": "Sign out",
+  "@settingsSignOut": {"description": "Sign out row"},
+
+  "settingsSignOutQuestion": "Sign out?",
+  "@settingsSignOutQuestion": {"description": "Sign out confirm dialog title"},
+
+  "settingsSignOutConfirm": "You can sign back in any time with the same number.",
+  "@settingsSignOutConfirm": {"description": "Sign out dialog body"},
+
+  "settingsDelete": "Delete account",
+  "@settingsDelete": {"description": "Delete account row"},
+
+  "settingsDeleteQuestion": "Delete your account?",
+  "@settingsDeleteQuestion": {"description": "Delete confirm dialog title"},
+
+  "settingsDeleteConfirm": "This wipes your tasting journal, BroCards, and palate profile. Cannot be undone.",
+  "@settingsDeleteConfirm": {"description": "Delete dialog body"},
+
+  "settingsDeleteForever": "Delete forever",
+  "@settingsDeleteForever": {"description": "Delete confirm CTA"},
+
+  "settingsDeleteComingSoon": "Account deletion coming soon.",
+  "@settingsDeleteComingSoon": {"description": "Snackbar — feature stub"},
+
+  "settingsCancel": "Cancel",
+  "@settingsCancel": {"description": "Generic cancel button"},
+
+  "settingsPrivacyPolicy": "Privacy policy",
+  "@settingsPrivacyPolicy": {"description": "Privacy policy link"},
+
+  "settingsTerms": "Terms of service",
+  "@settingsTerms": {"description": "Terms link"},
+
+  "settingsVersion": "Version",
+  "@settingsVersion": {"description": "Version label"},
+
+  "settingsResponsibly": "Drink responsibly. 18+",
+  "@settingsResponsibly": {"description": "Settings footer"},
+
+  "settingsChooseLanguage": "Choose language",
+  "@settingsChooseLanguage": {"description": "Language picker sheet title"},
+
+  "voiceComingSoon": "Voice coming in v1.1, Bro.",
+  "@voiceComingSoon": {"description": "Voice button stub snackbar"},
+
+  "flashlightComingSoon": "Flashlight in v1.1, Bro.",
+  "@flashlightComingSoon": {"description": "Flashlight button stub snackbar"}
 }

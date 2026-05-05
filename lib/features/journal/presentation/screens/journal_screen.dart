@@ -9,6 +9,7 @@ import 'package:winebro/core/theme/app_elevation.dart';
 import 'package:winebro/core/theme/app_motion.dart';
 import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/core/utils/formatters.dart';
+import 'package:winebro/features/aroma_wheel/domain/aroma_taxonomy.dart';
 import 'package:winebro/features/journal/domain/journal_entry.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
 import 'package:winebro/shared/widgets/segmented_chip_selector.dart';
@@ -86,7 +87,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
                     child: Text(
-                      'Your Story',
+                      context.l10n.journalTitleHero,
                       style: TextStyle(
                         fontFamily: 'PlayfairDisplay',
                         fontSize: 36,
@@ -101,7 +102,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
                     child: Text(
-                      'Every sip, remembered.',
+                      context.l10n.journalByline,
                       style: context.serifQuote
                           .copyWith(color: colors.textSecondary),
                     ),
@@ -190,8 +191,8 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
           },
           backgroundColor: colors.paprika,
           icon: const Icon(Icons.add, color: Colors.white),
-          label: const Text('New BroCard',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+          label: Text(context.l10n.journalNewBroCard,
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -235,21 +236,27 @@ class _HeroStats extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-              child: _StatTile(label: 'TASTINGS', value: stats.total)),
+              child: _StatTile(
+                  label: context.l10n.journalStatTastings, value: stats.total)),
           Container(
             width: 1,
             height: 40,
             color: context.appColors.borderSubtle,
             margin: const EdgeInsets.symmetric(horizontal: 8),
           ),
-          Expanded(child: _StatTile(label: 'WINES', value: stats.wines)),
+          Expanded(
+              child: _StatTile(
+                  label: context.l10n.journalStatWines, value: stats.wines)),
           Container(
             width: 1,
             height: 40,
             color: context.appColors.borderSubtle,
             margin: const EdgeInsets.symmetric(horizontal: 8),
           ),
-          Expanded(child: _StatTile(label: 'SPIRITS', value: stats.spirits)),
+          Expanded(
+              child: _StatTile(
+                  label: context.l10n.journalStatSpirits,
+                  value: stats.spirits)),
         ],
       ),
     );
@@ -380,7 +387,7 @@ class _BroCardTimelineRow extends StatelessWidget {
                           size: 12, color: context.paprikaOnSurface),
                       const SizedBox(width: 4),
                       Text(
-                        'Buy again',
+                        context.l10n.actionBuyAgain,
                         style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: 11,
@@ -462,7 +469,7 @@ class _EmptyState extends StatelessWidget {
                       borderRadius: BorderRadius.circular(999),
                     ),
                     child: Text(
-                      'YOUR FIRST CHAPTER',
+                      context.l10n.journalEmptyEyebrow,
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 11,
@@ -474,7 +481,7 @@ class _EmptyState extends StatelessWidget {
                   ),
                   const SizedBox(height: 14),
                   Text(
-                    'Start your\ntasting story.',
+                    context.l10n.journalEmptyHeadline,
                     style: TextStyle(
                       fontFamily: 'PlayfairDisplay',
                       fontSize: 32,
@@ -500,7 +507,7 @@ class _EmptyState extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton.icon(
                     icon: const Icon(Icons.qr_code_scanner, size: 18),
-                    label: const Text('Scan a bottle'),
+                    label: Text(context.l10n.journalCtaScan),
                     onPressed: () {
                       HapticFeedback.mediumImpact();
                       Navigator.of(context, rootNavigator: true)
@@ -512,7 +519,7 @@ class _EmptyState extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton.icon(
                     icon: const Icon(Icons.edit_outlined, size: 18),
-                    label: const Text('Log manually'),
+                    label: Text(context.l10n.journalCtaLogManually),
                     onPressed: () {
                       HapticFeedback.mediumImpact();
                       BroCardSheet.show(context);
@@ -784,12 +791,13 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
   }
 
   Widget _buildNoseStep(AppColors colors, AppLocalizations l10n) {
+    // Single source of truth: aroma_taxonomy.dart's kAromaWheel.
+    // Per category, surface the first subcategory's aromas (~5-7 per group)
+    // — keeps the BroCard form scannable while staying brand-coherent
+    // with the Aroma Wheel exploration screen and capturing the
+    // India-specific terms (Champa, Elaichi, Pudina, Tandoor smoke, etc.).
     final aromaCategories = {
-      'Fruity': ['Citrus', 'Berry', 'Stone Fruit', 'Tropical', 'Dried Fruit'],
-      'Floral': ['Rose', 'Jasmine', 'Violet', 'Elderflower', 'Champa'],
-      'Spice': ['Vanilla', 'Cinnamon', 'Pepper', 'Cardamom', 'Clove'],
-      'Earthy': ['Mushroom', 'Wet Earth', 'Mineral', 'Leather', 'Tobacco'],
-      'Oak': ['Toast', 'Cedar', 'Smoke', 'Coffee', 'Chocolate'],
+      for (final cat in kAromaWheel) cat.name: cat.subcategories.first.aromas,
     };
 
     return Column(

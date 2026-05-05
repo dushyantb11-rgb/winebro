@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:string_similarity/string_similarity.dart';
+import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_motion.dart';
 import 'package:winebro/core/theme/app_theme.dart';
@@ -94,7 +95,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
       if (recognized.text.isEmpty) {
         setState(() {
           _phase = _ScanPhase.noMatch;
-          _errorMessage = 'No text detected on the label.';
+          _errorMessage = context.l10n.scanNoText;
         });
         return;
       }
@@ -111,7 +112,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
       } else {
         setState(() {
           _phase = _ScanPhase.noMatch;
-          _errorMessage = 'No matching bottle in our catalogue yet.';
+          _errorMessage = context.l10n.scanNoMatch;
         });
       }
     } on Exception catch (e) {
@@ -180,11 +181,11 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
                     const Spacer(),
                     IconButton(
                       icon: const Icon(Icons.flash_off, color: Colors.white70, size: 24),
-                      tooltip: 'Flashlight (coming soon)',
+                      tooltip: 'Flashlight',
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Flashlight in v1.1, Bro.')),
+                          SnackBar(
+                              content: Text(context.l10n.flashlightComingSoon)),
                         );
                       },
                     ),
@@ -480,7 +481,7 @@ class _IdleOrErrorSheet extends StatelessWidget {
           const SizedBox(height: 14),
         ] else ...[
           Text(
-            'Tap the finder to scan',
+            context.l10n.scanIdleHeadline,
             style: TextStyle(
               fontFamily: 'PlayfairDisplay',
               fontSize: 22,
@@ -491,7 +492,7 @@ class _IdleOrErrorSheet extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'Point your camera at any wine or spirit label.',
+            context.l10n.scanIdleSubtitle,
             style: context.serifQuote.copyWith(color: colors.textSecondary),
           ),
           const SizedBox(height: 18),
@@ -499,7 +500,7 @@ class _IdleOrErrorSheet extends StatelessWidget {
         ElevatedButton.icon(
           onPressed: onScan,
           icon: const Icon(Icons.camera_alt, size: 20),
-          label: Text(isError ? 'Try again' : 'Open camera'),
+          label: Text(isError ? context.l10n.scanTryAgain : context.l10n.scanOpenCamera),
         ),
       ],
     );
@@ -529,7 +530,7 @@ class _ScanningSheet extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             Text(
-              'Looking…',
+              context.l10n.scanLooking,
               style: TextStyle(
                 fontFamily: 'PlayfairDisplay',
                 fontSize: 22,
@@ -542,7 +543,7 @@ class _ScanningSheet extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'Reading label, matching to catalogue.',
+          context.l10n.scanLookingSubtitle,
           style: context.serifQuote.copyWith(color: colors.textSecondary),
         ),
       ],
@@ -577,7 +578,7 @@ class _MatchedSheet extends StatelessWidget {
                       size: 14, color: context.salemOnSurface),
                   const SizedBox(width: 6),
                   Text(
-                    'MATCHED',
+                    context.l10n.scanMatched,
                     style: TextStyle(
                       fontFamily: 'Montserrat',
                       fontSize: 10,
@@ -635,7 +636,7 @@ class _MatchedSheet extends StatelessWidget {
                   );
                 },
                 icon: const Icon(Icons.book_outlined, size: 18),
-                label: const Text('Add to journal'),
+                label: Text(context.l10n.actionAddToJournal),
               ),
             ),
             const SizedBox(width: 12),
@@ -646,7 +647,7 @@ class _MatchedSheet extends StatelessWidget {
                   context.go('/pair');
                 },
                 icon: const Icon(Icons.restaurant_menu_outlined, size: 18),
-                label: const Text('Pair'),
+                label: Text(context.l10n.actionPair),
               ),
             ),
           ],

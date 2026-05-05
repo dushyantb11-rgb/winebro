@@ -445,4 +445,300 @@ class AppLocalizationsGu extends AppLocalizations {
   String errorGeneric(String error) {
     return 'ભૂલ: $error';
   }
+
+  @override
+  String get homeGreetingMorning => 'Good morning,';
+
+  @override
+  String get homeGreetingAfternoon => 'Good afternoon,';
+
+  @override
+  String get homeGreetingEvening => 'Good evening,';
+
+  @override
+  String get homeGreetingLate => 'Up late,';
+
+  @override
+  String get homeBylineMorning => 'Slow morning. What\'s pouring?';
+
+  @override
+  String get homeBylineAfternoon => 'Afternoon. A glass with what?';
+
+  @override
+  String get homeBylineEvening => 'Your night begins here.';
+
+  @override
+  String get homeBylineLate => 'Late and lovely.';
+
+  @override
+  String get homeTonightsPourEyebrow => 'TONIGHT\'S POUR';
+
+  @override
+  String get homeWhyThisTonight => 'Why this tonight';
+
+  @override
+  String get homeEmotionEyebrow => 'TONIGHT, YOU ARE…';
+
+  @override
+  String get homeEmotionCooking => 'Cooking';
+
+  @override
+  String get homeEmotionHosting => 'Hosting';
+
+  @override
+  String get homeEmotionJustSipping => 'Just sipping';
+
+  @override
+  String get homeContinueStoryEyebrow => 'CONTINUE YOUR STORY';
+
+  @override
+  String homeMatchPercent(int percent) {
+    return '$percent% match';
+  }
+
+  @override
+  String get homeBroCircleEyebrow => 'BRO CIRCLE';
+
+  @override
+  String homeBroCircleSocialProof(int percent) {
+    return '$percent% of bros pair this with Indian food';
+  }
+
+  @override
+  String get homeBroTipHeader => 'BRO TIP OF THE DAY';
+
+  @override
+  String get actionAddToJournal => 'Add to journal';
+
+  @override
+  String get actionPair => 'Pair';
+
+  @override
+  String get actionBuyAgain => 'Buy again';
+
+  @override
+  String get pairTitleHero => 'Pair';
+
+  @override
+  String get pairBylinePrompt =>
+      'What are you eating, drinking, or celebrating?';
+
+  @override
+  String get pairBylineResults => 'Bro\'s recommendations are below.';
+
+  @override
+  String get journalTitleHero => 'Your Story';
+
+  @override
+  String get journalByline => 'Every sip, remembered.';
+
+  @override
+  String get journalEmptyEyebrow => 'YOUR FIRST CHAPTER';
+
+  @override
+  String get journalEmptyHeadline => 'Start your\ntasting story.';
+
+  @override
+  String get journalEmptySubline =>
+      'Every bottle becomes a BroCard.\nYour palate, in your pocket.';
+
+  @override
+  String get journalCtaScan => 'Scan a bottle';
+
+  @override
+  String get journalCtaLogManually => 'Log manually';
+
+  @override
+  String get journalNewBroCard => 'New BroCard';
+
+  @override
+  String get journalStatTastings => 'TASTINGS';
+
+  @override
+  String get journalStatWines => 'WINES';
+
+  @override
+  String get journalStatSpirits => 'SPIRITS';
+
+  @override
+  String get profileTasteDnaEyebrow => 'YOUR TASTE DNA';
+
+  @override
+  String get profilePalateLearning => 'We\'re learning your palate.';
+
+  @override
+  String profilePalateNeedsMore(int remaining) {
+    String _temp0 = intl.Intl.pluralLogic(
+      remaining,
+      locale: localeName,
+      other: '$remaining more tastings',
+      one: '1 more tasting',
+    );
+    return 'Log $_temp0 to unlock your taste DNA radar.';
+  }
+
+  @override
+  String profilePalateProgress(int count) {
+    return '$count of 3 logged';
+  }
+
+  @override
+  String profilePalateBuiltFrom(int count) {
+    return 'Built from $count tastings';
+  }
+
+  @override
+  String get profileNextToUnlock => 'NEXT TO UNLOCK';
+
+  @override
+  String profileViewAllBadges(int total) {
+    return 'View all $total →';
+  }
+
+  @override
+  String get profileRecentlyEarned => 'RECENTLY EARNED';
+
+  @override
+  String get profileAllAchievements => 'All achievements';
+
+  @override
+  String get profileEarnedAllBadges =>
+      'You\'ve earned them all, Bro. Legendary.';
+
+  @override
+  String profileLevelMax(int xp) {
+    return '$xp XP · MAX LEVEL';
+  }
+
+  @override
+  String get scanLooking => 'Looking…';
+
+  @override
+  String get scanLookingSubtitle => 'Reading label, matching to catalogue.';
+
+  @override
+  String get scanMatched => 'MATCHED';
+
+  @override
+  String get scanIdleHeadline => 'Tap the finder to scan';
+
+  @override
+  String get scanIdleSubtitle =>
+      'Point your camera at any wine or spirit label.';
+
+  @override
+  String get scanOpenCamera => 'Open camera';
+
+  @override
+  String get scanTryAgain => 'Try again';
+
+  @override
+  String get scanNoMatch => 'No matching bottle in our catalogue yet.';
+
+  @override
+  String get scanNoText => 'No text detected on the label.';
+
+  @override
+  String get onboardingSkip => 'Skip';
+
+  @override
+  String get onboardingNext => 'Next';
+
+  @override
+  String get onboardingBegin => 'Begin the quiz';
+
+  @override
+  String get onboardingSlide1Eyebrow => 'PALATE QUIZ';
+
+  @override
+  String get onboardingSlide1Headline => 'Find your\ntaste DNA';
+
+  @override
+  String get onboardingSlide1Byline =>
+      'Six axes of flavour learn whether you lean sweet or dry, fruity or smoky, light or full-bodied.';
+
+  @override
+  String get onboardingSlide2Eyebrow => 'LABEL SCANNER';
+
+  @override
+  String get onboardingSlide2Headline => 'Scan any\nbottle';
+
+  @override
+  String get onboardingSlide2Byline =>
+      'Point your camera at a label. WineBro reads, identifies, and suggests what to eat with it.';
+
+  @override
+  String get onboardingSlide3Eyebrow => 'BROCARD JOURNAL';
+
+  @override
+  String get onboardingSlide3Headline => 'Every sip,\nremembered';
+
+  @override
+  String get onboardingSlide3Byline =>
+      'A beautiful tasting card for every bottle. Watch your palate evolve over time.';
+
+  @override
+  String get settingsAppearance => 'APPEARANCE';
+
+  @override
+  String get settingsAccount => 'ACCOUNT';
+
+  @override
+  String get settingsAbout => 'ABOUT';
+
+  @override
+  String get settingsTheme => 'Theme';
+
+  @override
+  String get settingsLanguageRow => 'Language';
+
+  @override
+  String get settingsSignOut => 'Sign out';
+
+  @override
+  String get settingsSignOutQuestion => 'Sign out?';
+
+  @override
+  String get settingsSignOutConfirm =>
+      'You can sign back in any time with the same number.';
+
+  @override
+  String get settingsDelete => 'Delete account';
+
+  @override
+  String get settingsDeleteQuestion => 'Delete your account?';
+
+  @override
+  String get settingsDeleteConfirm =>
+      'This wipes your tasting journal, BroCards, and palate profile. Cannot be undone.';
+
+  @override
+  String get settingsDeleteForever => 'Delete forever';
+
+  @override
+  String get settingsDeleteComingSoon => 'Account deletion coming soon.';
+
+  @override
+  String get settingsCancel => 'Cancel';
+
+  @override
+  String get settingsPrivacyPolicy => 'Privacy policy';
+
+  @override
+  String get settingsTerms => 'Terms of service';
+
+  @override
+  String get settingsVersion => 'Version';
+
+  @override
+  String get settingsResponsibly => 'Drink responsibly. 18+';
+
+  @override
+  String get settingsChooseLanguage => 'Choose language';
+
+  @override
+  String get voiceComingSoon => 'Voice coming in v1.1, Bro.';
+
+  @override
+  String get flashlightComingSoon => 'Flashlight in v1.1, Bro.';
 }

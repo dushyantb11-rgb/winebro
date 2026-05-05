@@ -917,6 +917,540 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error: {error}'**
   String errorGeneric(String error);
+
+  /// Time-aware greeting before name (5am-12pm)
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning,'**
+  String get homeGreetingMorning;
+
+  /// Time-aware greeting (12pm-5pm)
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon,'**
+  String get homeGreetingAfternoon;
+
+  /// Time-aware greeting (5pm-10pm)
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening,'**
+  String get homeGreetingEvening;
+
+  /// Time-aware greeting (10pm-5am)
+  ///
+  /// In en, this message translates to:
+  /// **'Up late,'**
+  String get homeGreetingLate;
+
+  /// Italic byline, morning
+  ///
+  /// In en, this message translates to:
+  /// **'Slow morning. What\'s pouring?'**
+  String get homeBylineMorning;
+
+  /// Italic byline, afternoon
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon. A glass with what?'**
+  String get homeBylineAfternoon;
+
+  /// Italic byline, evening
+  ///
+  /// In en, this message translates to:
+  /// **'Your night begins here.'**
+  String get homeBylineEvening;
+
+  /// Italic byline, late night
+  ///
+  /// In en, this message translates to:
+  /// **'Late and lovely.'**
+  String get homeBylineLate;
+
+  /// Hero card eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'TONIGHT\'S POUR'**
+  String get homeTonightsPourEyebrow;
+
+  /// Pill CTA on Tonight's Pour
+  ///
+  /// In en, this message translates to:
+  /// **'Why this tonight'**
+  String get homeWhyThisTonight;
+
+  /// Eyebrow above 3 emotion tiles
+  ///
+  /// In en, this message translates to:
+  /// **'TONIGHT, YOU ARE…'**
+  String get homeEmotionEyebrow;
+
+  /// Emotion tile
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking'**
+  String get homeEmotionCooking;
+
+  /// Emotion tile
+  ///
+  /// In en, this message translates to:
+  /// **'Hosting'**
+  String get homeEmotionHosting;
+
+  /// Emotion tile
+  ///
+  /// In en, this message translates to:
+  /// **'Just sipping'**
+  String get homeEmotionJustSipping;
+
+  /// Continue Your Story eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'CONTINUE YOUR STORY'**
+  String get homeContinueStoryEyebrow;
+
+  /// Match percentage badge
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% match'**
+  String homeMatchPercent(int percent);
+
+  /// Bro Circle strip eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'BRO CIRCLE'**
+  String get homeBroCircleEyebrow;
+
+  /// Social proof one-liner on product detail
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% of bros pair this with Indian food'**
+  String homeBroCircleSocialProof(int percent);
+
+  /// Bro Tip card eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'BRO TIP OF THE DAY'**
+  String get homeBroTipHeader;
+
+  /// Button: add to journal
+  ///
+  /// In en, this message translates to:
+  /// **'Add to journal'**
+  String get actionAddToJournal;
+
+  /// Button/label: pair
+  ///
+  /// In en, this message translates to:
+  /// **'Pair'**
+  String get actionPair;
+
+  /// BroCard repurchase indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Buy again'**
+  String get actionBuyAgain;
+
+  /// Pair screen large title
+  ///
+  /// In en, this message translates to:
+  /// **'Pair'**
+  String get pairTitleHero;
+
+  /// Italic byline before selection
+  ///
+  /// In en, this message translates to:
+  /// **'What are you eating, drinking, or celebrating?'**
+  String get pairBylinePrompt;
+
+  /// Italic byline after selection
+  ///
+  /// In en, this message translates to:
+  /// **'Bro\'s recommendations are below.'**
+  String get pairBylineResults;
+
+  /// Journal large title
+  ///
+  /// In en, this message translates to:
+  /// **'Your Story'**
+  String get journalTitleHero;
+
+  /// Italic byline
+  ///
+  /// In en, this message translates to:
+  /// **'Every sip, remembered.'**
+  String get journalByline;
+
+  /// Empty-state eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR FIRST CHAPTER'**
+  String get journalEmptyEyebrow;
+
+  /// Empty-state headline
+  ///
+  /// In en, this message translates to:
+  /// **'Start your\ntasting story.'**
+  String get journalEmptyHeadline;
+
+  /// Empty-state subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Every bottle becomes a BroCard.\nYour palate, in your pocket.'**
+  String get journalEmptySubline;
+
+  /// Empty-state primary CTA
+  ///
+  /// In en, this message translates to:
+  /// **'Scan a bottle'**
+  String get journalCtaScan;
+
+  /// Empty-state secondary CTA
+  ///
+  /// In en, this message translates to:
+  /// **'Log manually'**
+  String get journalCtaLogManually;
+
+  /// FAB label
+  ///
+  /// In en, this message translates to:
+  /// **'New BroCard'**
+  String get journalNewBroCard;
+
+  /// Hero stat eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'TASTINGS'**
+  String get journalStatTastings;
+
+  /// Hero stat eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'WINES'**
+  String get journalStatWines;
+
+  /// Hero stat eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'SPIRITS'**
+  String get journalStatSpirits;
+
+  /// Eyebrow above palate radar
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR TASTE DNA'**
+  String get profileTasteDnaEyebrow;
+
+  /// Headline before 3 tastings logged
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re learning your palate.'**
+  String get profilePalateLearning;
+
+  /// Subtitle in palate-gated state
+  ///
+  /// In en, this message translates to:
+  /// **'Log {remaining, plural, =1{1 more tasting} other{{remaining} more tastings}} to unlock your taste DNA radar.'**
+  String profilePalateNeedsMore(int remaining);
+
+  /// Progress label
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of 3 logged'**
+  String profilePalateProgress(int count);
+
+  /// Headline with full radar
+  ///
+  /// In en, this message translates to:
+  /// **'Built from {count} tastings'**
+  String profilePalateBuiltFrom(int count);
+
+  /// Eyebrow above next-2 badges
+  ///
+  /// In en, this message translates to:
+  /// **'NEXT TO UNLOCK'**
+  String get profileNextToUnlock;
+
+  /// Link to full badge sheet
+  ///
+  /// In en, this message translates to:
+  /// **'View all {total} →'**
+  String profileViewAllBadges(int total);
+
+  /// Eyebrow above recent badges
+  ///
+  /// In en, this message translates to:
+  /// **'RECENTLY EARNED'**
+  String get profileRecentlyEarned;
+
+  /// Title of full-badge sheet
+  ///
+  /// In en, this message translates to:
+  /// **'All achievements'**
+  String get profileAllAchievements;
+
+  /// Empty state when no badges remain
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve earned them all, Bro. Legendary.'**
+  String get profileEarnedAllBadges;
+
+  /// XP label at max level
+  ///
+  /// In en, this message translates to:
+  /// **'{xp} XP · MAX LEVEL'**
+  String profileLevelMax(int xp);
+
+  /// Magnetic sheet label while OCR runs
+  ///
+  /// In en, this message translates to:
+  /// **'Looking…'**
+  String get scanLooking;
+
+  /// Italic subtitle while scanning
+  ///
+  /// In en, this message translates to:
+  /// **'Reading label, matching to catalogue.'**
+  String get scanLookingSubtitle;
+
+  /// Green chip after bottle match
+  ///
+  /// In en, this message translates to:
+  /// **'MATCHED'**
+  String get scanMatched;
+
+  /// Magnetic sheet idle headline
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the finder to scan'**
+  String get scanIdleHeadline;
+
+  /// Idle italic subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Point your camera at any wine or spirit label.'**
+  String get scanIdleSubtitle;
+
+  /// Idle CTA
+  ///
+  /// In en, this message translates to:
+  /// **'Open camera'**
+  String get scanOpenCamera;
+
+  /// Error CTA
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get scanTryAgain;
+
+  /// No-match error message
+  ///
+  /// In en, this message translates to:
+  /// **'No matching bottle in our catalogue yet.'**
+  String get scanNoMatch;
+
+  /// OCR-empty error message
+  ///
+  /// In en, this message translates to:
+  /// **'No text detected on the label.'**
+  String get scanNoText;
+
+  /// Skip onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get onboardingSkip;
+
+  /// Next slide button
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get onboardingNext;
+
+  /// Final onboarding CTA
+  ///
+  /// In en, this message translates to:
+  /// **'Begin the quiz'**
+  String get onboardingBegin;
+
+  /// Onboarding slide 1 eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'PALATE QUIZ'**
+  String get onboardingSlide1Eyebrow;
+
+  /// Onboarding slide 1 hero copy
+  ///
+  /// In en, this message translates to:
+  /// **'Find your\ntaste DNA'**
+  String get onboardingSlide1Headline;
+
+  /// Onboarding slide 1 byline
+  ///
+  /// In en, this message translates to:
+  /// **'Six axes of flavour learn whether you lean sweet or dry, fruity or smoky, light or full-bodied.'**
+  String get onboardingSlide1Byline;
+
+  /// Onboarding slide 2 eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'LABEL SCANNER'**
+  String get onboardingSlide2Eyebrow;
+
+  /// Onboarding slide 2 hero copy
+  ///
+  /// In en, this message translates to:
+  /// **'Scan any\nbottle'**
+  String get onboardingSlide2Headline;
+
+  /// Onboarding slide 2 byline
+  ///
+  /// In en, this message translates to:
+  /// **'Point your camera at a label. WineBro reads, identifies, and suggests what to eat with it.'**
+  String get onboardingSlide2Byline;
+
+  /// Onboarding slide 3 eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'BROCARD JOURNAL'**
+  String get onboardingSlide3Eyebrow;
+
+  /// Onboarding slide 3 hero copy
+  ///
+  /// In en, this message translates to:
+  /// **'Every sip,\nremembered'**
+  String get onboardingSlide3Headline;
+
+  /// Onboarding slide 3 byline
+  ///
+  /// In en, this message translates to:
+  /// **'A beautiful tasting card for every bottle. Watch your palate evolve over time.'**
+  String get onboardingSlide3Byline;
+
+  /// Settings section header
+  ///
+  /// In en, this message translates to:
+  /// **'APPEARANCE'**
+  String get settingsAppearance;
+
+  /// Settings section header
+  ///
+  /// In en, this message translates to:
+  /// **'ACCOUNT'**
+  String get settingsAccount;
+
+  /// Settings section header
+  ///
+  /// In en, this message translates to:
+  /// **'ABOUT'**
+  String get settingsAbout;
+
+  /// Theme toggle row
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get settingsTheme;
+
+  /// Language picker row
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguageRow;
+
+  /// Sign out row
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get settingsSignOut;
+
+  /// Sign out confirm dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out?'**
+  String get settingsSignOutQuestion;
+
+  /// Sign out dialog body
+  ///
+  /// In en, this message translates to:
+  /// **'You can sign back in any time with the same number.'**
+  String get settingsSignOutConfirm;
+
+  /// Delete account row
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get settingsDelete;
+
+  /// Delete confirm dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your account?'**
+  String get settingsDeleteQuestion;
+
+  /// Delete dialog body
+  ///
+  /// In en, this message translates to:
+  /// **'This wipes your tasting journal, BroCards, and palate profile. Cannot be undone.'**
+  String get settingsDeleteConfirm;
+
+  /// Delete confirm CTA
+  ///
+  /// In en, this message translates to:
+  /// **'Delete forever'**
+  String get settingsDeleteForever;
+
+  /// Snackbar — feature stub
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion coming soon.'**
+  String get settingsDeleteComingSoon;
+
+  /// Generic cancel button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get settingsCancel;
+
+  /// Privacy policy link
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get settingsPrivacyPolicy;
+
+  /// Terms link
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of service'**
+  String get settingsTerms;
+
+  /// Version label
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get settingsVersion;
+
+  /// Settings footer
+  ///
+  /// In en, this message translates to:
+  /// **'Drink responsibly. 18+'**
+  String get settingsResponsibly;
+
+  /// Language picker sheet title
+  ///
+  /// In en, this message translates to:
+  /// **'Choose language'**
+  String get settingsChooseLanguage;
+
+  /// Voice button stub snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Voice coming in v1.1, Bro.'**
+  String get voiceComingSoon;
+
+  /// Flashlight button stub snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Flashlight in v1.1, Bro.'**
+  String get flashlightComingSoon;
 }
 
 class _AppLocalizationsDelegate

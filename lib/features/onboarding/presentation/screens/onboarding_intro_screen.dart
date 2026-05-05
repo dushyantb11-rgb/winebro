@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_motion.dart';
 import 'package:winebro/core/theme/app_theme.dart';
@@ -24,29 +25,28 @@ class _OnboardingIntroScreenState extends State<OnboardingIntroScreen> {
   final _pageController = PageController();
   int _index = 0;
 
-  static const _slides = [
-    _Slide(
-      eyebrow: 'PALATE QUIZ',
-      headline: 'Find your\ntaste DNA',
-      byline:
-          'Six axes of flavour learn whether you lean sweet or dry, fruity or smoky, light or full-bodied.',
-      icon: Icons.fingerprint,
-    ),
-    _Slide(
-      eyebrow: 'LABEL SCANNER',
-      headline: 'Scan any\nbottle',
-      byline:
-          'Point your camera at a label. WineBro reads, identifies, and suggests what to eat with it.',
-      icon: Icons.qr_code_scanner,
-    ),
-    _Slide(
-      eyebrow: 'BROCARD JOURNAL',
-      headline: 'Every sip,\nremembered',
-      byline:
-          'A beautiful tasting card for every bottle. Watch your palate evolve over time.',
-      icon: Icons.book_outlined,
-    ),
-  ];
+  static const _slideCount = 3;
+
+  List<_Slide> _slides(BuildContext context) => [
+        _Slide(
+          eyebrow: context.l10n.onboardingSlide1Eyebrow,
+          headline: context.l10n.onboardingSlide1Headline,
+          byline: context.l10n.onboardingSlide1Byline,
+          icon: Icons.fingerprint,
+        ),
+        _Slide(
+          eyebrow: context.l10n.onboardingSlide2Eyebrow,
+          headline: context.l10n.onboardingSlide2Headline,
+          byline: context.l10n.onboardingSlide2Byline,
+          icon: Icons.qr_code_scanner,
+        ),
+        _Slide(
+          eyebrow: context.l10n.onboardingSlide3Eyebrow,
+          headline: context.l10n.onboardingSlide3Headline,
+          byline: context.l10n.onboardingSlide3Byline,
+          icon: Icons.book_outlined,
+        ),
+      ];
 
   @override
   void dispose() {
@@ -56,7 +56,7 @@ class _OnboardingIntroScreenState extends State<OnboardingIntroScreen> {
 
   void _next() {
     HapticFeedback.lightImpact();
-    if (_index < _slides.length - 1) {
+    if (_index < _slideCount - 1) {
       _pageController.nextPage(
         duration: AppMotion.gentle,
         curve: AppMotion.standard,
@@ -74,7 +74,8 @@ class _OnboardingIntroScreenState extends State<OnboardingIntroScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final isLast = _index == _slides.length - 1;
+    final slides = _slides(context);
+    final isLast = _index == slides.length - 1;
 
     return Scaffold(
       body: Stack(
@@ -82,10 +83,10 @@ class _OnboardingIntroScreenState extends State<OnboardingIntroScreen> {
           // Pages
           PageView.builder(
             controller: _pageController,
-            itemCount: _slides.length,
+            itemCount: slides.length,
             onPageChanged: (i) => setState(() => _index = i),
             itemBuilder: (_, i) =>
-                _SlideView(slide: _slides[i], colors: colors),
+                _SlideView(slide: slides[i], colors: colors),
           ),
 
           // Skip
@@ -98,7 +99,7 @@ class _OnboardingIntroScreenState extends State<OnboardingIntroScreen> {
                 style: TextButton.styleFrom(
                   foregroundColor: colors.inkOnHero.withValues(alpha: 0.7),
                 ),
-                child: const Text('Skip'),
+                child: Text(context.l10n.onboardingSkip),
               ),
             ),
           ),
@@ -116,7 +117,7 @@ class _OnboardingIntroScreenState extends State<OnboardingIntroScreen> {
                     // Dots
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(_slides.length, (i) {
+                      children: List.generate(slides.length, (i) {
                         final active = i == _index;
                         return AnimatedContainer(
                           duration: AppMotion.fast,
@@ -143,7 +144,9 @@ class _OnboardingIntroScreenState extends State<OnboardingIntroScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 18),
                         ),
                         child: Text(
-                          isLast ? 'Begin the quiz' : 'Next',
+                          isLast
+                              ? context.l10n.onboardingBegin
+                              : context.l10n.onboardingNext,
                           style: const TextStyle(
                             fontFamily: 'Montserrat',
                             fontSize: 16,

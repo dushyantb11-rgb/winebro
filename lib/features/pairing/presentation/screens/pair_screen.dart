@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:string_similarity/string_similarity.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
+import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_elevation.dart';
 import 'package:winebro/core/theme/app_motion.dart';
@@ -111,7 +112,7 @@ class _PairScreenState extends ConsumerState<PairScreen> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
                 child: Text(
-                  'Pair',
+                  context.l10n.pairTitleHero,
                   style: TextStyle(
                     fontFamily: 'PlayfairDisplay',
                     fontSize: 36,
@@ -127,8 +128,8 @@ class _PairScreenState extends ConsumerState<PairScreen> {
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                 child: Text(
                   hasSelection
-                      ? 'Bro\'s recommendations are below.'
-                      : 'What are you eating, drinking, or celebrating?',
+                      ? context.l10n.pairBylineResults
+                      : context.l10n.pairBylinePrompt,
                   style: context.serifQuote.copyWith(
                     color: colors.textSecondary,
                   ),
@@ -171,9 +172,8 @@ class _PairScreenState extends ConsumerState<PairScreen> {
                               onPressed: () {
                                 HapticFeedback.lightImpact();
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                        'Voice coming in v1.1, Bro.'),
+                                  SnackBar(
+                                    content: Text(context.l10n.voiceComingSoon),
                                   ),
                                 );
                               },
