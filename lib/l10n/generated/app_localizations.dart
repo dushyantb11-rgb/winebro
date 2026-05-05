@@ -1631,6 +1631,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reorder'**
   String get homeRestockReorder;
+
+  /// Eyebrow on calibration card
+  ///
+  /// In en, this message translates to:
+  /// **'CALIBRATING YOUR NOSE'**
+  String get aromaCalibrationEyebrow;
+
+  /// Calibration question for one aroma
+  ///
+  /// In en, this message translates to:
+  /// **'Have you smelled {aroma}?'**
+  String aromaCalibrationPrompt(String aroma);
+
+  /// Free-text association field hint
+  ///
+  /// In en, this message translates to:
+  /// **'What does it remind you of? (optional)'**
+  String get aromaCalibrationAssociationHint;
+
+  /// Familiar choice
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, I know this scent'**
+  String get aromaCalibrationFamiliar;
+
+  /// Sometimes choice
+  ///
+  /// In en, this message translates to:
+  /// **'Sometimes — I think so'**
+  String get aromaCalibrationSometimes;
+
+  /// Never choice
+  ///
+  /// In en, this message translates to:
+  /// **'Never — first time'**
+  String get aromaCalibrationNever;
+
+  /// Snackbar after completion
+  ///
+  /// In en, this message translates to:
+  /// **'Bro just got better at reading your palate.'**
+  String get aromaCalibrationThanks;
+
+  /// CTA button on Aroma Wheel screen
+  ///
+  /// In en, this message translates to:
+  /// **'Calibrate your nose · 60 seconds'**
+  String get aromaCalibrationCta;
 }
 
 class _AppLocalizationsDelegate

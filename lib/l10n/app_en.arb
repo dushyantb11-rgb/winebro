@@ -836,5 +836,32 @@
   "@homeRestockEyebrow": {"description": "Eyebrow on the Home Restock card"},
 
   "homeRestockReorder": "Reorder",
-  "@homeRestockReorder": {"description": "CTA on the Home Restock card"}
+  "@homeRestockReorder": {"description": "CTA on the Home Restock card"},
+
+  "aromaCalibrationEyebrow": "CALIBRATING YOUR NOSE",
+  "@aromaCalibrationEyebrow": {"description": "Eyebrow on calibration card"},
+
+  "aromaCalibrationPrompt": "Have you smelled {aroma}?",
+  "@aromaCalibrationPrompt": {
+    "description": "Calibration question for one aroma",
+    "placeholders": {"aroma": {"type": "String"}}
+  },
+
+  "aromaCalibrationAssociationHint": "What does it remind you of? (optional)",
+  "@aromaCalibrationAssociationHint": {"description": "Free-text association field hint"},
+
+  "aromaCalibrationFamiliar": "Yes, I know this scent",
+  "@aromaCalibrationFamiliar": {"description": "Familiar choice"},
+
+  "aromaCalibrationSometimes": "Sometimes — I think so",
+  "@aromaCalibrationSometimes": {"description": "Sometimes choice"},
+
+  "aromaCalibrationNever": "Never — first time",
+  "@aromaCalibrationNever": {"description": "Never choice"},
+
+  "aromaCalibrationThanks": "Bro just got better at reading your palate.",
+  "@aromaCalibrationThanks": {"description": "Snackbar after completion"},
+
+  "aromaCalibrationCta": "Calibrate your nose · 60 seconds",
+  "@aromaCalibrationCta": {"description": "CTA button on Aroma Wheel screen"}
 }

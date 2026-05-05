@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/features/aroma_wheel/domain/aroma_taxonomy.dart';
+import 'package:winebro/features/aroma_wheel/presentation/aroma_calibration_sheet.dart';
 
 class AromaWheelScreen extends StatefulWidget {
   const AromaWheelScreen({super.key});
@@ -35,6 +36,21 @@ class _AromaWheelScreenState extends State<AromaWheelScreen> {
             }
           },
         ),
+        actions: [
+          if (_selectedCategoryIndex == null)
+            TextButton.icon(
+              onPressed: () => AromaCalibrationSheet.show(context),
+              icon: Icon(Icons.tune, color: colors.paprika, size: 18),
+              label: Text(
+                l10n.aromaCalibrationCta,
+                style: TextStyle(
+                  color: colors.paprika,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+        ],
       ),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
