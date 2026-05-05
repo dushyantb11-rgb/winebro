@@ -11,7 +11,7 @@ import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_motion.dart';
 import 'package:winebro/core/theme/app_theme.dart';
-import 'package:winebro/features/journal/presentation/screens/journal_screen.dart';
+import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
 import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
 
@@ -628,11 +628,12 @@ class _MatchedSheet extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  BroCardSheet.show(
+                  QuickLogSheet.show(
                     context,
-                    productName: product.name,
-                    category: product.category.group,
-                    region: product.region,
+                    prefillName: product.name,
+                    prefillCategory: product.category.group,
+                    prefillRegion: product.region,
+                    prefillProductId: product.id,
                   );
                 },
                 icon: const Icon(Icons.book_outlined, size: 18),

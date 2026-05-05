@@ -737,5 +737,62 @@
   "@voiceComingSoon": {"description": "Voice button stub snackbar"},
 
   "flashlightComingSoon": "Flashlight in v1.1, Bro.",
-  "@flashlightComingSoon": {"description": "Flashlight button stub snackbar"}
+  "@flashlightComingSoon": {"description": "Flashlight button stub snackbar"},
+
+  "quickLogTitle": "Quick log",
+  "@quickLogTitle": {"description": "Quick-log sheet title"},
+
+  "quickLogSearchHint": "What did you taste?",
+  "@quickLogSearchHint": {"description": "Quick-log product search hint"},
+
+  "quickLogRatingPrompt": "How was it, Bro?",
+  "@quickLogRatingPrompt": {"description": "Star rating prompt"},
+
+  "quickLogFoodOptional": "What did you eat with it? (optional)",
+  "@quickLogFoodOptional": {"description": "Optional food pairing prompt"},
+
+  "quickLogBuyAgainPrompt": "Would you buy this again?",
+  "@quickLogBuyAgainPrompt": {"description": "Buy-again toggle prompt"},
+
+  "quickLogSave": "Save",
+  "@quickLogSave": {"description": "Quick-log save CTA"},
+
+  "quickLogProUpgrade": "Add detailed tasting notes →",
+  "@quickLogProUpgrade": {"description": "Upgrade to Pro 6-step CTA"},
+
+  "quickLogSavedSnackbar": "Saved to your story",
+  "@quickLogSavedSnackbar": {"description": "Snackbar after Quick-log save"},
+
+  "wishlistTitle": "Wishlist",
+  "@wishlistTitle": {"description": "Wishlist screen + Home tile title"},
+
+  "wishlistEmptyHint": "Save bottles you want to try — they show up here.",
+  "@wishlistEmptyHint": {"description": "Empty wishlist hint"},
+
+  "wishlistRemove": "Remove",
+  "@wishlistRemove": {"description": "Remove from wishlist button"},
+
+  "actionBuy": "Buy ₹{price}",
+  "@actionBuy": {
+    "description": "Buy button on Pair results / detail",
+    "placeholders": {"price": {"type": "String"}}
+  },
+
+  "actionSave": "Save",
+  "@actionSave": {"description": "Save to wishlist button"},
+
+  "actionSaved": "Saved",
+  "@actionSaved": {"description": "Saved state of save button"},
+
+  "actionRemind": "Remind me",
+  "@actionRemind": {"description": "Set calendar reminder button"},
+
+  "actionRemindSet": "Reminder set",
+  "@actionRemindSet": {"description": "Snackbar after calendar reminder set"},
+
+  "wishlistAddedSnackbar": "Added to wishlist",
+  "@wishlistAddedSnackbar": {"description": "Snackbar after Save"},
+
+  "wishlistRemovedSnackbar": "Removed from wishlist",
+  "@wishlistRemovedSnackbar": {"description": "Snackbar after Remove"}
 }

@@ -11,6 +11,7 @@ import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/core/utils/formatters.dart';
 import 'package:winebro/features/aroma_wheel/domain/aroma_taxonomy.dart';
 import 'package:winebro/features/journal/domain/journal_entry.dart';
+import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
 import 'package:winebro/shared/widgets/segmented_chip_selector.dart';
 import 'package:winebro/shared/widgets/star_rating.dart';
@@ -187,7 +188,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
         child: FloatingActionButton.extended(
           onPressed: () {
             HapticFeedback.mediumImpact();
-            BroCardSheet.show(context);
+            QuickLogSheet.show(context);
           },
           backgroundColor: colors.paprika,
           icon: const Icon(Icons.add, color: Colors.white),
@@ -522,7 +523,7 @@ class _EmptyState extends StatelessWidget {
                     label: Text(context.l10n.journalCtaLogManually),
                     onPressed: () {
                       HapticFeedback.mediumImpact();
-                      BroCardSheet.show(context);
+                      QuickLogSheet.show(context);
                     },
                   ),
                 ),

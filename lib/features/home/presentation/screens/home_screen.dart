@@ -10,7 +10,7 @@ import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/features/auth/domain/auth_state.dart';
 import 'package:winebro/features/auth/presentation/providers/auth_provider.dart';
 import 'package:winebro/features/home/presentation/providers/home_providers.dart';
-import 'package:winebro/features/journal/presentation/screens/journal_screen.dart';
+import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/shared/widgets/emotion_tile.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
@@ -391,11 +391,12 @@ class HomeScreen extends ConsumerWidget {
                     child: ElevatedButton.icon(
                       onPressed: () {
                         Navigator.pop(context);
-                        BroCardSheet.show(
+                        QuickLogSheet.show(
                           context,
-                          productName: product.name,
-                          category: product.category.group,
-                          region: product.region,
+                          prefillName: product.name,
+                          prefillCategory: product.category.group,
+                          prefillRegion: product.region,
+                          prefillProductId: product.id,
                         );
                       },
                       icon: const Icon(Icons.book_outlined, size: 18),
