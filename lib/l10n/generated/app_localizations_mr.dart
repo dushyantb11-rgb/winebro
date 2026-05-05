@@ -1087,4 +1087,73 @@ class AppLocalizationsMr extends AppLocalizations {
   @override
   String get settingsVisibilityPrivateHint =>
       'Only you can see your journal — community signals stay anonymous.';
+
+  @override
+  String get wrapUpProfileTitle => 'Your year in tastings';
+
+  @override
+  String get wrapUpProfileHint => 'Bro put together your wrap-up.';
+
+  @override
+  String get wrapUpYearSuffix => 'WRAP-UP';
+
+  @override
+  String get wrapUpNext => 'Next';
+
+  @override
+  String get wrapUpDone => 'Done';
+
+  @override
+  String get wrapUpYourYearEyebrow => 'YOUR YEAR';
+
+  @override
+  String get wrapUpTastingsLabel => 'tastings logged';
+
+  @override
+  String wrapUpYourYearBody(int count) {
+    return '$count different bottles. Each one a story.';
+  }
+
+  @override
+  String get wrapUpMostPouredEyebrow => 'MOST POURED';
+
+  @override
+  String get wrapUpMostPouredBody =>
+      'Your year had a clear hero. Bro saw it coming.';
+
+  @override
+  String get wrapUpFavoriteRegionEyebrow => 'FAVORITE REGION';
+
+  @override
+  String get wrapUpFavoriteRegionBody => 'Your palate kept coming back here.';
+
+  @override
+  String get wrapUpTopPairingEyebrow => 'WITH FOOD';
+
+  @override
+  String get wrapUpTopPairingBody =>
+      'The pairing your year kept circling back to.';
+
+  @override
+  String get wrapUpStreakEyebrow => 'ON A ROLL';
+
+  @override
+  String get wrapUpStreakLabel => 'consecutive days';
+
+  @override
+  String wrapUpStreakBody(int count) {
+    return '$count bottles you rated 4 stars or higher.';
+  }
+
+  @override
+  String wrapUpEmptyTitle(int year) {
+    return 'Your $year starts here.';
+  }
+
+  @override
+  String get wrapUpEmptyBody =>
+      'Log a tasting and Bro will start putting together your year.';
+
+  @override
+  String get wrapUpEmptyCta => 'Open journal';
 }

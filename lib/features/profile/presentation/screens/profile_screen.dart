@@ -105,6 +105,7 @@ class ProfileScreen extends ConsumerWidget {
               _StatsRow(state: state),
               const SizedBox(height: 32),
               if (state.totalJournalEntries >= 3) const _CrossCategoryTile(),
+              if (state.totalJournalEntries >= 5) const _WrapUpTile(),
               const _FriendsTile(),
               const _WishlistTile(),
               const SizedBox(height: 24),
@@ -172,6 +173,67 @@ class _WishlistTile extends ConsumerWidget {
             ),
             Icon(Icons.chevron_right, color: colors.textTertiary, size: 20),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// Yearly Wrap-up tile (S7.1)
+// ============================================================
+
+class _WrapUpTile extends ConsumerWidget {
+  const _WrapUpTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.appColors;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: InkWell(
+        onTap: () => context.push('/wrap-up'),
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [colors.paprika, colors.paprikaDark],
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.auto_awesome, color: colors.inkOnHero, size: 22),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.wrapUpProfileTitle,
+                      style: TextStyle(
+                        fontFamily: 'PlayfairDisplay',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: colors.inkOnHero,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      context.l10n.wrapUpProfileHint,
+                      style: TextStyle(
+                        color: colors.inkOnHero.withValues(alpha: 0.85),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right,
+                  color: colors.inkOnHero.withValues(alpha: 0.85), size: 20),
+            ],
+          ),
         ),
       ),
     );
