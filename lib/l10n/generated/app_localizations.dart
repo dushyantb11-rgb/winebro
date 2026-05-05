@@ -1451,6 +1451,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Flashlight in v1.1, Bro.'**
   String get flashlightComingSoon;
+
+  /// Quick-log sheet title
+  ///
+  /// In en, this message translates to:
+  /// **'Quick log'**
+  String get quickLogTitle;
+
+  /// Quick-log product search hint
+  ///
+  /// In en, this message translates to:
+  /// **'What did you taste?'**
+  String get quickLogSearchHint;
+
+  /// Star rating prompt
+  ///
+  /// In en, this message translates to:
+  /// **'How was it, Bro?'**
+  String get quickLogRatingPrompt;
+
+  /// Optional food pairing prompt
+  ///
+  /// In en, this message translates to:
+  /// **'What did you eat with it? (optional)'**
+  String get quickLogFoodOptional;
+
+  /// Buy-again toggle prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Would you buy this again?'**
+  String get quickLogBuyAgainPrompt;
+
+  /// Quick-log save CTA
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get quickLogSave;
+
+  /// Upgrade to Pro 6-step CTA
+  ///
+  /// In en, this message translates to:
+  /// **'Add detailed tasting notes →'**
+  String get quickLogProUpgrade;
+
+  /// Snackbar after Quick-log save
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to your story'**
+  String get quickLogSavedSnackbar;
+
+  /// Wishlist screen + Home tile title
+  ///
+  /// In en, this message translates to:
+  /// **'Wishlist'**
+  String get wishlistTitle;
+
+  /// Empty wishlist hint
+  ///
+  /// In en, this message translates to:
+  /// **'Save bottles you want to try — they show up here.'**
+  String get wishlistEmptyHint;
+
+  /// Remove from wishlist button
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get wishlistRemove;
+
+  /// Buy button on Pair results / detail
+  ///
+  /// In en, this message translates to:
+  /// **'Buy ₹{price}'**
+  String actionBuy(String price);
+
+  /// Save to wishlist button
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get actionSave;
+
+  /// Saved state of save button
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get actionSaved;
+
+  /// Set calendar reminder button
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me'**
+  String get actionRemind;
+
+  /// Snackbar after calendar reminder set
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder set'**
+  String get actionRemindSet;
+
+  /// Snackbar after Save
+  ///
+  /// In en, this message translates to:
+  /// **'Added to wishlist'**
+  String get wishlistAddedSnackbar;
+
+  /// Snackbar after Remove
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from wishlist'**
+  String get wishlistRemovedSnackbar;
 }
 
 class _AppLocalizationsDelegate

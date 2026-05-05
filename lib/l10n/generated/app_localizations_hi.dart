@@ -743,4 +743,61 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get flashlightComingSoon => 'Flashlight in v1.1, Bro.';
+
+  @override
+  String get quickLogTitle => 'Quick log';
+
+  @override
+  String get quickLogSearchHint => 'What did you taste?';
+
+  @override
+  String get quickLogRatingPrompt => 'How was it, Bro?';
+
+  @override
+  String get quickLogFoodOptional => 'What did you eat with it? (optional)';
+
+  @override
+  String get quickLogBuyAgainPrompt => 'Would you buy this again?';
+
+  @override
+  String get quickLogSave => 'Save';
+
+  @override
+  String get quickLogProUpgrade => 'Add detailed tasting notes →';
+
+  @override
+  String get quickLogSavedSnackbar => 'Saved to your story';
+
+  @override
+  String get wishlistTitle => 'Wishlist';
+
+  @override
+  String get wishlistEmptyHint =>
+      'Save bottles you want to try — they show up here.';
+
+  @override
+  String get wishlistRemove => 'Remove';
+
+  @override
+  String actionBuy(String price) {
+    return 'Buy ₹$price';
+  }
+
+  @override
+  String get actionSave => 'Save';
+
+  @override
+  String get actionSaved => 'Saved';
+
+  @override
+  String get actionRemind => 'Remind me';
+
+  @override
+  String get actionRemindSet => 'Reminder set';
+
+  @override
+  String get wishlistAddedSnackbar => 'Added to wishlist';
+
+  @override
+  String get wishlistRemovedSnackbar => 'Removed from wishlist';
 }
