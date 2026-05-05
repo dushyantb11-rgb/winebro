@@ -1156,4 +1156,24 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get wrapUpEmptyCta => 'Open journal';
+
+  @override
+  String get ageGateLeading =>
+      'I\'m 21 or older. I\'ll drink responsibly. I agree to WineBro\'s ';
+
+  @override
+  String get ageGatePrivacy => 'Privacy Policy';
+
+  @override
+  String get ageGateAnd => ' and ';
+
+  @override
+  String get ageGateTerms => 'Terms of Service';
+
+  @override
+  String get ageGateTrailing => '.';
+
+  @override
+  String get ageGateRequired =>
+      'Please confirm you are 21+ and accept the policies to continue.';
 }

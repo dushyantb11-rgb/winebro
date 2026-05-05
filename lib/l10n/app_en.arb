@@ -1096,5 +1096,18 @@
   "wrapUpEmptyBody": "Log a tasting and Bro will start putting together your year.",
   "@wrapUpEmptyBody": {"description": "Empty state body"},
   "wrapUpEmptyCta": "Open journal",
-  "@wrapUpEmptyCta": {"description": "Empty CTA"}
+  "@wrapUpEmptyCta": {"description": "Empty CTA"},
+
+  "ageGateLeading": "I'm 21 or older. I'll drink responsibly. I agree to WineBro's ",
+  "@ageGateLeading": {"description": "Age gate leading text"},
+  "ageGatePrivacy": "Privacy Policy",
+  "@ageGatePrivacy": {"description": "Privacy link in age gate"},
+  "ageGateAnd": " and ",
+  "@ageGateAnd": {"description": "Conjunction"},
+  "ageGateTerms": "Terms of Service",
+  "@ageGateTerms": {"description": "Terms link in age gate"},
+  "ageGateTrailing": ".",
+  "@ageGateTrailing": {"description": "Trailing punctuation"},
+  "ageGateRequired": "Please confirm you are 21+ and accept the policies to continue.",
+  "@ageGateRequired": {"description": "Snackbar when checkbox unchecked"}
 }

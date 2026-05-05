@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/utils/validators.dart';
@@ -19,6 +21,7 @@ class _NameScreenState extends ConsumerState<NameScreen> {
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  bool _ageConfirmed = false;
 
   @override
   void dispose() {
@@ -28,15 +31,27 @@ class _NameScreenState extends ConsumerState<NameScreen> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
+    if (!_ageConfirmed) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.ageGateRequired)),
+      );
+      return;
+    }
 
     setState(() => _isLoading = true);
 
     await ref.read(authStateProvider.notifier).saveProfile(
       displayName: _nameController.text.trim(),
-      isAgeVerified: true,
+      isAgeVerified: _ageConfirmed,
     );
 
     if (mounted) setState(() => _isLoading = false);
+  }
+
+  Future<void> _openLegal(Uri uri) async {
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   @override
@@ -96,7 +111,20 @@ class _NameScreenState extends ConsumerState<NameScreen> {
                 validator: Validators.displayName,
                 onFieldSubmitted: (_) => _submit(),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 28),
+              _AgeGateRow(
+                value: _ageConfirmed,
+                colors: colors,
+                onChanged: (v) =>
+                    setState(() => _ageConfirmed = v ?? false),
+                onTapPrivacy: () => _openLegal(
+                  Uri.parse('https://winebro.web.app/privacy-policy.html'),
+                ),
+                onTapTerms: () => _openLegal(
+                  Uri.parse('https://winebro.web.app/terms.html'),
+                ),
+              ),
+              const SizedBox(height: 24),
               LoadingButton(
                 onPressed: _submit,
                 label: l10n.continueButton,
@@ -106,6 +134,72 @@ class _NameScreenState extends ConsumerState<NameScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _AgeGateRow extends StatelessWidget {
+  const _AgeGateRow({
+    required this.value,
+    required this.colors,
+    required this.onChanged,
+    required this.onTapPrivacy,
+    required this.onTapTerms,
+  });
+
+  final bool value;
+  final AppColors colors;
+  final ValueChanged<bool?> onChanged;
+  final VoidCallback onTapPrivacy;
+  final VoidCallback onTapTerms;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final linkStyle = TextStyle(
+      color: colors.paprika,
+      fontWeight: FontWeight.w700,
+      decoration: TextDecoration.underline,
+    );
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Checkbox(
+          value: value,
+          onChanged: onChanged,
+          activeColor: colors.paprika,
+          checkColor: colors.inkOnHero,
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: Text.rich(
+              TextSpan(
+                style: TextStyle(
+                  color: colors.textSecondary,
+                  fontSize: 12,
+                  height: 1.45,
+                ),
+                children: [
+                  TextSpan(text: l10n.ageGateLeading),
+                  TextSpan(
+                    text: l10n.ageGatePrivacy,
+                    style: linkStyle,
+                    recognizer: TapGestureRecognizer()..onTap = onTapPrivacy,
+                  ),
+                  TextSpan(text: l10n.ageGateAnd),
+                  TextSpan(
+                    text: l10n.ageGateTerms,
+                    style: linkStyle,
+                    recognizer: TapGestureRecognizer()..onTap = onTapTerms,
+                  ),
+                  TextSpan(text: l10n.ageGateTrailing),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

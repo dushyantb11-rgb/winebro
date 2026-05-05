@@ -2183,6 +2183,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open journal'**
   String get wrapUpEmptyCta;
+
+  /// Age gate leading text
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m 21 or older. I\'ll drink responsibly. I agree to WineBro\'s '**
+  String get ageGateLeading;
+
+  /// Privacy link in age gate
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get ageGatePrivacy;
+
+  /// Conjunction
+  ///
+  /// In en, this message translates to:
+  /// **' and '**
+  String get ageGateAnd;
+
+  /// Terms link in age gate
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get ageGateTerms;
+
+  /// Trailing punctuation
+  ///
+  /// In en, this message translates to:
+  /// **'.'**
+  String get ageGateTrailing;
+
+  /// Snackbar when checkbox unchecked
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm you are 21+ and accept the policies to continue.'**
+  String get ageGateRequired;
 }
 
 class _AppLocalizationsDelegate
