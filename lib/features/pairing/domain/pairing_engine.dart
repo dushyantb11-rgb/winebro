@@ -4,6 +4,12 @@ import 'package:winebro/core/constants/pairing_constants.dart';
 import 'package:winebro/features/pairing/domain/dish.dart';
 import 'package:winebro/features/pairing/domain/palate_profile.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
+import 'package:winebro/features/pairing_feedback/domain/pairing_aggregate.dart';
+
+/// Maximum +/- score nudge from community feedback (engine v1.1).
+/// At full confidence (large sample, all Yes), bias is +0.5 multiplied
+/// by this cap → adds at most this many points to the match score.
+const double kFeedbackBiasCapPoints = 10;
 
 class PairingEngine {
   const PairingEngine();
@@ -106,6 +112,7 @@ class PairingEngine {
     required List<Product> products,
     Occasion? occasion,
     int topN = 5,
+    Map<String, PairingAggregate>? feedbackAggregates,
   }) {
     final results = <PairingResult>[];
 
@@ -119,8 +126,11 @@ class PairingEngine {
 
       final foodScore = _foodDrinkRuleScore(dish.foodProperties, product);
 
+      final feedbackBonus =
+          _feedbackBonus(product.id, feedbackAggregates);
+
       final blendedScore =
-          (userMatch.score * 0.6 + foodScore * 100 * 0.4)
+          (userMatch.score * 0.6 + foodScore * 100 * 0.4 + feedbackBonus)
               .clamp(kScoreFloor, kScoreCeiling);
 
       results.add(PairingResult(
@@ -130,11 +140,30 @@ class PairingEngine {
         archetypeBonus: userMatch.archetypeBonus,
         occasionBonus: userMatch.occasionBonus,
         frequencyPenalty: 0,
+        feedbackBonus: feedbackBonus,
       ));
     }
 
     results.sort((a, b) => b.score.compareTo(a.score));
     return results.take(topN).toList();
+  }
+
+  /// Engine v1.1: convert a community pairing aggregate (yes/maybe/no
+  /// counters) into a points-bonus added to the match score.
+  ///
+  /// Bias = signedShrunkBias ∈ [-0.5, 0.5] · 2 · cap → points ∈ [-cap, cap].
+  /// Multiplying by 2 brings the [-0.5, 0.5] range to [-1, 1] before
+  /// scaling — i.e., a fully one-sided community would shift +/- the
+  /// full cap; in practice the Bayesian shrinkage holds early picks
+  /// near zero until enough samples land.
+  double _feedbackBonus(
+    String productId,
+    Map<String, PairingAggregate>? aggregates,
+  ) {
+    if (aggregates == null) return 0;
+    final agg = aggregates[productId];
+    if (agg == null) return 0;
+    return agg.signedShrunkBias() * 2 * kFeedbackBiasCapPoints;
   }
 
   double _weightedCosineSimilarity(PalateProfile user, Product product) {
@@ -330,6 +359,7 @@ class PairingResult {
     required this.archetypeBonus,
     required this.occasionBonus,
     required this.frequencyPenalty,
+    this.feedbackBonus = 0,
   });
 
   final Product product;
@@ -338,6 +368,11 @@ class PairingResult {
   final double archetypeBonus;
   final double occasionBonus;
   final double frequencyPenalty;
+
+  /// Points added to the score from engine v1.1's community
+  /// feedback aggregate (Bayesian-shrunk yes-rate). Zero when no
+  /// community signal exists for this (product, dish) pair.
+  final double feedbackBonus;
 
   int get matchPercent => score.round();
 }
