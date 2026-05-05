@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
@@ -114,6 +115,56 @@ class NotificationHandler {
   /// Firestore on sign-in so server-side targeting can address it.
   Future<String?> getToken() async {
     return FirebaseMessaging.instance.getToken();
+  }
+
+  /// One-shot post-authentication setup. Called from the auth listener
+  /// in WineBroApp the moment a user becomes [Authenticated]. Idempotent.
+  ///
+  /// Steps:
+  ///   1. Request notification permissions (no-op if already granted)
+  ///   2. Subscribe to all topic broadcasts (broTip, tonightsPour, ...)
+  ///   3. Persist FCM token to users/{uid}/fcm_token/primary so CF-07
+  ///      streakLossWarning can target this user
+  ///   4. Listen for token refresh events and update Firestore
+  Future<void> registerForUser(String uid) async {
+    if (kIsWeb) return;
+    final granted = await requestPermissions();
+    if (!granted) {
+      developer.log(
+        'Notifications declined; skipping topic subscribe + token write',
+        name: 'wb.fcm',
+      );
+      return;
+    }
+
+    await subscribeAll();
+
+    // Token + refresh subscription
+    final messaging = FirebaseMessaging.instance;
+    final token = await messaging.getToken();
+    if (token != null) {
+      await _writeToken(uid, token);
+    }
+    messaging.onTokenRefresh.listen((newToken) async {
+      await _writeToken(uid, newToken);
+    });
+  }
+
+  Future<void> _writeToken(String uid, String token) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('fcm_token')
+          .doc('primary')
+          .set({
+        'token': token,
+        'updatedAt': DateTime.now().toIso8601String(),
+        'platform': defaultTargetPlatform.name,
+      });
+    } catch (e) {
+      developer.log('FCM token write failed: $e', name: 'wb.fcm');
+    }
   }
 
   // ====================================================================
