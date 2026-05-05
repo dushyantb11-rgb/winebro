@@ -979,5 +979,65 @@
   "@voiceCaptureTooltip": {"description": "Mic icon tooltip"},
 
   "voiceCaptureAttached": "AUDIO ATTACHED",
-  "@voiceCaptureAttached": {"description": "Audio attached badge"}
+  "@voiceCaptureAttached": {"description": "Audio attached badge"},
+
+  "friendsTitle": "Friends",
+  "@friendsTitle": {"description": "Friends screen title"},
+  "friendsProfileTitle": "Friends",
+  "@friendsProfileTitle": {"description": "Profile tile title"},
+  "friendsProfileEmpty": "Find Bros you know on WineBro.",
+  "@friendsProfileEmpty": {"description": "Profile tile empty hint"},
+  "friendsProfileCount": "Following {count} {count, plural, =1{Bro} other{Bros}}",
+  "@friendsProfileCount": {
+    "description": "Profile tile follow count",
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "friendsDiscoverTitle": "Find friends from contacts",
+  "@friendsDiscoverTitle": {"description": "Discover card title"},
+  "friendsDiscoverHint": "Match phone numbers — never uploads your contacts.",
+  "@friendsDiscoverHint": {"description": "Discover card hint"},
+  "friendsDiscoveryError": "Couldn't read contacts. Check permissions.",
+  "@friendsDiscoveryError": {"description": "Discovery error"},
+  "friendsDiscoveredHeader": "FOUND ({count})",
+  "@friendsDiscoveredHeader": {
+    "description": "Discovered count header",
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "friendsNoneOnApp": "None of your contacts are on WineBro yet.",
+  "@friendsNoneOnApp": {"description": "Empty discovery"},
+  "friendsFollowingHeader": "FOLLOWING ({count})",
+  "@friendsFollowingHeader": {
+    "description": "Following count header",
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "friendsEmpty": "Tap above to find Bros you already know.",
+  "@friendsEmpty": {"description": "Empty following list"},
+  "friendsFollow": "Follow",
+  "@friendsFollow": {"description": "Follow button"},
+  "friendsFollowing": "FOLLOWING",
+  "@friendsFollowing": {"description": "Following badge"},
+  "friendsUnfollow": "Unfollow",
+  "@friendsUnfollow": {"description": "Unfollow tooltip"},
+  "friendsAsContact": "Saved as {contactName}",
+  "@friendsAsContact": {
+    "description": "Contact-name byline",
+    "placeholders": {"contactName": {"type": "String"}}
+  },
+
+  "settingsPrivacy": "PRIVACY",
+  "@settingsPrivacy": {"description": "Privacy section header"},
+  "settingsVisibilityTitle": "Profile visibility",
+  "@settingsVisibilityTitle": {"description": "Visibility row title"},
+  "settingsVisibilityPublic": "Public",
+  "@settingsVisibilityPublic": {"description": "Visibility option"},
+  "settingsVisibilityFriends": "Friends",
+  "@settingsVisibilityFriends": {"description": "Visibility option"},
+  "settingsVisibilityPrivate": "Private",
+  "@settingsVisibilityPrivate": {"description": "Visibility option"},
+  "settingsVisibilityPublicHint": "Anyone can see your name and recent BroCards.",
+  "@settingsVisibilityPublicHint": {"description": "Public hint"},
+  "settingsVisibilityFriendsHint": "Only people you follow can see your BroCards.",
+  "@settingsVisibilityFriendsHint": {"description": "Friends hint"},
+  "settingsVisibilityPrivateHint": "Only you can see your journal — community signals stay anonymous.",
+  "@settingsVisibilityPrivateHint": {"description": "Private hint"}
 }

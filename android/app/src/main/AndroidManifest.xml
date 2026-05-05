@@ -22,6 +22,9 @@
             <action android:name="android.speech.RecognitionService" />
         </intent>
     </queries>
+
+    <!-- S5.2 friend graph: contact discovery (hashed locally) -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <application
         android:label="winebro"
         android:name="${applicationName}"

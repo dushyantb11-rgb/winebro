@@ -1925,6 +1925,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'AUDIO ATTACHED'**
   String get voiceCaptureAttached;
+
+  /// Friends screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Friends'**
+  String get friendsTitle;
+
+  /// Profile tile title
+  ///
+  /// In en, this message translates to:
+  /// **'Friends'**
+  String get friendsProfileTitle;
+
+  /// Profile tile empty hint
+  ///
+  /// In en, this message translates to:
+  /// **'Find Bros you know on WineBro.'**
+  String get friendsProfileEmpty;
+
+  /// Profile tile follow count
+  ///
+  /// In en, this message translates to:
+  /// **'Following {count} {count, plural, =1{Bro} other{Bros}}'**
+  String friendsProfileCount(int count);
+
+  /// Discover card title
+  ///
+  /// In en, this message translates to:
+  /// **'Find friends from contacts'**
+  String get friendsDiscoverTitle;
+
+  /// Discover card hint
+  ///
+  /// In en, this message translates to:
+  /// **'Match phone numbers — never uploads your contacts.'**
+  String get friendsDiscoverHint;
+
+  /// Discovery error
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t read contacts. Check permissions.'**
+  String get friendsDiscoveryError;
+
+  /// Discovered count header
+  ///
+  /// In en, this message translates to:
+  /// **'FOUND ({count})'**
+  String friendsDiscoveredHeader(int count);
+
+  /// Empty discovery
+  ///
+  /// In en, this message translates to:
+  /// **'None of your contacts are on WineBro yet.'**
+  String get friendsNoneOnApp;
+
+  /// Following count header
+  ///
+  /// In en, this message translates to:
+  /// **'FOLLOWING ({count})'**
+  String friendsFollowingHeader(int count);
+
+  /// Empty following list
+  ///
+  /// In en, this message translates to:
+  /// **'Tap above to find Bros you already know.'**
+  String get friendsEmpty;
+
+  /// Follow button
+  ///
+  /// In en, this message translates to:
+  /// **'Follow'**
+  String get friendsFollow;
+
+  /// Following badge
+  ///
+  /// In en, this message translates to:
+  /// **'FOLLOWING'**
+  String get friendsFollowing;
+
+  /// Unfollow tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Unfollow'**
+  String get friendsUnfollow;
+
+  /// Contact-name byline
+  ///
+  /// In en, this message translates to:
+  /// **'Saved as {contactName}'**
+  String friendsAsContact(String contactName);
+
+  /// Privacy section header
+  ///
+  /// In en, this message translates to:
+  /// **'PRIVACY'**
+  String get settingsPrivacy;
+
+  /// Visibility row title
+  ///
+  /// In en, this message translates to:
+  /// **'Profile visibility'**
+  String get settingsVisibilityTitle;
+
+  /// Visibility option
+  ///
+  /// In en, this message translates to:
+  /// **'Public'**
+  String get settingsVisibilityPublic;
+
+  /// Visibility option
+  ///
+  /// In en, this message translates to:
+  /// **'Friends'**
+  String get settingsVisibilityFriends;
+
+  /// Visibility option
+  ///
+  /// In en, this message translates to:
+  /// **'Private'**
+  String get settingsVisibilityPrivate;
+
+  /// Public hint
+  ///
+  /// In en, this message translates to:
+  /// **'Anyone can see your name and recent BroCards.'**
+  String get settingsVisibilityPublicHint;
+
+  /// Friends hint
+  ///
+  /// In en, this message translates to:
+  /// **'Only people you follow can see your BroCards.'**
+  String get settingsVisibilityFriendsHint;
+
+  /// Private hint
+  ///
+  /// In en, this message translates to:
+  /// **'Only you can see your journal — community signals stay anonymous.'**
+  String get settingsVisibilityPrivateHint;
 }
 
 class _AppLocalizationsDelegate

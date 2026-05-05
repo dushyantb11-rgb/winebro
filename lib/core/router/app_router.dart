@@ -8,6 +8,7 @@ import 'package:winebro/features/auth/presentation/screens/name_screen.dart';
 import 'package:winebro/features/auth/presentation/screens/otp_screen.dart';
 import 'package:winebro/features/auth/presentation/screens/splash_screen.dart';
 import 'package:winebro/features/aroma_wheel/presentation/screens/aroma_wheel_screen.dart';
+import 'package:winebro/features/friends/presentation/screens/friends_screen.dart';
 import 'package:winebro/features/home/presentation/screens/home_screen.dart';
 import 'package:winebro/features/journal/presentation/screens/journal_screen.dart';
 import 'package:winebro/features/onboarding/presentation/screens/onboarding_intro_screen.dart';
@@ -133,6 +134,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/wishlist',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (_, __) => const WishlistScreen(),
+      ),
+      GoRoute(
+        path: '/friends',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (_, __) => const FriendsScreen(),
       ),
       GoRoute(
         path: '/feedback/:entryId',

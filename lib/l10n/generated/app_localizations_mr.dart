@@ -999,4 +999,92 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get voiceCaptureAttached => 'AUDIO ATTACHED';
+
+  @override
+  String get friendsTitle => 'Friends';
+
+  @override
+  String get friendsProfileTitle => 'Friends';
+
+  @override
+  String get friendsProfileEmpty => 'Find Bros you know on WineBro.';
+
+  @override
+  String friendsProfileCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Bros',
+      one: 'Bro',
+    );
+    return 'Following $count $_temp0';
+  }
+
+  @override
+  String get friendsDiscoverTitle => 'Find friends from contacts';
+
+  @override
+  String get friendsDiscoverHint =>
+      'Match phone numbers — never uploads your contacts.';
+
+  @override
+  String get friendsDiscoveryError =>
+      'Couldn\'t read contacts. Check permissions.';
+
+  @override
+  String friendsDiscoveredHeader(int count) {
+    return 'FOUND ($count)';
+  }
+
+  @override
+  String get friendsNoneOnApp => 'None of your contacts are on WineBro yet.';
+
+  @override
+  String friendsFollowingHeader(int count) {
+    return 'FOLLOWING ($count)';
+  }
+
+  @override
+  String get friendsEmpty => 'Tap above to find Bros you already know.';
+
+  @override
+  String get friendsFollow => 'Follow';
+
+  @override
+  String get friendsFollowing => 'FOLLOWING';
+
+  @override
+  String get friendsUnfollow => 'Unfollow';
+
+  @override
+  String friendsAsContact(String contactName) {
+    return 'Saved as $contactName';
+  }
+
+  @override
+  String get settingsPrivacy => 'PRIVACY';
+
+  @override
+  String get settingsVisibilityTitle => 'Profile visibility';
+
+  @override
+  String get settingsVisibilityPublic => 'Public';
+
+  @override
+  String get settingsVisibilityFriends => 'Friends';
+
+  @override
+  String get settingsVisibilityPrivate => 'Private';
+
+  @override
+  String get settingsVisibilityPublicHint =>
+      'Anyone can see your name and recent BroCards.';
+
+  @override
+  String get settingsVisibilityFriendsHint =>
+      'Only people you follow can see your BroCards.';
+
+  @override
+  String get settingsVisibilityPrivateHint =>
+      'Only you can see your journal — community signals stay anonymous.';
 }

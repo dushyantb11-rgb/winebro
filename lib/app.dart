@@ -8,6 +8,7 @@ import 'package:winebro/core/router/app_router.dart';
 import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/features/auth/domain/auth_state.dart';
 import 'package:winebro/features/auth/presentation/providers/auth_provider.dart';
+import 'package:winebro/features/friends/data/friend_repository.dart';
 
 class WineBroApp extends ConsumerWidget {
   const WineBroApp({super.key});
@@ -28,6 +29,9 @@ class WineBroApp extends ConsumerWidget {
     ref.listen<AuthState>(authStateProvider, (prev, next) {
       if (next is Authenticated && prev is! Authenticated) {
         NotificationHandler.instance.registerForUser(next.user.id);
+        // Phone-hash index write — gates contact-discovery in S5.2.
+        // ignore: discarded_futures
+        ref.read(friendRepositoryProvider).ensureSelfIndexed();
       }
     });
 
