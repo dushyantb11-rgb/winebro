@@ -15,6 +15,22 @@
         { "fieldPath": "createdAt", "order": "ASCENDING" },
         { "fieldPath": "foodPaired", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "journal",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "buyAgain", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "journal",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "buyAgain", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": [

@@ -100,6 +100,40 @@ final continueStoryProvider =
 });
 
 // ============================================================
+// Restock surface
+//
+// Surfaces buy-again journal entries aged 28-35 days as a "time
+// to restock" Home tile. Window is intentionally narrow:
+//   < 28 days → too soon, the bottle isn't gone
+//   > 35 days → already passed; CF-10's Sunday push catches the tail
+// Generates the D7 "Restocking behaviour" data asset every time
+// the user taps Reorder vs dismisses.
+// ============================================================
+
+final restockProvider = FutureProvider<JournalEntry?>((ref) async {
+  final uid = FirebaseAuth.instance.currentUser?.uid;
+  if (uid == null) return null;
+
+  final now = DateTime.now();
+  final minCreated = now.subtract(const Duration(days: 35));
+  final maxCreated = now.subtract(const Duration(days: 28));
+
+  final snap = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection('journal')
+      .where('buyAgain', isEqualTo: true)
+      .where('createdAt', isGreaterThanOrEqualTo: minCreated.toIso8601String())
+      .where('createdAt', isLessThan: maxCreated.toIso8601String())
+      .orderBy('createdAt')
+      .limit(1)
+      .get();
+
+  if (snap.docs.isEmpty) return null;
+  return JournalEntry.fromMap(snap.docs.first.data());
+});
+
+// ============================================================
 // Bro Circle (community signal)
 //
 // "This week 1,247 bros tasted Lagavulin 16."

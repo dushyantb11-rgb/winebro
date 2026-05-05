@@ -830,5 +830,11 @@
   "@feedbackThanks": {"description": "Snackbar after feedback recorded"},
 
   "feedbackEntryNotFound": "That pairing record is gone — nothing to rate.",
-  "@feedbackEntryNotFound": {"description": "Shown if entry was deleted before feedback collection"}
+  "@feedbackEntryNotFound": {"description": "Shown if entry was deleted before feedback collection"},
+
+  "homeRestockEyebrow": "TIME TO RESTOCK",
+  "@homeRestockEyebrow": {"description": "Eyebrow on the Home Restock card"},
+
+  "homeRestockReorder": "Reorder",
+  "@homeRestockReorder": {"description": "CTA on the Home Restock card"}
 }
