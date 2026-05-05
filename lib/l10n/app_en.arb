@@ -863,5 +863,20 @@
   "@aromaCalibrationThanks": {"description": "Snackbar after completion"},
 
   "aromaCalibrationCta": "Calibrate your nose · 60 seconds",
-  "@aromaCalibrationCta": {"description": "CTA button on Aroma Wheel screen"}
+  "@aromaCalibrationCta": {"description": "CTA button on Aroma Wheel screen"},
+
+  "brocardPhotoBottle": "Bottle photo",
+  "@brocardPhotoBottle": {"description": "Photo slot label on BroCard"},
+
+  "brocardPhotoLabel": "Label closeup",
+  "@brocardPhotoLabel": {"description": "Photo slot label on BroCard"},
+
+  "brocardPhotoCamera": "Take photo",
+  "@brocardPhotoCamera": {"description": "Photo source picker"},
+
+  "brocardPhotoGallery": "Choose from gallery",
+  "@brocardPhotoGallery": {"description": "Photo source picker"},
+
+  "brocardPhotoUploadFailed": "Couldn't upload that photo. Try again?",
+  "@brocardPhotoUploadFailed": {"description": "Photo upload failure snackbar"}
 }

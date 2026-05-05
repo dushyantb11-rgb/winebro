@@ -10,6 +10,8 @@ import 'package:winebro/core/theme/app_motion.dart';
 import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/core/utils/formatters.dart';
 import 'package:winebro/features/aroma_wheel/domain/aroma_taxonomy.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:winebro/features/journal/data/brocard_photo_service.dart';
 import 'package:winebro/features/journal/domain/journal_entry.dart';
 import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
 import 'package:winebro/features/profile/data/gamification_service.dart';
@@ -587,6 +589,11 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
   int _rating = 3;
   bool _buyAgain = false;
   final _notesController = TextEditingController();
+  String? _bottlePhotoUrl;
+  String? _labelPhotoUrl;
+  bool _photoUploading = false;
+  late final String _draftId =
+      DateTime.now().millisecondsSinceEpoch.toString();
 
   @override
   void dispose() {
@@ -602,7 +609,7 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return;
 
-    final id = DateTime.now().millisecondsSinceEpoch.toString();
+    final id = _draftId;
     final entry = JournalEntry(
       id: id,
       userId: uid,
@@ -628,6 +635,8 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
           ? _notesController.text.trim()
           : null,
       buyAgain: _buyAgain,
+      bottlePhotoUrl: _bottlePhotoUrl,
+      labelPhotoUrl: _labelPhotoUrl,
     );
 
     await FirebaseFirestore.instance
@@ -764,8 +773,92 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
           style: TextStyle(color: colors.textPrimary),
           decoration: InputDecoration(hintText: l10n.regionOptionalHint),
         ),
+        const SizedBox(height: 20),
+        Row(
+          children: [
+            Expanded(
+              child: _PhotoSlotTile(
+                label: l10n.brocardPhotoBottle,
+                photoUrl: _bottlePhotoUrl,
+                colors: colors,
+                busy: _photoUploading,
+                onTap: () => _pickPhoto(PhotoSlot.bottle),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _PhotoSlotTile(
+                label: l10n.brocardPhotoLabel,
+                photoUrl: _labelPhotoUrl,
+                colors: colors,
+                busy: _photoUploading,
+                onTap: () => _pickPhoto(PhotoSlot.label),
+              ),
+            ),
+          ],
+        ),
       ],
     );
+  }
+
+  Future<void> _pickPhoto(PhotoSlot slot) async {
+    if (_photoUploading) return;
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (ctx) {
+        final colors = ctx.appColors;
+        return SafeArea(
+          child: Container(
+            color: colors.charcoal,
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: Icon(Icons.photo_camera, color: colors.paprika),
+                  title: Text(ctx.l10n.brocardPhotoCamera,
+                      style: TextStyle(color: colors.textPrimary)),
+                  onTap: () => Navigator.pop(ctx, ImageSource.camera),
+                ),
+                ListTile(
+                  leading: Icon(Icons.photo_library, color: colors.paprika),
+                  title: Text(ctx.l10n.brocardPhotoGallery,
+                      style: TextStyle(color: colors.textPrimary)),
+                  onTap: () => Navigator.pop(ctx, ImageSource.gallery),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    if (source == null || !mounted) return;
+    setState(() => _photoUploading = true);
+    try {
+      final url = await ref.read(broCardPhotoServiceProvider).captureAndUpload(
+            entryId: _draftId,
+            slot: slot,
+            source: source,
+          );
+      if (!mounted) return;
+      if (url != null) {
+        setState(() {
+          if (slot == PhotoSlot.bottle) {
+            _bottlePhotoUrl = url;
+          } else {
+            _labelPhotoUrl = url;
+          }
+        });
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.l10n.brocardPhotoUploadFailed)),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _photoUploading = false);
+    }
   }
 
   Widget _buildAppearanceStep(AppColors colors, AppLocalizations l10n) {
@@ -985,6 +1078,79 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
           ),
           Expanded(child: Text(value, style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 12))),
         ],
+      ),
+    );
+  }
+}
+
+class _PhotoSlotTile extends StatelessWidget {
+  const _PhotoSlotTile({
+    required this.label,
+    required this.photoUrl,
+    required this.colors,
+    required this.busy,
+    required this.onTap,
+  });
+
+  final String label;
+  final String? photoUrl;
+  final AppColors colors;
+  final bool busy;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Material(
+        color: colors.surface1,
+        borderRadius: BorderRadius.circular(14),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: busy ? null : onTap,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: photoUrl != null
+                    ? colors.paprika.withValues(alpha: 0.5)
+                    : colors.borderSubtle,
+              ),
+              image: photoUrl != null
+                  ? DecorationImage(
+                      image: NetworkImage(photoUrl!),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+            ),
+            child: photoUrl != null
+                ? null
+                : Center(
+                    child: busy
+                        ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add_a_photo_outlined,
+                                  color: colors.textTertiary, size: 28),
+                              const SizedBox(height: 6),
+                              Text(
+                                label,
+                                style: TextStyle(
+                                  color: colors.textTertiary,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
+          ),
+        ),
       ),
     );
   }
