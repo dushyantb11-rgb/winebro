@@ -12,6 +12,7 @@ import 'package:winebro/core/utils/formatters.dart';
 import 'package:winebro/features/aroma_wheel/domain/aroma_taxonomy.dart';
 import 'package:winebro/features/journal/domain/journal_entry.dart';
 import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
+import 'package:winebro/features/profile/data/gamification_service.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
 import 'package:winebro/shared/widgets/segmented_chip_selector.dart';
 import 'package:winebro/shared/widgets/star_rating.dart';
@@ -635,6 +636,12 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
         .collection('journal')
         .doc(id)
         .set(entry.toMap());
+
+    // ignore: discarded_futures
+    ref.read(gamificationServiceProvider).recordAction(
+          GamificationAction.journalEntry,
+          category: _category,
+        );
 
     if (mounted) Navigator.of(context).pop();
   }

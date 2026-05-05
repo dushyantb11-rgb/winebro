@@ -10,6 +10,7 @@ import 'package:winebro/core/theme/app_motion.dart';
 import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/features/journal/domain/journal_entry.dart';
 import 'package:winebro/features/journal/presentation/screens/journal_screen.dart';
+import 'package:winebro/features/profile/data/gamification_service.dart';
 import 'package:winebro/features/pairing/data/seed_dishes.dart';
 import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/dish.dart';
@@ -160,6 +161,15 @@ class _QuickLogSheetState extends ConsumerState<QuickLogSheet> {
           .collection('journal')
           .doc(id)
           .set(entry.toMap());
+
+      // Streak / XP / badge fire — independent of the journal write
+      // so a gamification failure never blocks the user's note.
+      // ignore: discarded_futures
+      ref.read(gamificationServiceProvider).recordAction(
+            GamificationAction.journalEntry,
+            category: category,
+            withFoodPairing: foodPaired != null,
+          );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
