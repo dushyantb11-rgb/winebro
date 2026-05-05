@@ -1605,5 +1605,392 @@ const List<Dish> kSeedDishes = [
       ),
     ],
   ),
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // S8.2 — REGIONAL EXPANSION (14 new dishes across 7 underserved cuisines)
+  //
+  // Closes the "feels alien to my region" gap from the marketing audit.
+  // Coverage added: Bengali, Kashmiri, Hyderabadi (non-biryani), Goan
+  // land-meat, Rajasthani, Chettinad, Udupi.
+  // ─────────────────────────────────────────────────────────────────────────
+
+  // ─── BENGALI ──────────────────────────────────────────
+  Dish(
+    id: 'macher-jhol',
+    name: 'Macher Jhol',
+    category: FoodCategory.coastalSeafood,
+    foodProperties: [FoodProperty.tangy, FoodProperty.aromatic, FoodProperty.lightDelicate],
+    description: 'Bengali fish curry — light, tomato-mustard gravy with delicate rohu or katla.',
+    pairings: [
+      DishPairing(
+        productId: 'sula-sauvignon-blanc',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Macher Jhol is built on lightness — mustard, tomato, kaalo jeere. Sula Sauvignon\'s '
+            'green-grass and lime nose meets the fish and lifts every bite. Bengali Sundays solved.',
+        score: 88,
+      ),
+      DishPairing(
+        productId: 'tamakua-riesling',
+        strategy: PairingStrategy.contrast,
+        broTip:
+            'Tamakua Riesling brings off-dry sweetness that absorbs the mustard heat without '
+            'killing the delicate fish. Old-school Calcutta sommelier move.',
+        score: 84,
+      ),
+      DishPairing(
+        productId: 'bira-91-white',
+        strategy: PairingStrategy.contrast,
+        broTip:
+            'Bira White\'s coriander-orange peel echoes the Bengali panch phoron. Easy, '
+            'monsoon-afternoon kind of pairing.',
+        score: 78,
+      ),
+    ],
+  ),
+
+  Dish(
+    id: 'kosha-mangsho',
+    name: 'Kosha Mangsho',
+    category: FoodCategory.northIndianRich,
+    foodProperties: [FoodProperty.highProtein, FoodProperty.aromatic, FoodProperty.spicyHeat],
+    description: 'Bengali slow-cooked mutton — caramelized onions, ghee, garam masala. Sunday lunch standard.',
+    pairings: [
+      DishPairing(
+        productId: 'krsma-cabernet-sauvignon',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Kosha Mangsho\'s deep, slow-reduced mutton needs a Cab with grip. KRSMA\'s '
+            'Hampi-grown tannins lock onto the protein, the ghee mellows everything. Match made.',
+        score: 89,
+      ),
+      DishPairing(
+        productId: 'reveilo-cabernet-sauvignon',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Reveilo Cab has the structure for red meat without overpowering the spice. '
+            'Cedar and graphite play with the garam masala. Bengali rabbari approved.',
+        score: 86,
+      ),
+    ],
+  ),
+
+  Dish(
+    id: 'sandesh',
+    name: 'Sandesh',
+    category: FoodCategory.desserts,
+    foodProperties: [FoodProperty.sweetDessert, FoodProperty.creamy, FoodProperty.lightDelicate],
+    description: 'Bengali milk-and-sugar sweet — chenna pressed with cardamom or saffron. Lighter than Mishti Doi.',
+    pairings: [
+      DishPairing(
+        productId: 'tamakua-riesling',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Sandesh is delicate — too bold and you crush it. Tamakua Riesling\'s gentle '
+            'sweetness and floral lift mirrors the cardamom. Pure Bengal.',
+        score: 86,
+      ),
+      DishPairing(
+        productId: 'soma-chenin-blanc',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Soma Chenin Blanc\'s tropical sweetness rides alongside chenna without '
+            'fighting the cardamom. Light enough to keep the dessert delicate.',
+        score: 80,
+      ),
+    ],
+  ),
+
+  // ─── KASHMIRI ─────────────────────────────────────────
+  Dish(
+    id: 'kashmiri-yakhni',
+    name: 'Kashmiri Yakhni',
+    category: FoodCategory.northIndianRich,
+    foodProperties: [FoodProperty.creamy, FoodProperty.aromatic, FoodProperty.lightDelicate],
+    description: 'Yogurt-based mutton curry — fennel, dry ginger, cardamom. Wazwan signature, gentle heat.',
+    pairings: [
+      DishPairing(
+        productId: 'soma-chenin-blanc',
+        strategy: PairingStrategy.contrast,
+        broTip:
+            'Yakhni\'s yogurt richness needs acidity, not weight. Soma Chenin\'s tropical '
+            'edge cuts the curd while honouring the saffron. Wazwan-friendly.',
+        score: 87,
+      ),
+      DishPairing(
+        productId: 'sula-sauvignon-blanc',
+        strategy: PairingStrategy.contrast,
+        broTip:
+            'Sula Sauvignon\'s Nashik citrus is the simplest answer — bright enough to '
+            'lift the yogurt, light enough to leave the fennel and cardamom alone.',
+        score: 81,
+      ),
+    ],
+  ),
+
+  Dish(
+    id: 'rogan-josh-kashmiri',
+    name: 'Kashmiri Rogan Josh',
+    category: FoodCategory.northIndianRich,
+    foodProperties: [FoodProperty.highProtein, FoodProperty.aromatic, FoodProperty.spicyHeat],
+    description: 'Mutton in Kashmiri red chilli paste — long-cook, yogurt-based, less spicy than it looks.',
+    pairings: [
+      DishPairing(
+        productId: 'grover-zampa-la-reserve',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Grover La Réserve\'s Bordeaux-style depth meets Rogan Josh\'s Kashmiri chilli '
+            'colour without battle. Cedar and dried herbs ride alongside the saffron.',
+        score: 91,
+      ),
+      DishPairing(
+        productId: 'winery52-red',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Winery 52\'s Cabernet-Shiraz blend is the value-tier match — ripe black '
+            'fruit and gentle spice tag along beside Kashmiri red. Crowd-pleaser.',
+        score: 84,
+      ),
+    ],
+  ),
+
+  // ─── HYDERABADI (non-biryani) ─────────────────────────
+  Dish(
+    id: 'hyderabadi-haleem',
+    name: 'Hyderabadi Haleem',
+    category: FoodCategory.northIndianRich,
+    foodProperties: [FoodProperty.highProtein, FoodProperty.umamiRich, FoodProperty.aromatic],
+    description: 'Slow-cooked wheat, lentil, and meat porridge — Ramzan classic from the Nizam\'s kitchen.',
+    pairings: [
+      DishPairing(
+        productId: 'old-monk-7',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Haleem and Old Monk neat — Hyderabadi grandfathers nodding from the grave. '
+            'The rum\'s caramel-vanilla wraps around the slow-cooked spice. Cult pairing.',
+        score: 86,
+      ),
+      DishPairing(
+        productId: 'kingfisher-ultra',
+        strategy: PairingStrategy.contrast,
+        broTip:
+            'Cold KF Strong with hot Haleem is the post-fast Iftar move. Hops scrub the '
+            'palate between mouthfuls of meat-and-wheat density. Practical genius.',
+        score: 80,
+      ),
+    ],
+  ),
+
+  Dish(
+    id: 'mirchi-ka-salan',
+    name: 'Mirchi ka Salan',
+    category: FoodCategory.southIndianSpiced,
+    foodProperties: [FoodProperty.spicyHeat, FoodProperty.tangy, FoodProperty.umamiRich],
+    description: 'Hyderabadi green chilli curry — peanut, sesame, tamarind base. Biryani\'s sidekick.',
+    pairings: [
+      DishPairing(
+        productId: 'tamakua-riesling',
+        strategy: PairingStrategy.contrast,
+        broTip:
+            'Salan is built on chilli + tamarind sour. Tamakua Riesling\'s off-dry edge '
+            'cools the heat AND matches the tang. Wedding-buffet pro tip.',
+        score: 88,
+      ),
+      DishPairing(
+        productId: 'fratelli-tilt-rose',
+        strategy: PairingStrategy.contrast,
+        broTip:
+            'Tilt Rosé\'s fruit lift and chill bring the heat down without taming the '
+            'soul of the salan. Hyderabadi Sundays.',
+        score: 83,
+      ),
+    ],
+  ),
+
+  // ─── GOAN LAND-MEAT ───────────────────────────────────
+  Dish(
+    id: 'pork-vindaloo',
+    name: 'Pork Vindaloo',
+    category: FoodCategory.coastalSeafood,
+    foodProperties: [FoodProperty.spicyHeat, FoodProperty.tangy, FoodProperty.highProtein],
+    description: 'Goan pork in vinegar-chilli-garlic — Portuguese-Indian, fiery and tangy.',
+    pairings: [
+      DishPairing(
+        productId: 'big-banyan-shiraz',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Vindaloo demands a fruit-forward red that won\'t collapse. Big Banyan Shiraz '
+            'matches the pepper kick with Bangalore plum. Bombay Duck-house standard.',
+        score: 87,
+      ),
+      DishPairing(
+        productId: 'paul-john-brilliance',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Paul John Brilliance and vindaloo — Goan rebellion. Vanilla-honey malt '
+            'wraps around the chilli, vinegar lifts the spirit. After-meal sipper.',
+        score: 81,
+      ),
+    ],
+  ),
+
+  Dish(
+    id: 'sorpotel',
+    name: 'Sorpotel',
+    category: FoodCategory.coastalSeafood,
+    foodProperties: [FoodProperty.spicyHeat, FoodProperty.tangy, FoodProperty.highProtein, FoodProperty.aromatic],
+    description: 'Goan Catholic pork-offal stew — vinegar, dry red chilli, kokum. Sat-night Goan classic.',
+    pairings: [
+      DishPairing(
+        productId: 'krsma-sangiovese',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Sorpotel\'s sour-spice depth needs a Sangiovese. KRSMA\'s Italian DNA from Hampi '
+            'rides the kokum and chilli. Goan-Catholic-by-way-of-Tuscany.',
+        score: 86,
+      ),
+      DishPairing(
+        productId: 'old-monk-7',
+        strategy: PairingStrategy.contrast,
+        broTip:
+            'Old Monk neat after Sorpotel — Goan Sunday afternoon classic. Caramel rum '
+            'cools the vinegar bite, the 7-year aging echoes the slow-cook depth.',
+        score: 82,
+      ),
+    ],
+  ),
+
+  // ─── RAJASTHANI ───────────────────────────────────────
+  Dish(
+    id: 'laal-maas',
+    name: 'Laal Maas',
+    category: FoodCategory.northIndianRich,
+    foodProperties: [FoodProperty.spicyHeat, FoodProperty.highProtein, FoodProperty.aromatic],
+    description: 'Rajasthani fiery red mutton — Mathania chilli, ghee, curd. Heat is the point.',
+    pairings: [
+      DishPairing(
+        productId: 'tamakua-riesling',
+        strategy: PairingStrategy.contrast,
+        broTip:
+            'Laal Maas is the heat test. Tamakua Riesling\'s sweetness rides on top of '
+            'the chilli wave, cooling without smothering. Marwari mehfil-approved.',
+        score: 89,
+      ),
+      DishPairing(
+        productId: 'big-banyan-shiraz',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Big Banyan Shiraz\'s pepper-and-plum profile rolls with Mathania chilli '
+            'instead of fighting it. Both ride together. Jaipur-Bangalore handshake.',
+        score: 84,
+      ),
+    ],
+  ),
+
+  Dish(
+    id: 'dal-baati-churma',
+    name: 'Dal Baati Churma',
+    category: FoodCategory.northIndianRich,
+    foodProperties: [FoodProperty.umamiRich, FoodProperty.aromatic, FoodProperty.highFat],
+    description: 'Rajasthani trinity — baked wheat dumplings, panchmel dal, ghee-jaggery crumble.',
+    pairings: [
+      DishPairing(
+        productId: 'sula-shiraz',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Sula Shiraz\'s soft fruit and pepper sit beside the panchmel dal\'s five-lentil '
+            'depth. The ghee weight matches. Marwari Sundays.',
+        score: 82,
+      ),
+      DishPairing(
+        productId: 'big-banyan-shiraz',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Big Banyan Shiraz brings the value-tier weight that holds up against ghee '
+            'and churma without overshadowing the dal. Pour from the everyday rack.',
+        score: 78,
+      ),
+    ],
+  ),
+
+  // ─── CHETTINAD ────────────────────────────────────────
+  Dish(
+    id: 'chicken-chettinad',
+    name: 'Chicken Chettinad',
+    category: FoodCategory.southIndianSpiced,
+    foodProperties: [FoodProperty.spicyHeat, FoodProperty.aromatic, FoodProperty.highProtein],
+    description: 'Tamil Chettinad chicken — black pepper, fennel, star anise, curry leaf, dry chilli.',
+    pairings: [
+      DishPairing(
+        productId: 'reveilo-cabernet-sauvignon',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Chettinad\'s pepper-and-anise depth needs structure. Reveilo Cabernet\'s '
+            'graphite and tobacco ride alongside the spice rather than competing.',
+        score: 86,
+      ),
+      DishPairing(
+        productId: 'bira-91-white',
+        strategy: PairingStrategy.contrast,
+        broTip:
+            'Chettinad black-pepper heat begs for a wheat beer. Bira White\'s creamy '
+            'orange-coriander softens every bite. Madurai-meets-Mumbai.',
+        score: 80,
+      ),
+    ],
+  ),
+
+  Dish(
+    id: 'paniyaram',
+    name: 'Kuzhi Paniyaram',
+    category: FoodCategory.southIndianSpiced,
+    foodProperties: [FoodProperty.aromatic, FoodProperty.lightDelicate, FoodProperty.umamiRich],
+    description: 'South Indian fermented rice-lentil bites — savoury or sweet. Tamil Sunday breakfast.',
+    pairings: [
+      DishPairing(
+        productId: 'sula-sauvignon-blanc',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Paniyaram\'s subtle ferment meets Sula Sauvignon\'s green-apple lift. Light '
+            'enough to honour the snack, bright enough to wake up the palate.',
+        score: 82,
+      ),
+      DishPairing(
+        productId: 'soma-chenin-blanc',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Soma Chenin\'s tropical edge pairs with the gunpowder-and-coconut-chutney '
+            'side. Tamil Sunday brunch elevated.',
+        score: 79,
+      ),
+    ],
+  ),
+
+  // ─── UDUPI ────────────────────────────────────────────
+  Dish(
+    id: 'bisi-bele-bath',
+    name: 'Bisi Bele Bath',
+    category: FoodCategory.southIndianSpiced,
+    foodProperties: [FoodProperty.umamiRich, FoodProperty.aromatic, FoodProperty.spicyHeat],
+    description: 'Karnataka rice-dal-tamarind one-pot — sambar powder, vegetables, ghee. Udupi staple.',
+    pairings: [
+      DishPairing(
+        productId: 'big-banyan-shiraz',
+        strategy: PairingStrategy.complement,
+        broTip:
+            'Bisi Bele Bath is hometown food in Karnataka. Big Banyan Shiraz from the '
+            'same state — fruit-forward, gentle pepper. Pour from the same district.',
+        score: 84,
+      ),
+      DishPairing(
+        productId: 'kingfisher-ultra',
+        strategy: PairingStrategy.contrast,
+        broTip:
+            'Bangalore lunch reflex — Kingfisher Ultra with hot Bisi Bele Bath. The '
+            'lager scrubs the tamarind tang and you\'re ready for round two.',
+        score: 78,
+      ),
+    ],
+  ),
 ];
 

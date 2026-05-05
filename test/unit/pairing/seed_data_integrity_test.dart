@@ -5,16 +5,20 @@ import 'package:winebro/features/pairing/data/seed_products.dart';
 
 void main() {
   group('SD-01 to SD-10: Seed Data Integrity', () {
-    test('SD-01: All 50 products have unique IDs', () {
+    test('SD-01: Products have unique IDs and meet floor', () {
       final ids = kSeedProducts.map((p) => p.id).toSet();
       expect(ids.length, equals(kSeedProducts.length));
-      expect(kSeedProducts.length, equals(50));
+      // Floor — never let the catalogue shrink below this without
+      // a deliberate deletion + tracker entry.
+      expect(kSeedProducts.length, greaterThanOrEqualTo(55));
     });
 
-    test('SD-02: All 52 dishes have unique IDs', () {
+    test('SD-02: Dishes have unique IDs and meet floor', () {
       final ids = kSeedDishes.map((d) => d.id).toSet();
       expect(ids.length, equals(kSeedDishes.length));
-      expect(kSeedDishes.length, equals(52));
+      // Floor — covers North/South/Coastal + S8.2 regional expansion
+      // (Bengali, Kashmiri, Hyderabadi, Goan, Rajasthani, Chettinad, Udupi).
+      expect(kSeedDishes.length, greaterThanOrEqualTo(66));
     });
 
     test('SD-03: All product axis scores within 0-10', () {
