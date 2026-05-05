@@ -949,5 +949,35 @@
   "categoryGinRumVodka": "Gin / Rum / Vodka",
   "@categoryGinRumVodka": {"description": "Category label"},
   "categoryNonAlcoholic": "Non-alcoholic",
-  "@categoryNonAlcoholic": {"description": "Category label"}
+  "@categoryNonAlcoholic": {"description": "Category label"},
+
+  "voiceCaptureTitle": "Speak your notes",
+  "@voiceCaptureTitle": {"description": "Voice capture sheet title"},
+
+  "voiceCaptureHint": "Tap the mic and describe what you taste.",
+  "@voiceCaptureHint": {"description": "Pre-recording hint"},
+
+  "voiceCaptureListening": "Listening — speak naturally.",
+  "@voiceCaptureListening": {"description": "While recording"},
+
+  "voiceCaptureReview": "Looking good. Tap mic to add more, or use this transcript.",
+  "@voiceCaptureReview": {"description": "Post-stop review"},
+
+  "voiceCapturePlaceholder": "Your transcript will appear here as you speak...",
+  "@voiceCapturePlaceholder": {"description": "Empty transcript placeholder"},
+
+  "voiceCaptureCancel": "Cancel",
+  "@voiceCaptureCancel": {"description": "Cancel button"},
+
+  "voiceCaptureUseTranscript": "Use this",
+  "@voiceCaptureUseTranscript": {"description": "Accept transcript"},
+
+  "voiceCapturePermissionError": "Need microphone + speech permissions. Check Settings.",
+  "@voiceCapturePermissionError": {"description": "Permission denied"},
+
+  "voiceCaptureTooltip": "Speak your notes",
+  "@voiceCaptureTooltip": {"description": "Mic icon tooltip"},
+
+  "voiceCaptureAttached": "AUDIO ATTACHED",
+  "@voiceCaptureAttached": {"description": "Audio attached badge"}
 }

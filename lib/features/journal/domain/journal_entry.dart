@@ -99,6 +99,7 @@ class JournalEntry {
     this.buyAgain = false,
     this.bottlePhotoUrl,
     this.labelPhotoUrl,
+    this.notesAudioUrl,
   });
 
   final String id;
@@ -127,6 +128,7 @@ class JournalEntry {
   final bool buyAgain;
   final String? bottlePhotoUrl;
   final String? labelPhotoUrl;
+  final String? notesAudioUrl;
 
   bool get isDetailed =>
       appearance != null ||
@@ -161,6 +163,7 @@ class JournalEntry {
     bool? buyAgain,
     String? bottlePhotoUrl,
     String? labelPhotoUrl,
+    String? notesAudioUrl,
   }) {
     return JournalEntry(
       id: id ?? this.id,
@@ -200,6 +203,7 @@ class JournalEntry {
       buyAgain: buyAgain ?? this.buyAgain,
       bottlePhotoUrl: bottlePhotoUrl ?? this.bottlePhotoUrl,
       labelPhotoUrl: labelPhotoUrl ?? this.labelPhotoUrl,
+      notesAudioUrl: notesAudioUrl ?? this.notesAudioUrl,
     );
   }
 
@@ -229,6 +233,7 @@ class JournalEntry {
     'buyAgain': buyAgain,
     if (bottlePhotoUrl != null) 'bottlePhotoUrl': bottlePhotoUrl,
     if (labelPhotoUrl != null) 'labelPhotoUrl': labelPhotoUrl,
+    if (notesAudioUrl != null) 'notesAudioUrl': notesAudioUrl,
   };
 
   factory JournalEntry.fromMap(Map<String, dynamic> map) => JournalEntry(
@@ -291,6 +296,7 @@ class JournalEntry {
     buyAgain: map['buyAgain'] as bool? ?? false,
     bottlePhotoUrl: map['bottlePhotoUrl'] as String?,
     labelPhotoUrl: map['labelPhotoUrl'] as String?,
+    notesAudioUrl: map['notesAudioUrl'] as String?,
   );
 
   @override

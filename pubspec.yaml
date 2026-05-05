@@ -43,6 +43,11 @@ dependencies:
   permission_handler: ^11.3.1
   image_picker: ^1.1.2
 
+  # Voice notes
+  speech_to_text: ^7.0.0
+  record: ^6.0.0
+  path_provider: ^2.1.5
+
   # Storage
   flutter_secure_storage: ^9.2.4
   shared_preferences: ^2.3.4
