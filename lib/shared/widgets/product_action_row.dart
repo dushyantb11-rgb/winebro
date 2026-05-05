@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:winebro/core/affiliate/affiliate_url_resolver.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
@@ -49,12 +50,17 @@ class ProductActionRow extends ConsumerWidget {
     final buyLabel = context.l10n.actionBuy(product.price.toStringAsFixed(0));
     final saveLabel = isInWishlist ? context.l10n.actionSaved : context.l10n.actionSave;
 
+    final buyIcon = PhosphorIcons.shoppingBagOpen();
+    final savedIcon = PhosphorIcons.bookmarkSimple(PhosphorIconsStyle.fill);
+    final saveIcon = PhosphorIcons.bookmarkSimple();
+    final remindIcon = PhosphorIcons.bellRinging();
+
     if (onTransparent) {
       return Row(
         children: [
           Expanded(
             child: _HeroButton(
-              icon: Icons.shopping_cart_outlined,
+              icon: buyIcon,
               label: buyLabel,
               onTap: () => _onBuy(context),
               filled: true,
@@ -63,7 +69,7 @@ class ProductActionRow extends ConsumerWidget {
           ),
           const SizedBox(width: 8),
           _HeroButton(
-            icon: isInWishlist ? Icons.bookmark : Icons.bookmark_border,
+            icon: isInWishlist ? savedIcon : saveIcon,
             label: saveLabel,
             onTap: () => _onSave(context, ref, isInWishlist),
             filled: false,
@@ -71,7 +77,7 @@ class ProductActionRow extends ConsumerWidget {
           ),
           const SizedBox(width: 8),
           _HeroButton(
-            icon: Icons.alarm_add_outlined,
+            icon: remindIcon,
             label: context.l10n.actionRemind,
             onTap: () => _onRemind(context),
             filled: false,
@@ -87,7 +93,7 @@ class ProductActionRow extends ConsumerWidget {
         Expanded(
           flex: 2,
           child: ElevatedButton.icon(
-            icon: const Icon(Icons.shopping_cart_outlined, size: 16),
+            icon: Icon(buyIcon, size: 16),
             label: Text(buyLabel),
             onPressed: () => _onBuy(context),
           ),
@@ -95,7 +101,7 @@ class ProductActionRow extends ConsumerWidget {
         const SizedBox(width: 8),
         IconButton.outlined(
           icon: Icon(
-            isInWishlist ? Icons.bookmark : Icons.bookmark_border,
+            isInWishlist ? savedIcon : saveIcon,
             color: isInWishlist ? colors.paprika : colors.textSecondary,
           ),
           tooltip: saveLabel,
@@ -103,7 +109,7 @@ class ProductActionRow extends ConsumerWidget {
         ),
         const SizedBox(width: 8),
         IconButton.outlined(
-          icon: Icon(Icons.alarm_add_outlined, color: colors.textSecondary),
+          icon: Icon(remindIcon, color: colors.textSecondary),
           tooltip: context.l10n.actionRemind,
           onPressed: () => _onRemind(context),
         ),
