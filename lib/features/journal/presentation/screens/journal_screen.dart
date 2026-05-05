@@ -376,7 +376,8 @@ class _BroCardTimelineRow extends StatelessWidget {
                     ),
                     if (entry.buyAgain) ...[
                       const SizedBox(width: 12),
-                      Icon(Icons.favorite, size: 12, color: colors.paprika),
+                      Icon(Icons.favorite,
+                          size: 12, color: context.paprikaOnSurface),
                       const SizedBox(width: 4),
                       Text(
                         'Buy again',
@@ -384,7 +385,7 @@ class _BroCardTimelineRow extends StatelessWidget {
                           fontFamily: 'Montserrat',
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
-                          color: colors.paprika,
+                          color: context.paprikaOnSurface,
                         ),
                       ),
                     ],

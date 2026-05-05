@@ -175,17 +175,23 @@ class _HeroBlock extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
+        // Level pill sits on the Profile body surface (cream in light /
+        // charcoal in dark). Repainted from goldWarm (=white universally,
+        // invisible on cream) to paprika tint — works in both themes
+        // because paprika is brand-locked and paprikaOnSurface clears
+        // AA on charcoal in dark theme.
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
           decoration: BoxDecoration(
-            color: colors.goldWarm.withValues(alpha: 0.15),
+            color: colors.paprika.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(999),
-            border: Border.all(color: colors.goldWarm.withValues(alpha: 0.4)),
+            border: Border.all(color: colors.paprika.withValues(alpha: 0.4)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(levelInfo.icon, size: 14, color: colors.goldWarm),
+              Icon(levelInfo.icon,
+                  size: 14, color: context.paprikaOnSurface),
               const SizedBox(width: 6),
               Text(
                 '${levelInfo.name.toUpperCase()} · LV ${state.level + 1}',
@@ -193,7 +199,7 @@ class _HeroBlock extends StatelessWidget {
                   fontFamily: 'Montserrat',
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
-                  color: colors.goldWarm,
+                  color: context.paprikaOnSurface,
                   letterSpacing: 1.2,
                 ),
               ),

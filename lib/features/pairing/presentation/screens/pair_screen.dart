@@ -355,7 +355,7 @@ class _SelectionBreadcrumb extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(Icons.check_circle, size: 18, color: colors.paprika),
+            Icon(Icons.check_circle, size: 18, color: context.paprikaOnSurface),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -532,7 +532,7 @@ class _SearchRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           children: [
-            Icon(icon, size: 22, color: colors.paprika),
+            Icon(icon, size: 22, color: context.paprikaOnSurface),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
@@ -756,13 +756,13 @@ class _TrendingDishCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(dish.icon, color: colors.inkOnHero, size: 18),
-            const SizedBox(height: 6),
+            Icon(dish.icon, color: colors.inkOnHero, size: 22),
+            const SizedBox(height: 8),
             Text(
               dish.name,
               style: TextStyle(
                 fontFamily: 'PlayfairDisplay',
-                fontSize: 15,
+                fontSize: 16,
                 fontWeight: FontWeight.w800,
                 color: colors.inkOnHero,
                 height: 1.05,
@@ -1152,7 +1152,7 @@ class _AlternateCard extends StatelessWidget {
               color: colors.paprika.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(Icons.wine_bar, color: colors.paprika, size: 22),
+            child: Icon(Icons.wine_bar, color: context.paprikaOnSurface, size: 22),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -1193,7 +1193,7 @@ class _AlternateCard extends StatelessWidget {
                 fontFamily: 'Montserrat',
                 fontSize: 12,
                 fontWeight: FontWeight.w800,
-                color: colors.salem,
+                color: context.salemOnSurface,
               ),
             ),
           ),
@@ -1222,7 +1222,7 @@ class _AlternateFoodCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(d.icon, color: colors.paprika, size: 22),
+          Icon(d.icon, color: context.paprikaOnSurface, size: 22),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -1247,7 +1247,7 @@ class _AlternateFoodCard extends StatelessWidget {
                         fontFamily: 'Montserrat',
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
-                        color: colors.salem,
+                        color: context.salemOnSurface,
                       ),
                     ),
                   ],

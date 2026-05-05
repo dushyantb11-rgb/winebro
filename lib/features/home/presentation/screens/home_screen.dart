@@ -354,13 +354,13 @@ class HomeScreen extends ConsumerWidget {
                   color: colors.surface1,
                   borderRadius: BorderRadius.circular(16),
                   border: Border(
-                    left: BorderSide(color: colors.salem, width: 3),
+                    left: BorderSide(color: context.salemOnSurface, width: 3),
                   ),
                 ),
                 child: Row(
                   children: [
                     Icon(Icons.people_outline,
-                        size: 18, color: colors.salem),
+                        size: 18, color: context.salemOnSurface),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
@@ -493,10 +493,10 @@ class _TonightsPourCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: colors.inkOnHero.withValues(alpha: 0.18),
+              color: colors.inkOnHero.withValues(alpha: 0.25),
               borderRadius: BorderRadius.circular(999),
               border: Border.all(
-                  color: colors.inkOnHero.withValues(alpha: 0.3)),
+                  color: colors.inkOnHero.withValues(alpha: 0.4)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -635,7 +635,7 @@ class _ContinueStoryCard extends StatelessWidget {
                   child: Text(
                     '78% match',
                     style: TextStyle(
-                      color: colors.salem,
+                      color: context.salemOnSurface,
                       fontSize: 11,
                       fontWeight: FontWeight.w800,
                     ),
@@ -689,7 +689,7 @@ class _BroCircleCard extends StatelessWidget {
             Row(
               children: [
                 Icon(Icons.people_outline,
-                    size: 16, color: colors.salem),
+                    size: 16, color: context.salemOnSurface),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
@@ -698,7 +698,7 @@ class _BroCircleCard extends StatelessWidget {
                       fontFamily: 'Montserrat',
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
-                      color: colors.salem,
+                      color: context.salemOnSurface,
                       letterSpacing: 0.3,
                     ),
                     maxLines: 1,
