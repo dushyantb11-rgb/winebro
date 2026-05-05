@@ -14,6 +14,7 @@ import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
 import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
+import 'package:winebro/features/profile/data/gamification_service.dart';
 
 /// Redesigned 2026 Scan modal.
 ///
@@ -109,6 +110,13 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
           _phase = _ScanPhase.matched;
           _matched = match;
         });
+        // Streak / XP / badge fire on a successful scan match. Decoupled
+        // (no await) so the recognizer UI never waits on Firestore.
+        // ignore: discarded_futures
+        ref.read(gamificationServiceProvider).recordAction(
+              GamificationAction.scan,
+              category: match.category.group,
+            );
       } else {
         setState(() {
           _phase = _ScanPhase.noMatch;
