@@ -924,4 +924,45 @@ class AppLocalizationsGu extends AppLocalizations {
   String preQuizContinueWithCount(int count) {
     return 'Continue with $count selected';
   }
+
+  @override
+  String get crossCategoryEyebrow => 'ONE MORE THING';
+
+  @override
+  String get crossCategoryHeadline => 'What else do you drink?';
+
+  @override
+  String get crossCategorySubhead =>
+      'Bro will tailor recommendations across your full repertoire — not just wine.';
+
+  @override
+  String get crossCategorySubmit => 'Save';
+
+  @override
+  String get crossCategoryThanks => 'Saved — Bro now sees the full picture.';
+
+  @override
+  String get crossCategoryProfileTitle => 'What else do you drink?';
+
+  @override
+  String get crossCategoryProfileHint =>
+      'Tell Bro your other categories — 10 seconds.';
+
+  @override
+  String get categoryWine => 'Wine';
+
+  @override
+  String get categoryWhisky => 'Whisky';
+
+  @override
+  String get categoryBeer => 'Beer';
+
+  @override
+  String get categoryCocktails => 'Cocktails';
+
+  @override
+  String get categoryGinRumVodka => 'Gin / Rum / Vodka';
+
+  @override
+  String get categoryNonAlcoholic => 'Non-alcoholic';
 }

@@ -915,5 +915,39 @@
   "@preQuizContinueWithCount": {
     "description": "CTA with selection count",
     "placeholders": {"count": {"type": "int"}}
-  }
+  },
+
+  "crossCategoryEyebrow": "ONE MORE THING",
+  "@crossCategoryEyebrow": {"description": "Cross-category eyebrow"},
+
+  "crossCategoryHeadline": "What else do you drink?",
+  "@crossCategoryHeadline": {"description": "Cross-category headline"},
+
+  "crossCategorySubhead": "Bro will tailor recommendations across your full repertoire — not just wine.",
+  "@crossCategorySubhead": {"description": "Cross-category subhead"},
+
+  "crossCategorySubmit": "Save",
+  "@crossCategorySubmit": {"description": "Cross-category submit"},
+
+  "crossCategoryThanks": "Saved — Bro now sees the full picture.",
+  "@crossCategoryThanks": {"description": "Cross-category snackbar"},
+
+  "crossCategoryProfileTitle": "What else do you drink?",
+  "@crossCategoryProfileTitle": {"description": "Profile tile title"},
+
+  "crossCategoryProfileHint": "Tell Bro your other categories — 10 seconds.",
+  "@crossCategoryProfileHint": {"description": "Profile tile hint"},
+
+  "categoryWine": "Wine",
+  "@categoryWine": {"description": "Category label"},
+  "categoryWhisky": "Whisky",
+  "@categoryWhisky": {"description": "Category label"},
+  "categoryBeer": "Beer",
+  "@categoryBeer": {"description": "Category label"},
+  "categoryCocktails": "Cocktails",
+  "@categoryCocktails": {"description": "Category label"},
+  "categoryGinRumVodka": "Gin / Rum / Vodka",
+  "@categoryGinRumVodka": {"description": "Category label"},
+  "categoryNonAlcoholic": "Non-alcoholic",
+  "@categoryNonAlcoholic": {"description": "Category label"}
 }
