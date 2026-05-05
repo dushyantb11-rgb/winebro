@@ -73,6 +73,14 @@ service cloud.firestore {
       allow write: if false; // Admin SDK only
     }
 
+    // ─── COMMUNITY SIGNALS (Bro Circle counters) ─────────
+    // Public aggregates written by CF-11 (admin only). Any signed-in
+    // user can read for the Bro Circle on Home.
+    match /community_signals/{productId} {
+      allow read: if request.auth != null;
+      allow write: if false; // CF-11 admin SDK only
+    }
+
     // ─── PAIRING FEEDBACK (D6 — pairing success rate) ────
     // Per-user response to "Did Bro get it right?". Each user
     // owns docs whose id is `{uid}_{entryId}`; ownership enforced

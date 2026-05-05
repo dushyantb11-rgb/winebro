@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:winebro/features/home/domain/community_signal.dart';
 import 'package:winebro/features/journal/domain/journal_entry.dart';
 import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
@@ -152,40 +153,143 @@ class BroCircleSignal {
   final String subline;
 }
 
+/// Reads the top community signals written by CF-11 nightly. Up to
+/// 12 docs ordered by tastersThisWeek desc — the consumer composes
+/// the 4 most interesting (climbing / loved / top pairer / volume).
+final communitySignalsProvider =
+    StreamProvider<List<CommunitySignal>>((ref) {
+  return FirebaseFirestore.instance
+      .collection('community_signals')
+      .orderBy('tastersThisWeek', descending: true)
+      .limit(12)
+      .snapshots()
+      .map((snap) =>
+          snap.docs.map((d) => CommunitySignal.fromMap(d.data())).toList());
+});
+
+/// Bro Circle on Home — composed signals shown in the horizontal
+/// scroller. Replaces the synthetic v1 placeholder. Strategy:
+///   1. If CF-11 has produced data, surface 4 real signals
+///      (volume / climbing / loved / top-pairing).
+///   2. If the collection is empty (cold start / fresh deploy),
+///      fall back to a "be the first to taste" ribbon over our
+///      seed products so Day-1 users still see something useful.
 final broCircleProvider = Provider<List<BroCircleSignal>>((ref) {
+  final signalsAsync = ref.watch(communitySignalsProvider);
+  final signals = signalsAsync.value ?? const <CommunitySignal>[];
+
+  Product? seedProductFor(String id) =>
+      kSeedProducts.where((p) => p.id == id).firstOrNull;
+
+  if (signals.isNotEmpty) {
+    final composed = <BroCircleSignal>[];
+
+    // Pick 1: highest taster volume.
+    final topVolume = signals.first;
+    final p1 = seedProductFor(topVolume.productId);
+    if (p1 != null) {
+      composed.add(BroCircleSignal(
+        product: p1,
+        headline: 'This week ${_formatCount(topVolume.tastersThisWeek)} '
+            'bro${topVolume.tastersThisWeek == 1 ? '' : 's'} tasted',
+        subline: topVolume.productName,
+      ));
+    }
+
+    // Pick 2: climbing fastest (must be different product).
+    final climbing = signals
+        .where((s) => s.isClimbing && s.productId != topVolume.productId)
+        .firstOrNull;
+    if (climbing != null) {
+      final p = seedProductFor(climbing.productId);
+      if (p != null) {
+        composed.add(BroCircleSignal(
+          product: p,
+          headline: 'Climbing fast',
+          subline:
+              '${climbing.productName} — ${(climbing.climbingScore * 100).round()}% week-over-week',
+        ));
+      }
+    }
+
+    // Pick 3: most-loved (≥70% rated 4-5).
+    final loved = signals
+        .where((s) =>
+            s.isLoved &&
+            !composed.any((c) => c.product.id == s.productId))
+        .firstOrNull;
+    if (loved != null) {
+      final p = seedProductFor(loved.productId);
+      if (p != null) {
+        composed.add(BroCircleSignal(
+          product: p,
+          headline: 'Most-loved this week',
+          subline:
+              '${loved.productName} — ${(loved.lovedRate * 100).round()}% rate it 4★+',
+        ));
+      }
+    }
+
+    // Pick 4: most distinctive top-pairing (D1 surface).
+    final paired = signals
+        .where((s) =>
+            s.topPairing != null &&
+            s.topPairingShare >= 0.4 &&
+            !composed.any((c) => c.product.id == s.productId))
+        .firstOrNull;
+    if (paired != null) {
+      final p = seedProductFor(paired.productId);
+      if (p != null) {
+        composed.add(BroCircleSignal(
+          product: p,
+          headline: 'Bros are pouring',
+          subline:
+              '${paired.productName} with ${paired.topPairing}',
+        ));
+      }
+    }
+
+    if (composed.length >= 3) return composed;
+    // If the live data was thin (fewer than 3 distinct signals), fall
+    // through to the seed-product fallback below.
+  }
+
+  // Cold-start fallback — shown until CF-11 has produced enough data.
+  // Same 4 cards but framed as "be the first" rather than fake numbers.
   final products = List<Product>.from(kSeedProducts);
-  // Stable per day, varied across signals
   final rng = Random(DateTime.now().day);
   products.shuffle(rng);
-
-  String tasters() => '${(rng.nextInt(900) + 600).toString()}'.replaceAllMapped(
-        RegExp(r'(\d{1,3})(?=(\d{3})+$)'),
-        (m) => '${m[1]},',
-      );
 
   return [
     BroCircleSignal(
       product: products[0],
-      headline: 'This week ${tasters()} bros tasted',
+      headline: 'Be the first to log',
       subline: products[0].name,
     ),
     BroCircleSignal(
       product: products[1],
-      headline: 'Climbing fast',
-      subline: '${products[1].name} — 89% pair it with Indian food',
+      headline: 'Bro is curious about',
+      subline: products[1].name,
     ),
     BroCircleSignal(
       product: products[2],
-      headline: 'Most-loved this week',
+      headline: 'Try this tonight',
       subline: products[2].name,
     ),
     BroCircleSignal(
       product: products[3],
-      headline: 'Bros are pouring',
-      subline: '${products[3].name} on weekend nights',
+      headline: 'Bro recommends',
+      subline: products[3].name,
     ),
   ];
 });
+
+String _formatCount(int n) {
+  return n.toString().replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+$)'),
+        (m) => '${m[1]},',
+      );
+}
 
 // ============================================================
 // Time-aware greeting
