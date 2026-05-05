@@ -11,6 +11,7 @@
  * CF-08: tonightsPourMorning    — 07:00 IST, topic broadcast for daily curated bottle
  * CF-09: pairingFeedback24h     — hourly cron, "Did Bro get it right?" 24h after journal save
  * CF-10: restockSundayPush      — Sundays 11:00 IST, "time to restock?" push for buy-again 28-35d ago
+ * CF-11: communitySignalsRollup — daily 02:00 IST, aggregates 14d journal writes into community_signals/
  */
 
 import { initializeApp } from "firebase-admin/app";
@@ -26,3 +27,4 @@ export { streakLossWarning } from "./cf07-streak-loss-warning";
 export { tonightsPourMorning } from "./cf08-tonights-pour-morning";
 export { pairingFeedback24h } from "./cf09-pairing-feedback-24h";
 export { restockSundayPush } from "./cf10-restock-sunday-push";
+export { communitySignalsRollup } from "./cf11-community-signals-rollup";
