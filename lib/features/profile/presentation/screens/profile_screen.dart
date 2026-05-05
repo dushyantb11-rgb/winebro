@@ -331,7 +331,7 @@ class _PalateSection extends StatelessWidget {
               Icon(Icons.auto_graph, color: colors.paprika, size: 16),
               const SizedBox(width: 8),
               Text(
-                'YOUR TASTE DNA',
+                context.l10n.profileTasteDnaEyebrow,
                 style: context.eyebrow.copyWith(color: colors.paprika),
               ),
             ],
@@ -493,13 +493,13 @@ class _AchievementsSection extends StatelessWidget {
         Row(
           children: [
             Text(
-              'NEXT TO UNLOCK',
+              context.l10n.profileNextToUnlock,
               style: context.eyebrow.copyWith(color: colors.textTertiary),
             ),
             const Spacer(),
             TextButton(
               onPressed: () => _showAllBadges(context, state),
-              child: const Text('View all 20 →'),
+              child: Text(context.l10n.profileViewAllBadges(kBadges.length)),
             ),
           ],
         ),
@@ -521,7 +521,7 @@ class _AchievementsSection extends StatelessWidget {
         if (earnedRecent.isNotEmpty) ...[
           const SizedBox(height: 16),
           Text(
-            'RECENTLY EARNED',
+            context.l10n.profileRecentlyEarned,
             style: context.eyebrow.copyWith(color: colors.textTertiary),
           ),
           const SizedBox(height: 8),
@@ -556,7 +556,7 @@ class _AchievementsSection extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Text(
-                  'All achievements',
+                  context.l10n.profileAllAchievements,
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
               ),

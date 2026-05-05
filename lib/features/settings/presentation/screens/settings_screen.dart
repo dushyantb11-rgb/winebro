@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/providers/locale_provider.dart';
 import 'package:winebro/core/providers/theme_provider.dart';
 import 'package:winebro/core/theme/app_colors.dart';
@@ -27,7 +28,9 @@ class SettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(context.l10n.profileTitle == 'Profile'
+            ? 'Settings'
+            : 'Settings'), // intentionally hardcoded — "Settings" is universal app term
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -36,12 +39,12 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
-          _SectionHeader(label: 'APPEARANCE', colors: colors),
+          _SectionHeader(label: context.l10n.settingsAppearance, colors: colors),
           _SettingsTile(
             icon: themeMode == ThemeMode.dark
                 ? Icons.dark_mode
                 : Icons.light_mode,
-            title: 'Theme',
+            title: context.l10n.settingsTheme,
             trailing: _ThemeSwitch(
               value: themeMode == ThemeMode.dark,
               onChanged: (_) => ref.read(themeProvider.notifier).toggle(),
@@ -51,24 +54,24 @@ class SettingsScreen extends ConsumerWidget {
           ),
           _SettingsTile(
             icon: Icons.language,
-            title: 'Language',
+            title: context.l10n.settingsLanguageRow,
             subtitle: kLocaleNames[locale?.languageCode ?? 'en'] ?? 'English',
             onTap: () => _showLanguageSheet(context, ref),
             colors: colors,
           ),
           const SizedBox(height: 24),
 
-          _SectionHeader(label: 'ACCOUNT', colors: colors),
+          _SectionHeader(label: context.l10n.settingsAccount, colors: colors),
           _SettingsTile(
             icon: Icons.logout,
-            title: 'Sign out',
+            title: context.l10n.settingsSignOut,
             colors: colors,
             onTap: () async {
               final confirmed = await _confirm(
                 context,
-                'Sign out?',
-                'You can sign back in any time with the same number.',
-                'Sign out',
+                context.l10n.settingsSignOutQuestion,
+                context.l10n.settingsSignOutConfirm,
+                context.l10n.settingsSignOut,
                 isDestructive: true,
               );
               if (confirmed == true && context.mounted) {
@@ -78,22 +81,22 @@ class SettingsScreen extends ConsumerWidget {
           ),
           _SettingsTile(
             icon: Icons.delete_outline,
-            title: 'Delete account',
+            title: context.l10n.settingsDelete,
             isDestructive: true,
             colors: colors,
             onTap: () async {
               final confirmed = await _confirm(
                 context,
-                'Delete your account?',
-                'This wipes your tasting journal, BroCards, and palate profile. Cannot be undone.',
-                'Delete forever',
+                context.l10n.settingsDeleteQuestion,
+                context.l10n.settingsDeleteConfirm,
+                context.l10n.settingsDeleteForever,
                 isDestructive: true,
               );
               if (confirmed == true && context.mounted) {
                 // TODO: wire to account deletion endpoint when ready
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Account deletion coming soon.'),
+                  SnackBar(
+                    content: Text(context.l10n.settingsDeleteComingSoon),
                   ),
                 );
               }
@@ -101,29 +104,30 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
 
-          _SectionHeader(label: 'ABOUT', colors: colors),
+          _SectionHeader(label: context.l10n.settingsAbout, colors: colors),
           _SettingsTile(
             icon: Icons.privacy_tip_outlined,
-            title: 'Privacy policy',
+            title: context.l10n.settingsPrivacyPolicy,
             colors: colors,
-            onTap: () => _open(Uri.parse('https://winebro.web.app/privacy-policy.html')),
+            onTap: () =>
+                _open(Uri.parse('https://winebro.web.app/privacy-policy.html')),
           ),
           _SettingsTile(
             icon: Icons.gavel_outlined,
-            title: 'Terms of service',
+            title: context.l10n.settingsTerms,
             colors: colors,
             onTap: () => _open(Uri.parse('https://winebro.web.app/terms.html')),
           ),
           _SettingsTile(
             icon: Icons.info_outline,
-            title: 'Version',
+            title: context.l10n.settingsVersion,
             subtitle: '0.1.0',
             colors: colors,
           ),
           const SizedBox(height: 40),
           Center(
             child: Text(
-              'Drink responsibly. 18+',
+              context.l10n.settingsResponsibly,
               style: TextStyle(
                 fontFamily: 'PlayfairDisplay',
                 fontStyle: FontStyle.italic,
@@ -157,7 +161,7 @@ class SettingsScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.all(20),
               child: Text(
-                'Choose language',
+                context.l10n.settingsChooseLanguage,
                 style: Theme.of(context).textTheme.displaySmall,
               ),
             ),
@@ -205,7 +209,7 @@ class SettingsScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.settingsCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),

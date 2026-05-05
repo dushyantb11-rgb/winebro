@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
+import 'package:winebro/core/notifications/notification_handler.dart';
 import 'package:winebro/core/providers/locale_provider.dart';
 import 'package:winebro/core/providers/theme_provider.dart';
 import 'package:winebro/core/router/app_router.dart';
@@ -14,6 +15,10 @@ class WineBroApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
     final locale = ref.watch(localeProvider);
     final themeMode = ref.watch(themeProvider);
+
+    // Bind router to the FCM handler so notification taps deep-link
+    // correctly. Safe to call on every rebuild — bindRouter is idempotent.
+    NotificationHandler.instance.bindRouter(router);
 
     return MaterialApp.router(
       title: 'WineBro',

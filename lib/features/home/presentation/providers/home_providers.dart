@@ -154,24 +154,11 @@ final broCircleProvider = Provider<List<BroCircleSignal>>((ref) {
 });
 
 // ============================================================
-// Trending — kept for backward compatibility, slimmer ranking
-// ============================================================
-
-final trendingProductsProvider = Provider<List<Product>>((ref) {
-  final sorted = List<Product>.from(kSeedProducts)
-    ..sort((a, b) {
-      final aScore = a.complexity * 1.5 + a.body + a.fruit * 0.5;
-      final bScore = b.complexity * 1.5 + b.body + b.fruit * 0.5;
-      return bScore.compareTo(aScore);
-    });
-  return sorted.take(8).toList();
-});
-
-// Backward-compat alias used by remaining call sites (e.g. tests).
-final brosPickProvider = tonightsPourProvider;
-
-// ============================================================
 // Time-aware greeting
+//
+// Note: as of 2026-05-05 this helper is unused — Home now resolves
+// greetings via context.l10n.homeGreetingMorning/Afternoon/Evening/Late
+// directly in the widget tree. Kept for any future non-widget callers.
 // ============================================================
 
 String greetingForHour(int hour) {

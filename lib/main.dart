@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:winebro/app.dart';
+import 'package:winebro/core/notifications/notification_handler.dart';
 import 'package:winebro/firebase_options.dart';
 
 void main() {
@@ -16,6 +17,12 @@ void main() {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
+
+      // FCM bootstrap — registers background handler + foreground/opened
+      // listeners. Topic subscriptions + permission prompts happen later
+      // via NotificationHandler.instance.requestPermissions() / subscribeAll()
+      // (called from the auth flow after sign-in).
+      await NotificationHandler.instance.initialize();
 
       FlutterError.onError = (details) {
         FirebaseCrashlytics.instance.recordFlutterFatalError(details);

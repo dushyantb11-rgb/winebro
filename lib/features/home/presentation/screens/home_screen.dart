@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_elevation.dart';
 import 'package:winebro/core/theme/app_motion.dart';
@@ -87,7 +88,7 @@ class HomeScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${greetingForHour(hour)},',
+                      _greetingFor(context, hour),
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 14,
@@ -110,7 +111,7 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      _bylineFor(hour),
+                      _bylineFor(context, hour),
                       style: context.serifQuote.copyWith(
                         color: colors.textSecondary,
                       ),
@@ -143,7 +144,7 @@ class HomeScreen extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
                 child: Text(
-                  'TONIGHT, YOU ARE…',
+                  context.l10n.homeEmotionEyebrow,
                   style: context.eyebrow.copyWith(color: colors.textTertiary),
                 ),
               ),
@@ -157,7 +158,7 @@ class HomeScreen extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: EmotionTile(
-                        label: 'Cooking',
+                        label: context.l10n.homeEmotionCooking,
                         icon: Icons.outdoor_grill,
                         gradient: [colors.paprika, colors.paprikaDeep],
                         onTap: () => context.go('/pair'),
@@ -166,7 +167,7 @@ class HomeScreen extends ConsumerWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: EmotionTile(
-                        label: 'Hosting',
+                        label: context.l10n.homeEmotionHosting,
                         icon: Icons.celebration_outlined,
                         gradient: [colors.thunder, colors.paprikaDark],
                         onTap: () => context.go('/pair'),
@@ -175,7 +176,7 @@ class HomeScreen extends ConsumerWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: EmotionTile(
-                        label: 'Just sipping',
+                        label: context.l10n.homeEmotionJustSipping,
                         icon: Icons.nightlight_round,
                         gradient: [colors.paprikaDark, colors.thunderLight],
                         onTap: () => context.go('/pair'),
@@ -211,7 +212,7 @@ class HomeScreen extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
                 child: Text(
-                  'BRO CIRCLE',
+                  context.l10n.homeBroCircleEyebrow,
                   style: context.eyebrow.copyWith(color: colors.textTertiary),
                 ),
               ),
@@ -249,11 +250,18 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  String _bylineFor(int hour) {
-    if (hour < 12) return 'Slow morning. What\'s pouring?';
-    if (hour < 17) return 'Afternoon. A glass with what?';
-    if (hour < 22) return 'Your night begins here.';
-    return 'Late and lovely.';
+  String _bylineFor(BuildContext context, int hour) {
+    if (hour < 12) return context.l10n.homeBylineMorning;
+    if (hour < 17) return context.l10n.homeBylineAfternoon;
+    if (hour < 22) return context.l10n.homeBylineEvening;
+    return context.l10n.homeBylineLate;
+  }
+
+  String _greetingFor(BuildContext context, int hour) {
+    if (hour < 12) return context.l10n.homeGreetingMorning;
+    if (hour < 17) return context.l10n.homeGreetingAfternoon;
+    if (hour < 22) return context.l10n.homeGreetingEvening;
+    return context.l10n.homeGreetingLate;
   }
 
   void _showProductDetail(BuildContext context, Product product) {
@@ -364,7 +372,7 @@ class HomeScreen extends ConsumerWidget {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        '82% of bros pair this with Indian food',
+                        context.l10n.homeBroCircleSocialProof(82),
                         style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: 13,
@@ -391,7 +399,7 @@ class HomeScreen extends ConsumerWidget {
                         );
                       },
                       icon: const Icon(Icons.book_outlined, size: 18),
-                      label: const Text('Add to journal'),
+                      label: Text(context.l10n.actionAddToJournal),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -403,7 +411,7 @@ class HomeScreen extends ConsumerWidget {
                       },
                       icon: const Icon(Icons.restaurant_menu_outlined,
                           size: 18),
-                      label: const Text('Pair'),
+                      label: Text(context.l10n.actionPair),
                     ),
                   ),
                 ],
@@ -454,7 +462,7 @@ class _TonightsPourCard extends StatelessWidget {
                     size: 14, color: colors.thunder),
                 const SizedBox(width: 6),
                 Text(
-                  'TONIGHT\'S POUR',
+                  context.l10n.homeTonightsPourEyebrow,
                   style: TextStyle(
                     fontFamily: 'Montserrat',
                     fontWeight: FontWeight.w800,
@@ -502,7 +510,7 @@ class _TonightsPourCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Why this tonight',
+                  context.l10n.homeWhyThisTonight,
                   style: TextStyle(
                     color: colors.inkOnHero,
                     fontSize: 12,
@@ -558,7 +566,7 @@ class _ContinueStoryCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'CONTINUE YOUR STORY',
+              context.l10n.homeContinueStoryEyebrow,
               style: context.eyebrow.copyWith(color: colors.gold),
             ),
             const SizedBox(height: 12),
@@ -633,7 +641,7 @@ class _ContinueStoryCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(
-                    '78% match',
+                    context.l10n.homeMatchPercent(78),
                     style: TextStyle(
                       color: context.salemOnSurface,
                       fontSize: 11,
@@ -770,7 +778,7 @@ class _BroTipCard extends StatelessWidget {
                     size: 16, color: colors.goldWarm),
                 const SizedBox(width: 8),
                 Text(
-                  'BRO TIP OF THE DAY',
+                  context.l10n.homeBroTipHeader,
                   style: TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 11,
