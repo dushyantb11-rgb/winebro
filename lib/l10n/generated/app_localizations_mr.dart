@@ -904,4 +904,25 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get contextOther => 'Other';
+
+  @override
+  String get preQuizEyebrow => 'BEFORE WE BEGIN';
+
+  @override
+  String get preQuizHeadline => 'Tap any of these you\'ve tried.';
+
+  @override
+  String get preQuizSubhead =>
+      'Bro learns faster from what you already know than from theory.';
+
+  @override
+  String get preQuizSkip => 'Skip';
+
+  @override
+  String get preQuizContinueEmpty => 'Continue without selecting';
+
+  @override
+  String preQuizContinueWithCount(int count) {
+    return 'Continue with $count selected';
+  }
 }

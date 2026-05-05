@@ -1751,6 +1751,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other'**
   String get contextOther;
+
+  /// Pre-quiz seed eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'BEFORE WE BEGIN'**
+  String get preQuizEyebrow;
+
+  /// Pre-quiz seed headline
+  ///
+  /// In en, this message translates to:
+  /// **'Tap any of these you\'ve tried.'**
+  String get preQuizHeadline;
+
+  /// Pre-quiz seed subhead
+  ///
+  /// In en, this message translates to:
+  /// **'Bro learns faster from what you already know than from theory.'**
+  String get preQuizSubhead;
+
+  /// Pre-quiz seed skip button
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get preQuizSkip;
+
+  /// CTA when nothing selected
+  ///
+  /// In en, this message translates to:
+  /// **'Continue without selecting'**
+  String get preQuizContinueEmpty;
+
+  /// CTA with selection count
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with {count} selected'**
+  String preQuizContinueWithCount(int count);
 }
 
 class _AppLocalizationsDelegate

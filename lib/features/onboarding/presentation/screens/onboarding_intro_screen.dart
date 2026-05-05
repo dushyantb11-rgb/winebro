@@ -62,13 +62,13 @@ class _OnboardingIntroScreenState extends State<OnboardingIntroScreen> {
         curve: AppMotion.standard,
       );
     } else {
-      context.go('/quiz');
+      context.go('/pre-quiz-seed');
     }
   }
 
   void _skip() {
     HapticFeedback.selectionClick();
-    context.go('/quiz');
+    context.go('/pre-quiz-seed');
   }
 
   @override

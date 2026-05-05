@@ -894,5 +894,26 @@
   "contextTravel": "Travel",
   "@contextTravel": {"description": "Tasting context"},
   "contextOther": "Other",
-  "@contextOther": {"description": "Tasting context"}
+  "@contextOther": {"description": "Tasting context"},
+
+  "preQuizEyebrow": "BEFORE WE BEGIN",
+  "@preQuizEyebrow": {"description": "Pre-quiz seed eyebrow"},
+
+  "preQuizHeadline": "Tap any of these you've tried.",
+  "@preQuizHeadline": {"description": "Pre-quiz seed headline"},
+
+  "preQuizSubhead": "Bro learns faster from what you already know than from theory.",
+  "@preQuizSubhead": {"description": "Pre-quiz seed subhead"},
+
+  "preQuizSkip": "Skip",
+  "@preQuizSkip": {"description": "Pre-quiz seed skip button"},
+
+  "preQuizContinueEmpty": "Continue without selecting",
+  "@preQuizContinueEmpty": {"description": "CTA when nothing selected"},
+
+  "preQuizContinueWithCount": "Continue with {count} selected",
+  "@preQuizContinueWithCount": {
+    "description": "CTA with selection count",
+    "placeholders": {"count": {"type": "int"}}
+  }
 }
