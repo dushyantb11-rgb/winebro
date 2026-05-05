@@ -1787,6 +1787,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue with {count} selected'**
   String preQuizContinueWithCount(int count);
+
+  /// Cross-category eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'ONE MORE THING'**
+  String get crossCategoryEyebrow;
+
+  /// Cross-category headline
+  ///
+  /// In en, this message translates to:
+  /// **'What else do you drink?'**
+  String get crossCategoryHeadline;
+
+  /// Cross-category subhead
+  ///
+  /// In en, this message translates to:
+  /// **'Bro will tailor recommendations across your full repertoire — not just wine.'**
+  String get crossCategorySubhead;
+
+  /// Cross-category submit
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get crossCategorySubmit;
+
+  /// Cross-category snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Saved — Bro now sees the full picture.'**
+  String get crossCategoryThanks;
+
+  /// Profile tile title
+  ///
+  /// In en, this message translates to:
+  /// **'What else do you drink?'**
+  String get crossCategoryProfileTitle;
+
+  /// Profile tile hint
+  ///
+  /// In en, this message translates to:
+  /// **'Tell Bro your other categories — 10 seconds.'**
+  String get crossCategoryProfileHint;
+
+  /// Category label
+  ///
+  /// In en, this message translates to:
+  /// **'Wine'**
+  String get categoryWine;
+
+  /// Category label
+  ///
+  /// In en, this message translates to:
+  /// **'Whisky'**
+  String get categoryWhisky;
+
+  /// Category label
+  ///
+  /// In en, this message translates to:
+  /// **'Beer'**
+  String get categoryBeer;
+
+  /// Category label
+  ///
+  /// In en, this message translates to:
+  /// **'Cocktails'**
+  String get categoryCocktails;
+
+  /// Category label
+  ///
+  /// In en, this message translates to:
+  /// **'Gin / Rum / Vodka'**
+  String get categoryGinRumVodka;
+
+  /// Category label
+  ///
+  /// In en, this message translates to:
+  /// **'Non-alcoholic'**
+  String get categoryNonAlcoholic;
 }
 
 class _AppLocalizationsDelegate

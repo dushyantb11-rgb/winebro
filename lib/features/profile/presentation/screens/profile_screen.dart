@@ -13,8 +13,26 @@ import 'package:winebro/features/auth/presentation/providers/auth_provider.dart'
 import 'package:winebro/features/pairing/domain/palate_profile.dart';
 import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/features/profile/domain/gamification.dart';
+import 'package:winebro/features/profile/presentation/widgets/cross_category_survey_sheet.dart';
 import 'package:winebro/features/wishlist/presentation/providers/wishlist_provider.dart';
 import 'package:winebro/shared/widgets/palate_radar_chart.dart';
+
+/// True when the user has logged ≥3 journal entries AND the
+/// cross-category survey is not yet recorded. Used to surface
+/// the survey CTA on Profile.
+final crossCategorySurveyNeededProvider =
+    StreamProvider<bool>((ref) {
+  final uid = FirebaseAuth.instance.currentUser?.uid;
+  if (uid == null) return Stream.value(false);
+
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection('cross_category')
+      .doc('initial')
+      .snapshots()
+      .map((doc) => !doc.exists);
+});
 
 final gamificationProvider = StreamProvider<GamificationState>((ref) {
   final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -85,6 +103,7 @@ class ProfileScreen extends ConsumerWidget {
               const SizedBox(height: 32),
               _StatsRow(state: state),
               const SizedBox(height: 32),
+              if (state.totalJournalEntries >= 3) const _CrossCategoryTile(),
               const _WishlistTile(),
               const SizedBox(height: 24),
               _PalateSection(state: state, palate: palate),
@@ -151,6 +170,72 @@ class _WishlistTile extends ConsumerWidget {
             ),
             Icon(Icons.chevron_right, color: colors.textTertiary, size: 20),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// Cross-category survey tile (D5)
+// ============================================================
+
+class _CrossCategoryTile extends ConsumerWidget {
+  const _CrossCategoryTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.appColors;
+    final needed =
+        ref.watch(crossCategorySurveyNeededProvider).value ?? false;
+    if (!needed) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: InkWell(
+        onTap: () => CrossCategorySurveySheet.show(context),
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          decoration: BoxDecoration(
+            color: colors.surface1,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: context.salemOnSurface.withValues(alpha: 0.4),
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.layers_outlined,
+                  color: context.salemOnSurface, size: 22),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.crossCategoryProfileTitle,
+                      style: TextStyle(
+                        fontFamily: 'PlayfairDisplay',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: colors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      context.l10n.crossCategoryProfileHint,
+                      style: TextStyle(
+                        color: colors.textSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right, color: colors.textTertiary, size: 20),
+            ],
+          ),
         ),
       ),
     );
