@@ -52,6 +52,7 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen> {
         title: Text(context.l10n.friendsTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
           onPressed: () => context.pop(),
         ),
       ),

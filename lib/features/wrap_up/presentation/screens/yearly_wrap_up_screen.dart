@@ -97,6 +97,7 @@ class _YearlyWrapUpScreenState extends ConsumerState<YearlyWrapUpScreen> {
                       ),
                       IconButton(
                         icon: Icon(Icons.close, color: colors.textSecondary),
+                        tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
                         onPressed: () => context.pop(),
                       ),
                     ],

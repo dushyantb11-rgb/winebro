@@ -244,6 +244,7 @@ class _QuickLogSheetState extends ConsumerState<QuickLogSheet> {
                   ),
                   IconButton(
                     icon: Icon(Icons.close, color: colors.textSecondary),
+                    tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -409,6 +410,7 @@ class _SearchField extends StatelessWidget {
             suffixIcon: query.isNotEmpty
                 ? IconButton(
                     icon: Icon(Icons.close, color: colors.textTertiary),
+                    tooltip: 'Clear',
                     onPressed: () {
                       controller.clear();
                       onChanged('');

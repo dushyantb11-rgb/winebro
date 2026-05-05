@@ -107,6 +107,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                           IconButton(
                             icon: Icon(Icons.arrow_back,
                                 color: colors.textSecondary),
+                            tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                             onPressed: _back,
                           ),
                         const Spacer(),
