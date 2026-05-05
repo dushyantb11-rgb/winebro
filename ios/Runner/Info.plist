@@ -73,7 +73,9 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>WineBro saves your tasting BroCards to your photo library when you choose to share or download them.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>WineBro does not record audio. This permission is requested only by the camera plugin and is never used.</string>
+	<string>WineBro records voice notes when you speak your tasting notes — quicker than typing, and your audio is saved to your private journal.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>WineBro converts your spoken tasting notes to text on-device so you can dictate instead of type.</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>WineBro does not track you across apps or websites owned by other companies.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>

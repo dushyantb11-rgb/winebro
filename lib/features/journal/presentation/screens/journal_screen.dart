@@ -12,10 +12,12 @@ import 'package:winebro/core/utils/formatters.dart';
 import 'package:winebro/features/aroma_wheel/domain/aroma_taxonomy.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:winebro/features/journal/data/brocard_photo_service.dart';
+import 'package:winebro/features/journal/data/voice_note_service.dart';
 import 'package:winebro/features/journal/domain/journal_context.dart';
 import 'package:winebro/features/journal/domain/journal_entry.dart';
 import 'package:winebro/features/journal/presentation/widgets/occasion_chips.dart';
 import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
+import 'package:winebro/features/journal/presentation/widgets/voice_capture_sheet.dart';
 import 'package:winebro/features/profile/data/gamification_service.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
 import 'package:winebro/shared/widgets/segmented_chip_selector.dart';
@@ -593,6 +595,8 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
   final _notesController = TextEditingController();
   String? _bottlePhotoUrl;
   String? _labelPhotoUrl;
+  String? _notesAudioPath;
+  String? _notesAudioUrl;
   bool _photoUploading = false;
   JournalContext? _context;
   late final String _draftId =
@@ -613,6 +617,16 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
     if (uid == null) return;
 
     final id = _draftId;
+
+    // Upload the captured voice note (if any) before writing the
+    // entry doc so notesAudioUrl is set on first write. Storage may
+    // not be initialized yet — null URL is the graceful fallback.
+    if (_notesAudioPath != null && _notesAudioUrl == null) {
+      _notesAudioUrl = await ref.read(voiceNoteServiceProvider).uploadAudio(
+            entryId: id,
+            localPath: _notesAudioPath!,
+          );
+    }
     final entry = JournalEntry(
       id: id,
       userId: uid,
@@ -640,6 +654,7 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
       buyAgain: _buyAgain,
       bottlePhotoUrl: _bottlePhotoUrl,
       labelPhotoUrl: _labelPhotoUrl,
+      notesAudioUrl: _notesAudioUrl,
       occasion: _context?.code,
     );
 
@@ -1031,14 +1046,60 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
           contentPadding: EdgeInsets.zero,
         ),
         const SizedBox(height: 16),
-        TextField(
-          controller: _notesController,
-          style: TextStyle(color: colors.textPrimary),
-          maxLines: 3,
-          decoration: InputDecoration(hintText: l10n.personalNotesHint),
+        Stack(
+          children: [
+            TextField(
+              controller: _notesController,
+              style: TextStyle(color: colors.textPrimary),
+              maxLines: 3,
+              decoration: InputDecoration(
+                hintText: l10n.personalNotesHint,
+                contentPadding:
+                    const EdgeInsets.fromLTRB(12, 12, 56, 12),
+              ),
+            ),
+            Positioned(
+              right: 4,
+              bottom: 4,
+              child: IconButton(
+                tooltip: l10n.voiceCaptureTooltip,
+                icon: Icon(
+                  _notesAudioPath != null ? Icons.mic : Icons.mic_none,
+                  color: _notesAudioPath != null
+                      ? colors.paprika
+                      : colors.textSecondary,
+                ),
+                onPressed: _captureVoiceNote,
+              ),
+            ),
+          ],
         ),
+        if (_notesAudioPath != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Text(
+              l10n.voiceCaptureAttached,
+              style: TextStyle(
+                color: context.salemOnSurface,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
       ],
     );
+  }
+
+  Future<void> _captureVoiceNote() async {
+    final result = await VoiceCaptureSheet.show(context);
+    if (!mounted || result == null) return;
+    final existing = _notesController.text.trim();
+    setState(() {
+      _notesController.text = existing.isEmpty
+          ? result.transcript
+          : '$existing ${result.transcript}';
+      _notesAudioPath = result.audioPath;
+    });
   }
 
   Widget _buildSummaryStep(AppColors colors, AppLocalizations l10n) {

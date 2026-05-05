@@ -14,6 +14,14 @@
         tools:node="remove" />
     <uses-permission android:name="android.permission.ACCESS_ADSERVICES_TOPICS"
         tools:node="remove" />
+
+    <!-- S4.1 voice notes -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <queries>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+    </queries>
     <application
         android:label="winebro"
         android:name="${applicationName}"

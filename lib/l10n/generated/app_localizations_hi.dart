@@ -967,4 +967,37 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get categoryNonAlcoholic => 'Non-alcoholic';
+
+  @override
+  String get voiceCaptureTitle => 'Speak your notes';
+
+  @override
+  String get voiceCaptureHint => 'Tap the mic and describe what you taste.';
+
+  @override
+  String get voiceCaptureListening => 'Listening — speak naturally.';
+
+  @override
+  String get voiceCaptureReview =>
+      'Looking good. Tap mic to add more, or use this transcript.';
+
+  @override
+  String get voiceCapturePlaceholder =>
+      'Your transcript will appear here as you speak...';
+
+  @override
+  String get voiceCaptureCancel => 'Cancel';
+
+  @override
+  String get voiceCaptureUseTranscript => 'Use this';
+
+  @override
+  String get voiceCapturePermissionError =>
+      'Need microphone + speech permissions. Check Settings.';
+
+  @override
+  String get voiceCaptureTooltip => 'Speak your notes';
+
+  @override
+  String get voiceCaptureAttached => 'AUDIO ATTACHED';
 }

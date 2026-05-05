@@ -1865,6 +1865,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Non-alcoholic'**
   String get categoryNonAlcoholic;
+
+  /// Voice capture sheet title
+  ///
+  /// In en, this message translates to:
+  /// **'Speak your notes'**
+  String get voiceCaptureTitle;
+
+  /// Pre-recording hint
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the mic and describe what you taste.'**
+  String get voiceCaptureHint;
+
+  /// While recording
+  ///
+  /// In en, this message translates to:
+  /// **'Listening — speak naturally.'**
+  String get voiceCaptureListening;
+
+  /// Post-stop review
+  ///
+  /// In en, this message translates to:
+  /// **'Looking good. Tap mic to add more, or use this transcript.'**
+  String get voiceCaptureReview;
+
+  /// Empty transcript placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Your transcript will appear here as you speak...'**
+  String get voiceCapturePlaceholder;
+
+  /// Cancel button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get voiceCaptureCancel;
+
+  /// Accept transcript
+  ///
+  /// In en, this message translates to:
+  /// **'Use this'**
+  String get voiceCaptureUseTranscript;
+
+  /// Permission denied
+  ///
+  /// In en, this message translates to:
+  /// **'Need microphone + speech permissions. Check Settings.'**
+  String get voiceCapturePermissionError;
+
+  /// Mic icon tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Speak your notes'**
+  String get voiceCaptureTooltip;
+
+  /// Audio attached badge
+  ///
+  /// In en, this message translates to:
+  /// **'AUDIO ATTACHED'**
+  String get voiceCaptureAttached;
 }
 
 class _AppLocalizationsDelegate
