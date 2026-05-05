@@ -98,6 +98,18 @@ class AppColors extends ThemeExtension<AppColors> {
   /// brighter mid-tones in photography.
   final Color scrim;
 
+  // CHV brand guide v1.0 (WineBro venture):
+  //   Primary palette: Paprika #93003C, Thunder #252122, Salem #0F8044
+  //   Secondary palette: Paprika, White, Salem
+  // No gold/champagne. Any "gold-equivalent" highlight must be White
+  // (on dark backgrounds) or Paprika (on light backgrounds).
+  // The gold/goldLight/goldDark/goldWarm tokens are kept as aliases
+  // so the rest of the codebase compiles, but they all resolve to
+  // brand-legal colors:
+  //   gold      -> Paprika   (highlight color on light surfaces)
+  //   goldLight -> Paprika   (subtle variant)
+  //   goldDark  -> PaprikaDeep
+  //   goldWarm  -> White     (used for hero ribbons over dark photos)
   static const light = AppColors(
     paprika: Color(0xFF93003C),
     paprikaLight: Color(0xFFB8145E),
@@ -107,10 +119,10 @@ class AppColors extends ThemeExtension<AppColors> {
     thunderLight: Color(0xFF3A3536),
     salem: Color(0xFF0F8044),
     salemLight: Color(0xFF14A358),
-    gold: Color(0xFFB8900B),
-    goldLight: Color(0xFFEFBF04),
-    goldDark: Color(0xFFA68300),
-    goldWarm: Color(0xFFD4A24C),
+    gold: Color(0xFF93003C),
+    goldLight: Color(0xFFB8145E),
+    goldDark: Color(0xFF5A0026),
+    goldWarm: Color(0xFFFFFFFF),
     charcoal: Color(0xFFFAF6EE),
     surface1: Color(0x0A000000),
     surface2: Color(0x0F000000),
@@ -141,10 +153,10 @@ class AppColors extends ThemeExtension<AppColors> {
     thunderLight: Color(0xFF3A3536),
     salem: Color(0xFF0F8044),
     salemLight: Color(0xFF14A358),
-    gold: Color(0xFFE0AE0F),
-    goldLight: Color(0xFFF5D442),
-    goldDark: Color(0xFFC9A003),
-    goldWarm: Color(0xFFD4A24C),
+    gold: Color(0xFFFFFFFF),
+    goldLight: Color(0xFFFFFFFF),
+    goldDark: Color(0xFFFFFFFF),
+    goldWarm: Color(0xFFFFFFFF),
     charcoal: Color(0xFF1C1819),
     surface1: Color(0x0AFFFFFF),
     surface2: Color(0x12FFFFFF),
