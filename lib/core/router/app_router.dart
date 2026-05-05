@@ -13,6 +13,7 @@ import 'package:winebro/features/journal/presentation/screens/journal_screen.dar
 import 'package:winebro/features/onboarding/presentation/screens/onboarding_intro_screen.dart';
 import 'package:winebro/features/onboarding/presentation/screens/quiz_screen.dart';
 import 'package:winebro/features/pairing/presentation/screens/pair_screen.dart';
+import 'package:winebro/features/pairing_feedback/presentation/pairing_feedback_screen.dart';
 import 'package:winebro/features/profile/presentation/screens/profile_screen.dart';
 import 'package:winebro/features/scanner/presentation/screens/scanner_screen.dart';
 import 'package:winebro/features/settings/presentation/screens/settings_screen.dart';
@@ -124,6 +125,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/wishlist',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (_, __) => const WishlistScreen(),
+      ),
+      GoRoute(
+        path: '/feedback/:entryId',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (_, state) => PairingFeedbackScreen(
+          entryId: state.pathParameters['entryId']!,
+        ),
       ),
 
       // Legacy /community route — redirect to home so any cached deep

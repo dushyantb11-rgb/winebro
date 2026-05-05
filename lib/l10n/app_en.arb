@@ -794,5 +794,41 @@
   "@wishlistAddedSnackbar": {"description": "Snackbar after Save"},
 
   "wishlistRemovedSnackbar": "Removed from wishlist",
-  "@wishlistRemovedSnackbar": {"description": "Snackbar after Remove"}
+  "@wishlistRemovedSnackbar": {"description": "Snackbar after Remove"},
+
+  "feedbackSheetTitle": "Did Bro get it right?",
+  "@feedbackSheetTitle": {"description": "Pairing feedback sheet title"},
+
+  "feedbackSheetSubtitle": "Yesterday — {product} with {dish}",
+  "@feedbackSheetSubtitle": {
+    "description": "Sub-headline showing what was tasted",
+    "placeholders": {
+      "product": {"type": "String"},
+      "dish": {"type": "String"}
+    }
+  },
+
+  "feedbackResponseYes": "Yes",
+  "@feedbackResponseYes": {"description": "Pairing worked"},
+
+  "feedbackResponseMaybe": "Sort of",
+  "@feedbackResponseMaybe": {"description": "Pairing partially worked"},
+
+  "feedbackResponseNo": "Not really",
+  "@feedbackResponseNo": {"description": "Pairing didn't work"},
+
+  "feedbackResponseHelperYes": "Bro learned what to suggest next time.",
+  "@feedbackResponseHelperYes": {"description": "Yes button helper"},
+
+  "feedbackResponseHelperMaybe": "Bro will calibrate this pairing.",
+  "@feedbackResponseHelperMaybe": {"description": "Maybe button helper"},
+
+  "feedbackResponseHelperNo": "Bro will steer others away.",
+  "@feedbackResponseHelperNo": {"description": "No button helper"},
+
+  "feedbackThanks": "Thanks — Bro got smarter.",
+  "@feedbackThanks": {"description": "Snackbar after feedback recorded"},
+
+  "feedbackEntryNotFound": "That pairing record is gone — nothing to rate.",
+  "@feedbackEntryNotFound": {"description": "Shown if entry was deleted before feedback collection"}
 }

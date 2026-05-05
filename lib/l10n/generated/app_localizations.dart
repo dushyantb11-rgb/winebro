@@ -1559,6 +1559,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Removed from wishlist'**
   String get wishlistRemovedSnackbar;
+
+  /// Pairing feedback sheet title
+  ///
+  /// In en, this message translates to:
+  /// **'Did Bro get it right?'**
+  String get feedbackSheetTitle;
+
+  /// Sub-headline showing what was tasted
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday — {product} with {dish}'**
+  String feedbackSheetSubtitle(String product, String dish);
+
+  /// Pairing worked
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get feedbackResponseYes;
+
+  /// Pairing partially worked
+  ///
+  /// In en, this message translates to:
+  /// **'Sort of'**
+  String get feedbackResponseMaybe;
+
+  /// Pairing didn't work
+  ///
+  /// In en, this message translates to:
+  /// **'Not really'**
+  String get feedbackResponseNo;
+
+  /// Yes button helper
+  ///
+  /// In en, this message translates to:
+  /// **'Bro learned what to suggest next time.'**
+  String get feedbackResponseHelperYes;
+
+  /// Maybe button helper
+  ///
+  /// In en, this message translates to:
+  /// **'Bro will calibrate this pairing.'**
+  String get feedbackResponseHelperMaybe;
+
+  /// No button helper
+  ///
+  /// In en, this message translates to:
+  /// **'Bro will steer others away.'**
+  String get feedbackResponseHelperNo;
+
+  /// Snackbar after feedback recorded
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks — Bro got smarter.'**
+  String get feedbackThanks;
+
+  /// Shown if entry was deleted before feedback collection
+  ///
+  /// In en, this message translates to:
+  /// **'That pairing record is gone — nothing to rate.'**
+  String get feedbackEntryNotFound;
 }
 
 class _AppLocalizationsDelegate

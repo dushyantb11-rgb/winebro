@@ -9,6 +9,7 @@
  * CF-06: dailyBroTipPush        — 20:00 IST, archetype-keyed Bro Tip topic broadcasts
  * CF-07: streakLossWarning      — 21:00 IST, targeted push to at-risk streak holders
  * CF-08: tonightsPourMorning    — 07:00 IST, topic broadcast for daily curated bottle
+ * CF-09: pairingFeedback24h     — hourly cron, "Did Bro get it right?" 24h after journal save
  */
 
 import { initializeApp } from "firebase-admin/app";
@@ -22,3 +23,4 @@ export { dailyDiscovery } from "./cf05-daily-discovery";
 export { dailyBroTipPush } from "./cf06-daily-bro-tip-push";
 export { streakLossWarning } from "./cf07-streak-loss-warning";
 export { tonightsPourMorning } from "./cf08-tonights-pour-morning";
+export { pairingFeedback24h } from "./cf09-pairing-feedback-24h";
