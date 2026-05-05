@@ -1039,5 +1039,62 @@
   "settingsVisibilityFriendsHint": "Only people you follow can see your BroCards.",
   "@settingsVisibilityFriendsHint": {"description": "Friends hint"},
   "settingsVisibilityPrivateHint": "Only you can see your journal — community signals stay anonymous.",
-  "@settingsVisibilityPrivateHint": {"description": "Private hint"}
+  "@settingsVisibilityPrivateHint": {"description": "Private hint"},
+
+  "wrapUpProfileTitle": "Your year in tastings",
+  "@wrapUpProfileTitle": {"description": "Profile tile title"},
+  "wrapUpProfileHint": "Bro put together your wrap-up.",
+  "@wrapUpProfileHint": {"description": "Profile tile hint"},
+
+  "wrapUpYearSuffix": "WRAP-UP",
+  "@wrapUpYearSuffix": {"description": "Header suffix after year"},
+  "wrapUpNext": "Next",
+  "@wrapUpNext": {"description": "Wrap-up next button"},
+  "wrapUpDone": "Done",
+  "@wrapUpDone": {"description": "Wrap-up done button"},
+
+  "wrapUpYourYearEyebrow": "YOUR YEAR",
+  "@wrapUpYourYearEyebrow": {"description": "Card 1 eyebrow"},
+  "wrapUpTastingsLabel": "tastings logged",
+  "@wrapUpTastingsLabel": {"description": "Tastings stat label"},
+  "wrapUpYourYearBody": "{count} different bottles. Each one a story.",
+  "@wrapUpYourYearBody": {
+    "description": "Card 1 body",
+    "placeholders": {"count": {"type": "int"}}
+  },
+
+  "wrapUpMostPouredEyebrow": "MOST POURED",
+  "@wrapUpMostPouredEyebrow": {"description": "Card 2 eyebrow"},
+  "wrapUpMostPouredBody": "Your year had a clear hero. Bro saw it coming.",
+  "@wrapUpMostPouredBody": {"description": "Card 2 body"},
+
+  "wrapUpFavoriteRegionEyebrow": "FAVORITE REGION",
+  "@wrapUpFavoriteRegionEyebrow": {"description": "Card 3 eyebrow"},
+  "wrapUpFavoriteRegionBody": "Your palate kept coming back here.",
+  "@wrapUpFavoriteRegionBody": {"description": "Card 3 body"},
+
+  "wrapUpTopPairingEyebrow": "WITH FOOD",
+  "@wrapUpTopPairingEyebrow": {"description": "Card 4 eyebrow"},
+  "wrapUpTopPairingBody": "The pairing your year kept circling back to.",
+  "@wrapUpTopPairingBody": {"description": "Card 4 body"},
+
+  "wrapUpStreakEyebrow": "ON A ROLL",
+  "@wrapUpStreakEyebrow": {"description": "Card 5 eyebrow"},
+  "wrapUpStreakLabel": "consecutive days",
+  "@wrapUpStreakLabel": {"description": "Streak stat label"},
+  "wrapUpStreakBody": "{count} bottles you rated 4 stars or higher.",
+  "@wrapUpStreakBody": {
+    "description": "Card 5 body",
+    "placeholders": {"count": {"type": "int"}}
+  },
+
+  "wrapUpEmptyTitle": "Your {year} starts here.",
+  "@wrapUpEmptyTitle": {
+    "description": "Empty state title",
+    "placeholders": {"year": {"type": "int"}}
+  },
+  "wrapUpEmptyBody": "Log a tasting and Bro will start putting together your year.",
+  "@wrapUpEmptyBody": {"description": "Empty state body"},
+  "wrapUpEmptyCta": "Open journal",
+  "@wrapUpEmptyCta": {"description": "Empty CTA"}
 }

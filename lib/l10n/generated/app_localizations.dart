@@ -2063,6 +2063,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Only you can see your journal — community signals stay anonymous.'**
   String get settingsVisibilityPrivateHint;
+
+  /// Profile tile title
+  ///
+  /// In en, this message translates to:
+  /// **'Your year in tastings'**
+  String get wrapUpProfileTitle;
+
+  /// Profile tile hint
+  ///
+  /// In en, this message translates to:
+  /// **'Bro put together your wrap-up.'**
+  String get wrapUpProfileHint;
+
+  /// Header suffix after year
+  ///
+  /// In en, this message translates to:
+  /// **'WRAP-UP'**
+  String get wrapUpYearSuffix;
+
+  /// Wrap-up next button
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get wrapUpNext;
+
+  /// Wrap-up done button
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get wrapUpDone;
+
+  /// Card 1 eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR YEAR'**
+  String get wrapUpYourYearEyebrow;
+
+  /// Tastings stat label
+  ///
+  /// In en, this message translates to:
+  /// **'tastings logged'**
+  String get wrapUpTastingsLabel;
+
+  /// Card 1 body
+  ///
+  /// In en, this message translates to:
+  /// **'{count} different bottles. Each one a story.'**
+  String wrapUpYourYearBody(int count);
+
+  /// Card 2 eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'MOST POURED'**
+  String get wrapUpMostPouredEyebrow;
+
+  /// Card 2 body
+  ///
+  /// In en, this message translates to:
+  /// **'Your year had a clear hero. Bro saw it coming.'**
+  String get wrapUpMostPouredBody;
+
+  /// Card 3 eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'FAVORITE REGION'**
+  String get wrapUpFavoriteRegionEyebrow;
+
+  /// Card 3 body
+  ///
+  /// In en, this message translates to:
+  /// **'Your palate kept coming back here.'**
+  String get wrapUpFavoriteRegionBody;
+
+  /// Card 4 eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'WITH FOOD'**
+  String get wrapUpTopPairingEyebrow;
+
+  /// Card 4 body
+  ///
+  /// In en, this message translates to:
+  /// **'The pairing your year kept circling back to.'**
+  String get wrapUpTopPairingBody;
+
+  /// Card 5 eyebrow
+  ///
+  /// In en, this message translates to:
+  /// **'ON A ROLL'**
+  String get wrapUpStreakEyebrow;
+
+  /// Streak stat label
+  ///
+  /// In en, this message translates to:
+  /// **'consecutive days'**
+  String get wrapUpStreakLabel;
+
+  /// Card 5 body
+  ///
+  /// In en, this message translates to:
+  /// **'{count} bottles you rated 4 stars or higher.'**
+  String wrapUpStreakBody(int count);
+
+  /// Empty state title
+  ///
+  /// In en, this message translates to:
+  /// **'Your {year} starts here.'**
+  String wrapUpEmptyTitle(int year);
+
+  /// Empty state body
+  ///
+  /// In en, this message translates to:
+  /// **'Log a tasting and Bro will start putting together your year.'**
+  String get wrapUpEmptyBody;
+
+  /// Empty CTA
+  ///
+  /// In en, this message translates to:
+  /// **'Open journal'**
+  String get wrapUpEmptyCta;
 }
 
 class _AppLocalizationsDelegate

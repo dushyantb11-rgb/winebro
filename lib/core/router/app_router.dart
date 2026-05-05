@@ -20,6 +20,7 @@ import 'package:winebro/features/profile/presentation/screens/profile_screen.dar
 import 'package:winebro/features/scanner/presentation/screens/scanner_screen.dart';
 import 'package:winebro/features/settings/presentation/screens/settings_screen.dart';
 import 'package:winebro/features/wishlist/presentation/screens/wishlist_screen.dart';
+import 'package:winebro/features/wrap_up/presentation/screens/yearly_wrap_up_screen.dart';
 import 'package:winebro/shared/widgets/shell_scaffold.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -139,6 +140,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/friends',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (_, __) => const FriendsScreen(),
+      ),
+      GoRoute(
+        path: '/wrap-up',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (_, __) => const YearlyWrapUpScreen(),
       ),
       GoRoute(
         path: '/feedback/:entryId',
