@@ -15,6 +15,8 @@ import 'package:winebro/features/pairing/domain/dish.dart';
 import 'package:winebro/features/pairing/domain/pairing_engine.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
+import 'package:winebro/shared/widgets/brand_label_card.dart';
+import 'package:winebro/shared/widgets/cuisine_icon.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
 import 'package:winebro/shared/widgets/product_action_row.dart';
 
@@ -1155,15 +1157,11 @@ class _AlternateCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: colors.paprika.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(Icons.wine_bar,
-                    color: context.paprikaOnSurface, size: 22),
+              BrandLabelCard(
+                productId: p.id,
+                productName: p.name,
+                category: p.category.group,
+                size: BrandLabelSize.compact,
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -1238,7 +1236,20 @@ class _AlternateFoodCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(d.icon, color: context.paprikaOnSurface, size: 22),
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: colors.paprika.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.all(8),
+            child: CuisineIcon(
+              cuisine: cuisineFor(d.category.displayName),
+              color: context.paprikaOnSurface,
+              size: 28,
+            ),
+          ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(

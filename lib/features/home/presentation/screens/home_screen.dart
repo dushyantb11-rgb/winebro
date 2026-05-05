@@ -15,6 +15,7 @@ import 'package:winebro/features/journal/domain/journal_entry.dart';
 import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
 import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
+import 'package:winebro/shared/widgets/brand_label_card.dart';
 import 'package:winebro/shared/widgets/emotion_tile.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
 import 'package:winebro/shared/widgets/product_action_row.dart';
@@ -643,15 +644,11 @@ class _ContinueStoryCard extends StatelessWidget {
             const SizedBox(height: 16),
             Row(
               children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: colors.paprika,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(Icons.wine_bar,
-                      color: colors.inkOnHero, size: 24),
+                BrandLabelCard(
+                  productId: next.id,
+                  productName: next.name,
+                  category: next.category.group,
+                  size: BrandLabelSize.compact,
                 ),
                 const SizedBox(width: 14),
                 Expanded(

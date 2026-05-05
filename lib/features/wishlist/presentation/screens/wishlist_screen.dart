@@ -8,6 +8,7 @@ import 'package:winebro/core/theme/app_elevation.dart';
 import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/features/wishlist/presentation/providers/wishlist_provider.dart';
+import 'package:winebro/shared/widgets/brand_label_card.dart';
 import 'package:winebro/shared/widgets/product_action_row.dart';
 
 class WishlistScreen extends ConsumerWidget {
@@ -121,18 +122,11 @@ class _WishlistRow extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 48,
-                height: 60,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [colors.paprika, colors.paprikaDeep],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(Icons.wine_bar, color: colors.inkOnHero, size: 22),
+              BrandLabelCard(
+                productId: product.id,
+                productName: product.name,
+                category: product.category.group,
+                size: BrandLabelSize.compact,
               ),
               const SizedBox(width: 14),
               Expanded(

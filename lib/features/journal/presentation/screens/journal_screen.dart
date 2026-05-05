@@ -11,6 +11,7 @@ import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/core/utils/formatters.dart';
 import 'package:winebro/features/aroma_wheel/domain/aroma_taxonomy.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:winebro/shared/widgets/brand_label_card.dart';
 import 'package:winebro/features/journal/data/brocard_photo_service.dart';
 import 'package:winebro/features/journal/data/voice_note_service.dart';
 import 'package:winebro/features/journal/domain/journal_context.dart';
@@ -333,19 +334,11 @@ class _BroCardTimelineRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Bottle thumb (gradient fallback until photo lands)
-          Container(
-            width: 56,
-            height: 72,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [colors.paprika, colors.paprikaDeep],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(Icons.wine_bar, color: colors.inkOnHero, size: 24),
+          BrandLabelCard(
+            productId: entry.productId,
+            productName: entry.productName,
+            category: entry.category,
+            size: BrandLabelSize.compact,
           ),
           const SizedBox(width: 14),
           Expanded(

@@ -52,6 +52,10 @@ dependencies:
   flutter_contacts: ^1.1.9+2
   crypto: ^3.0.6
 
+  # Iconography (S8.1 — replaces ~150 Material icon usages with a
+  # commercial-grade icon family)
+  phosphor_flutter: ^2.1.0
+
   # Storage
   flutter_secure_storage: ^9.2.4
   shared_preferences: ^2.3.4

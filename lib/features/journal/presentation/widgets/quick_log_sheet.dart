@@ -17,6 +17,7 @@ import 'package:winebro/features/pairing/data/seed_dishes.dart';
 import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/dish.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
+import 'package:winebro/shared/widgets/brand_label_card.dart';
 
 /// Quick-log BroCard — 1-tap journal entry that drops the activation
 /// barrier from 90 seconds (Pro 6-step) to ≤15 seconds.
@@ -434,7 +435,12 @@ class _SearchField extends StatelessWidget {
                       horizontal: 14, vertical: 10),
                   child: Row(
                     children: [
-                      Icon(Icons.wine_bar, color: colors.paprika, size: 18),
+                      BrandLabelCard(
+                        productId: p.id,
+                        productName: p.name,
+                        category: p.category.group,
+                        size: BrandLabelSize.compact,
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
