@@ -16,6 +16,7 @@ import 'package:winebro/features/pairing/presentation/screens/pair_screen.dart';
 import 'package:winebro/features/profile/presentation/screens/profile_screen.dart';
 import 'package:winebro/features/scanner/presentation/screens/scanner_screen.dart';
 import 'package:winebro/features/settings/presentation/screens/settings_screen.dart';
+import 'package:winebro/features/wishlist/presentation/screens/wishlist_screen.dart';
 import 'package:winebro/shared/widgets/shell_scaffold.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -118,6 +119,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/settings',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (_, __) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/wishlist',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (_, __) => const WishlistScreen(),
       ),
 
       // Legacy /community route — redirect to home so any cached deep

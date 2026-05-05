@@ -6,6 +6,7 @@ import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_elevation.dart';
 import 'package:winebro/core/theme/app_motion.dart';
+import 'package:winebro/core/affiliate/affiliate_url_resolver.dart';
 import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/features/auth/domain/auth_state.dart';
 import 'package:winebro/features/auth/presentation/providers/auth_provider.dart';
@@ -14,6 +15,7 @@ import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.da
 import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/shared/widgets/emotion_tile.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
+import 'package:winebro/shared/widgets/product_action_row.dart';
 
 /// Redesigned 2026 Home.
 ///
@@ -384,7 +386,12 @@ class HomeScreen extends ConsumerWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
+              ProductActionRow(
+                product: product,
+                source: AffiliateSource.detail,
+              ),
+              const SizedBox(height: 12),
               Row(
                 children: [
                   Expanded(
@@ -523,6 +530,12 @@ class _TonightsPourCard extends StatelessWidget {
                     size: 12, color: colors.inkOnHero),
               ],
             ),
+          ),
+          const SizedBox(height: 14),
+          ProductActionRow(
+            product: product,
+            source: AffiliateSource.tonightsPour,
+            onTransparent: true,
           ),
         ],
       ),

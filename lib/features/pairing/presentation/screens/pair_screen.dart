@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:string_similarity/string_similarity.dart';
+import 'package:winebro/core/affiliate/affiliate_url_resolver.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
@@ -15,6 +16,7 @@ import 'package:winebro/features/pairing/domain/pairing_engine.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
+import 'package:winebro/shared/widgets/product_action_row.dart';
 
 /// Redesigned 2026 Pair.
 ///
@@ -1044,6 +1046,12 @@ class _BrosPickPairingCard extends StatelessWidget {
               color: colors.inkOnHero.withValues(alpha: 0.78),
             ),
           ),
+          const SizedBox(height: 14),
+          ProductActionRow(
+            product: p,
+            source: AffiliateSource.pair,
+            onTransparent: true,
+          ),
         ],
       ),
     );
@@ -1143,60 +1151,68 @@ class _AlternateCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: colors.borderSubtle),
       ),
-      child: Row(
+      child: Column(
         children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: colors.paprika.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(Icons.wine_bar, color: context.paprikaOnSurface, size: 22),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  p.name,
-                  style: TextStyle(
-                    fontFamily: 'PlayfairDisplay',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: colors.textPrimary,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+          Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: colors.paprika.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                Text(
-                  '${p.subcategory} · ₹${p.price.toStringAsFixed(0)}',
+                child: Icon(Icons.wine_bar,
+                    color: context.paprikaOnSurface, size: 22),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      p.name,
+                      style: TextStyle(
+                        fontFamily: 'PlayfairDisplay',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: colors.textPrimary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      '${p.subcategory} · ₹${p.price.toStringAsFixed(0)}',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 12,
+                        color: colors.textTertiary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: colors.salem.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  '${result.matchPercent}%',
                   style: TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 12,
-                    color: colors.textTertiary,
+                    fontWeight: FontWeight.w800,
+                    color: context.salemOnSurface,
                   ),
                 ),
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              color: colors.salem.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Text(
-              '${result.matchPercent}%',
-              style: TextStyle(
-                fontFamily: 'Montserrat',
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-                color: context.salemOnSurface,
               ),
-            ),
+            ],
           ),
+          const SizedBox(height: 12),
+          ProductActionRow(product: p, source: AffiliateSource.pair),
         ],
       ),
     );
