@@ -1619,6 +1619,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That pairing record is gone — nothing to rate.'**
   String get feedbackEntryNotFound;
+
+  /// Eyebrow on the Home Restock card
+  ///
+  /// In en, this message translates to:
+  /// **'TIME TO RESTOCK'**
+  String get homeRestockEyebrow;
+
+  /// CTA on the Home Restock card
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder'**
+  String get homeRestockReorder;
 }
 
 class _AppLocalizationsDelegate

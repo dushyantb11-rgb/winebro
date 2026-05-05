@@ -833,4 +833,10 @@ class AppLocalizationsMr extends AppLocalizations {
   @override
   String get feedbackEntryNotFound =>
       'That pairing record is gone — nothing to rate.';
+
+  @override
+  String get homeRestockEyebrow => 'TIME TO RESTOCK';
+
+  @override
+  String get homeRestockReorder => 'Reorder';
 }

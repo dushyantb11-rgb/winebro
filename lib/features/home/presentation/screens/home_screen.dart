@@ -11,7 +11,9 @@ import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/features/auth/domain/auth_state.dart';
 import 'package:winebro/features/auth/presentation/providers/auth_provider.dart';
 import 'package:winebro/features/home/presentation/providers/home_providers.dart';
+import 'package:winebro/features/journal/domain/journal_entry.dart';
 import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
+import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/shared/widgets/emotion_tile.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
@@ -43,6 +45,7 @@ class HomeScreen extends ConsumerWidget {
     };
     final tonight = ref.watch(tonightsPourProvider);
     final continueStory = ref.watch(continueStoryProvider);
+    final restock = ref.watch(restockProvider);
     final circle = ref.watch(broCircleProvider);
     final hour = DateTime.now().hour;
 
@@ -209,6 +212,24 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
 
+            // ====== Restock — buy-again 28-35 days ago ======
+            SliverToBoxAdapter(
+              child: restock.when(
+                loading: () => const SizedBox(),
+                error: (_, __) => const SizedBox(),
+                data: (entry) {
+                  if (entry == null) return const SizedBox();
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
+                    child: _RestockCard(
+                      entry: entry,
+                      onTap: () => _showRestockProduct(context, entry),
+                    ),
+                  );
+                },
+              ),
+            ),
+
             // ====== Bro Circle — community signals ======
             SliverToBoxAdapter(
               child: Padding(
@@ -264,6 +285,20 @@ class HomeScreen extends ConsumerWidget {
     if (hour < 17) return context.l10n.homeGreetingAfternoon;
     if (hour < 22) return context.l10n.homeGreetingEvening;
     return context.l10n.homeGreetingLate;
+  }
+
+  void _showRestockProduct(BuildContext context, JournalEntry entry) {
+    // Match the restocked product back to a seed product (by name).
+    // If we no longer carry that exact product, fall back to a same-
+    // category alternative.
+    final matched = kSeedProducts.firstWhere(
+      (p) => p.name.toLowerCase() == entry.productName.toLowerCase(),
+      orElse: () => kSeedProducts.firstWhere(
+        (p) => p.category.group == entry.category,
+        orElse: () => kSeedProducts.first,
+      ),
+    );
+    _showProductDetail(context, matched);
   }
 
   void _showProductDetail(BuildContext context, Product product) {
@@ -677,6 +712,106 @@ class _ContinueStoryCard extends StatelessWidget {
     if (diff.inDays >= 1) return '${diff.inDays} days ago';
     if (diff.inHours >= 1) return '${diff.inHours} hours ago';
     return 'just now';
+  }
+}
+
+// ============================================================
+// Restock card — buy-again, 28-35 days ago
+// ============================================================
+
+class _RestockCard extends StatelessWidget {
+  const _RestockCard({required this.entry, required this.onTap});
+
+  final JournalEntry entry;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final daysAgo = DateTime.now().difference(entry.createdAt).inDays;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: colors.surface1,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: context.salemOnSurface.withValues(alpha: 0.4)),
+          boxShadow: AppElevation.e1(dark: isDark),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.replay_circle_filled_rounded,
+                    color: context.salemOnSurface, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.homeRestockEyebrow,
+                  style: context.eyebrow.copyWith(
+                    color: context.salemOnSurface,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text.rich(
+              TextSpan(
+                style: TextStyle(
+                  fontFamily: 'PlayfairDisplay',
+                  fontSize: 18,
+                  color: colors.textSecondary,
+                  height: 1.4,
+                ),
+                children: [
+                  const TextSpan(text: 'You loved '),
+                  TextSpan(
+                    text: entry.productName,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  TextSpan(text: ' $daysAgo days ago. Time to restock?'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 14, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: colors.paprika,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.shopping_bag_outlined,
+                          color: colors.inkOnHero, size: 16),
+                      const SizedBox(width: 6),
+                      Text(
+                        context.l10n.homeRestockReorder,
+                        style: TextStyle(
+                          color: colors.inkOnHero,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
