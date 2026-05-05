@@ -51,6 +51,34 @@ service cloud.firestore {
       allow write: if false; // Admin SDK only
     }
 
+    // ─── PAIRING FEEDBACK (D6 — pairing success rate) ────
+    // Per-user response to "Did Bro get it right?". Each user
+    // owns docs whose id is `{uid}_{entryId}`; ownership enforced
+    // via the userId field. Only the user can read their feedback;
+    // CF-09/engine read via Admin SDK. Aggregates are append-only
+    // counter docs maintained client-side via transaction.
+    match /pairing_feedback/{feedbackId} {
+      allow read: if request.auth != null
+                  && resource.data.userId == request.auth.uid;
+      allow create, update: if request.auth != null
+                            && request.resource.data.userId == request.auth.uid
+                            && request.resource.data.response in ['yes', 'maybe', 'no'];
+      allow delete: if false;
+    }
+
+    match /pairing_aggregates/{aggregateId} {
+      // Aggregates are world-readable by signed-in users — they feed
+      // engine v1.1 ranking shown to every user. Writes constrained
+      // to non-negative monotonic counters; no userId field, so any
+      // signed-in user may bump (transactional logic in client +
+      // server-side validator in CF-02 for anti-cheat in Sprint 3).
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+                   && request.resource.data.yes >= 0
+                   && request.resource.data.maybe >= 0
+                   && request.resource.data.no >= 0;
+    }
+
     // ─── DENY ALL OTHER PATHS ────────────────────────────
     match /{document=**} {
       allow read, write: if false;

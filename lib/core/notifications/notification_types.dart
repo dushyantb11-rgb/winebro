@@ -29,13 +29,14 @@ enum WineBroNotificationType {
   ///   data.productId
   restock(code: 'restock', deepLink: '/'),
 
-  /// 24 hours after a Pair save/buy: "Did Bro get it right?"
-  /// Tapping records `feedback_pairing_correct` event and deep-links
-  /// to the original product detail.
+  /// 24 hours after a journal save with `foodPaired`: "Did Bro get
+  /// it right?" Deep-links to /feedback/{entryId} which opens the
+  /// 3-button response sheet (Yes / Sort of / Not really).
+  ///   data.entryId
   ///   data.productId
-  ///   data.dishId      (nullable)
-  ///   data.matchPercent
-  pairingFeedback(code: 'pairingFeedback', deepLink: '/'),
+  ///   data.productName
+  ///   data.foodPaired
+  pairingFeedback(code: 'pairingFeedback', deepLink: '/feedback'),
 
   /// Generic catch-all. Deep-links to Home.
   unknown(code: 'unknown', deepLink: '/');

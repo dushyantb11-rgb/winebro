@@ -7,7 +7,23 @@
         { "fieldPath": "streak", "order": "ASCENDING" },
         { "fieldPath": "lastActiveDate", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "journal",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "createdAt", "order": "ASCENDING" },
+        { "fieldPath": "foodPaired", "order": "ASCENDING" }
+      ]
     }
   ],
-  "fieldOverrides": []
+  "fieldOverrides": [
+    {
+      "collectionGroup": "journal",
+      "fieldPath": "createdAt",
+      "indexes": [
+        { "queryScope": "COLLECTION_GROUP", "order": "ASCENDING" }
+      ]
+    }
+  ]
 }

@@ -189,6 +189,17 @@ class NotificationHandler {
       );
       return;
     }
+
+    // pairingFeedback deep-link needs the entryId from the data
+    // payload, not just the static enum path.
+    if (n.type == WineBroNotificationType.pairingFeedback) {
+      final entryId = n.data['entryId'];
+      if (entryId != null && entryId.isNotEmpty) {
+        router.go('/feedback/$entryId');
+        return;
+      }
+    }
+
     router.go(n.type.deepLink);
   }
 

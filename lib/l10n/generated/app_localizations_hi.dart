@@ -800,4 +800,38 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get wishlistRemovedSnackbar => 'Removed from wishlist';
+
+  @override
+  String get feedbackSheetTitle => 'Did Bro get it right?';
+
+  @override
+  String feedbackSheetSubtitle(String product, String dish) {
+    return 'Yesterday — $product with $dish';
+  }
+
+  @override
+  String get feedbackResponseYes => 'Yes';
+
+  @override
+  String get feedbackResponseMaybe => 'Sort of';
+
+  @override
+  String get feedbackResponseNo => 'Not really';
+
+  @override
+  String get feedbackResponseHelperYes =>
+      'Bro learned what to suggest next time.';
+
+  @override
+  String get feedbackResponseHelperMaybe => 'Bro will calibrate this pairing.';
+
+  @override
+  String get feedbackResponseHelperNo => 'Bro will steer others away.';
+
+  @override
+  String get feedbackThanks => 'Thanks — Bro got smarter.';
+
+  @override
+  String get feedbackEntryNotFound =>
+      'That pairing record is gone — nothing to rate.';
 }
