@@ -12,6 +12,7 @@ import 'package:winebro/features/auth/domain/auth_state.dart';
 import 'package:winebro/features/auth/presentation/providers/auth_provider.dart';
 import 'package:winebro/features/pairing/domain/palate_profile.dart';
 import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
+import 'package:winebro/features/friends/data/friend_repository.dart';
 import 'package:winebro/features/profile/domain/gamification.dart';
 import 'package:winebro/features/profile/presentation/widgets/cross_category_survey_sheet.dart';
 import 'package:winebro/features/wishlist/presentation/providers/wishlist_provider.dart';
@@ -104,6 +105,7 @@ class ProfileScreen extends ConsumerWidget {
               _StatsRow(state: state),
               const SizedBox(height: 32),
               if (state.totalJournalEntries >= 3) const _CrossCategoryTile(),
+              const _FriendsTile(),
               const _WishlistTile(),
               const SizedBox(height: 24),
               _PalateSection(state: state, palate: palate),
@@ -170,6 +172,69 @@ class _WishlistTile extends ConsumerWidget {
             ),
             Icon(Icons.chevron_right, color: colors.textTertiary, size: 20),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// Friends tile — entry into friend graph
+// ============================================================
+
+class _FriendsTile extends ConsumerWidget {
+  const _FriendsTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.appColors;
+    final friends = ref.watch(friendsStreamProvider).value ?? const [];
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: InkWell(
+        onTap: () => context.push('/friends'),
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          decoration: BoxDecoration(
+            color: colors.surface1,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: colors.borderSubtle),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.people_outline, color: colors.paprika, size: 22),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.friendsProfileTitle,
+                      style: TextStyle(
+                        fontFamily: 'PlayfairDisplay',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: colors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      friends.isEmpty
+                          ? context.l10n.friendsProfileEmpty
+                          : context.l10n
+                              .friendsProfileCount(friends.length),
+                      style: TextStyle(
+                        color: colors.textSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right, color: colors.textTertiary, size: 20),
+            ],
+          ),
         ),
       ),
     );

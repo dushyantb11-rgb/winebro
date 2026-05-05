@@ -76,6 +76,8 @@
 	<string>WineBro records voice notes when you speak your tasting notes — quicker than typing, and your audio is saved to your private journal.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>WineBro converts your spoken tasting notes to text on-device so you can dictate instead of type.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>WineBro hashes contact phone numbers locally to find Bros you already know on the app. Your contacts are never uploaded.</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>WineBro does not track you across apps or websites owned by other companies.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>

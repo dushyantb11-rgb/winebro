@@ -8,6 +8,8 @@ import 'package:winebro/core/providers/theme_provider.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_motion.dart';
 import 'package:winebro/features/auth/presentation/providers/auth_provider.dart';
+import 'package:winebro/features/friends/data/friend_repository.dart';
+import 'package:winebro/features/friends/domain/friend.dart';
 
 /// Settings screen — extracted from the AppBar of Profile.
 ///
@@ -59,6 +61,10 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () => _showLanguageSheet(context, ref),
             colors: colors,
           ),
+          const SizedBox(height: 24),
+
+          _SectionHeader(label: context.l10n.settingsPrivacy, colors: colors),
+          _PrivacyVisibilityTile(colors: colors),
           const SizedBox(height: 24),
 
           _SectionHeader(label: context.l10n.settingsAccount, colors: colors),
@@ -363,5 +369,78 @@ class _ThemeSwitch extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _PrivacyVisibilityTile extends ConsumerWidget {
+  const _PrivacyVisibilityTile({required this.colors});
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final visibility =
+        ref.watch(profileVisibilityProvider).value ?? ProfileVisibility.friendsOnly;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.l10n.settingsVisibilityTitle,
+            style: TextStyle(color: colors.textPrimary, fontSize: 14),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            children: ProfileVisibility.values.map((v) {
+              final active = v == visibility;
+              return ChoiceChip(
+                label: Text(_label(context, v)),
+                selected: active,
+                onSelected: (_) => ref
+                    .read(friendRepositoryProvider)
+                    .setVisibility(v),
+                selectedColor: colors.paprika,
+                labelStyle: TextStyle(
+                  color: active ? colors.inkOnHero : colors.textPrimary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12,
+                ),
+                backgroundColor: colors.surface1,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(999),
+                  side: BorderSide(
+                    color: active ? colors.paprika : colors.borderSubtle,
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            _hint(context, visibility),
+            style: TextStyle(color: colors.textTertiary, fontSize: 11),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _label(BuildContext context, ProfileVisibility v) {
+    final l10n = context.l10n;
+    return switch (v) {
+      ProfileVisibility.public => l10n.settingsVisibilityPublic,
+      ProfileVisibility.friendsOnly => l10n.settingsVisibilityFriends,
+      ProfileVisibility.private => l10n.settingsVisibilityPrivate,
+    };
+  }
+
+  String _hint(BuildContext context, ProfileVisibility v) {
+    final l10n = context.l10n;
+    return switch (v) {
+      ProfileVisibility.public => l10n.settingsVisibilityPublicHint,
+      ProfileVisibility.friendsOnly => l10n.settingsVisibilityFriendsHint,
+      ProfileVisibility.private => l10n.settingsVisibilityPrivateHint,
+    };
   }
 }
