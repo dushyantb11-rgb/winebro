@@ -12,7 +12,9 @@ import 'package:winebro/core/utils/formatters.dart';
 import 'package:winebro/features/aroma_wheel/domain/aroma_taxonomy.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:winebro/features/journal/data/brocard_photo_service.dart';
+import 'package:winebro/features/journal/domain/journal_context.dart';
 import 'package:winebro/features/journal/domain/journal_entry.dart';
+import 'package:winebro/features/journal/presentation/widgets/occasion_chips.dart';
 import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
 import 'package:winebro/features/profile/data/gamification_service.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
@@ -592,6 +594,7 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
   String? _bottlePhotoUrl;
   String? _labelPhotoUrl;
   bool _photoUploading = false;
+  JournalContext? _context;
   late final String _draftId =
       DateTime.now().millisecondsSinceEpoch.toString();
 
@@ -637,6 +640,7 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
       buyAgain: _buyAgain,
       bottlePhotoUrl: _bottlePhotoUrl,
       labelPhotoUrl: _labelPhotoUrl,
+      occasion: _context?.code,
     );
 
     await FirebaseFirestore.instance
@@ -796,6 +800,21 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
               ),
             ),
           ],
+        ),
+        const SizedBox(height: 20),
+        Text(
+          l10n.occasionPrompt,
+          style: TextStyle(
+            color: colors.textTertiary,
+            fontSize: 11,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1.5,
+          ),
+        ),
+        const SizedBox(height: 10),
+        OccasionChips(
+          selected: _context,
+          onChanged: (c) => setState(() => _context = c),
         ),
       ],
     );

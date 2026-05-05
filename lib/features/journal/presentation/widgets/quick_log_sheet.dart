@@ -8,8 +8,10 @@ import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_motion.dart';
 import 'package:winebro/core/theme/app_theme.dart';
+import 'package:winebro/features/journal/domain/journal_context.dart';
 import 'package:winebro/features/journal/domain/journal_entry.dart';
 import 'package:winebro/features/journal/presentation/screens/journal_screen.dart';
+import 'package:winebro/features/journal/presentation/widgets/occasion_chips.dart';
 import 'package:winebro/features/profile/data/gamification_service.dart';
 import 'package:winebro/features/pairing/data/seed_dishes.dart';
 import 'package:winebro/features/pairing/data/seed_products.dart';
@@ -84,6 +86,7 @@ class _QuickLogSheetState extends ConsumerState<QuickLogSheet> {
   String? _customDish;
   bool _buyAgain = false;
   bool _saving = false;
+  JournalContext? _context;
 
   @override
   void initState() {
@@ -152,6 +155,7 @@ class _QuickLogSheetState extends ConsumerState<QuickLogSheet> {
       createdAt: DateTime.now(),
       foodPaired: foodPaired,
       buyAgain: _buyAgain,
+      occasion: _context?.code,
     );
 
     try {
@@ -302,7 +306,17 @@ class _QuickLogSheetState extends ConsumerState<QuickLogSheet> {
                   });
                 },
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 24),
+              Text(
+                context.l10n.occasionPrompt,
+                style: context.eyebrow.copyWith(color: colors.textTertiary),
+              ),
+              const SizedBox(height: 12),
+              OccasionChips(
+                selected: _context,
+                onChanged: (c) => setState(() => _context = c),
+              ),
+              const SizedBox(height: 24),
               SwitchListTile(
                 value: _buyAgain,
                 onChanged: (v) {
