@@ -13,6 +13,7 @@ import 'package:winebro/features/auth/presentation/providers/auth_provider.dart'
 import 'package:winebro/features/pairing/domain/palate_profile.dart';
 import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/features/profile/domain/gamification.dart';
+import 'package:winebro/features/wishlist/presentation/providers/wishlist_provider.dart';
 import 'package:winebro/shared/widgets/palate_radar_chart.dart';
 
 final gamificationProvider = StreamProvider<GamificationState>((ref) {
@@ -84,11 +85,72 @@ class ProfileScreen extends ConsumerWidget {
               const SizedBox(height: 32),
               _StatsRow(state: state),
               const SizedBox(height: 32),
+              const _WishlistTile(),
+              const SizedBox(height: 24),
               _PalateSection(state: state, palate: palate),
               const SizedBox(height: 32),
               _AchievementsSection(state: state),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// Wishlist tile — entry to saved-for-later list
+// ============================================================
+
+class _WishlistTile extends ConsumerWidget {
+  const _WishlistTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.appColors;
+    final wishlist = ref.watch(wishlistProvider).value ?? const [];
+    if (wishlist.isEmpty) return const SizedBox.shrink();
+
+    return InkWell(
+      onTap: () => context.push('/wishlist'),
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        decoration: BoxDecoration(
+          color: colors.surface1,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colors.borderSubtle),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.bookmark, color: context.paprikaOnSurface, size: 22),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.l10n.wishlistTitle,
+                    style: TextStyle(
+                      fontFamily: 'PlayfairDisplay',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                  Text(
+                    '${wishlist.length} bottle${wishlist.length == 1 ? '' : 's'} saved',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 12,
+                      color: colors.textTertiary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right, color: colors.textTertiary, size: 20),
+          ],
         ),
       ),
     );
