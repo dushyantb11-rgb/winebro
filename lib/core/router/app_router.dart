@@ -11,6 +11,7 @@ import 'package:winebro/features/aroma_wheel/presentation/screens/aroma_wheel_sc
 import 'package:winebro/features/home/presentation/screens/home_screen.dart';
 import 'package:winebro/features/journal/presentation/screens/journal_screen.dart';
 import 'package:winebro/features/onboarding/presentation/screens/onboarding_intro_screen.dart';
+import 'package:winebro/features/onboarding/presentation/screens/pre_quiz_seed_screen.dart';
 import 'package:winebro/features/onboarding/presentation/screens/quiz_screen.dart';
 import 'package:winebro/features/pairing/presentation/screens/pair_screen.dart';
 import 'package:winebro/features/pairing_feedback/presentation/pairing_feedback_screen.dart';
@@ -50,7 +51,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           path.startsWith('/login') ? null : '/login',
         OtpSent() => path == '/otp' ? null : '/otp',
         NeedsProfile() => path == '/name' ? null : '/name',
-        NeedsOnboarding() => path == '/quiz' || path == '/onboarding-intro'
+        NeedsOnboarding() => path == '/quiz' ||
+                path == '/onboarding-intro' ||
+                path == '/pre-quiz-seed'
             ? null
             : '/onboarding-intro',
         AuthLoading() => null,
@@ -61,6 +64,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path == '/name' ||
                 path == '/quiz' ||
                 path == '/onboarding-intro' ||
+                path == '/pre-quiz-seed' ||
                 path == '/splash'
             ? '/'
             : null,
@@ -74,6 +78,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/onboarding-intro',
         builder: (_, __) => const OnboardingIntroScreen(),
+      ),
+      GoRoute(
+        path: '/pre-quiz-seed',
+        builder: (_, __) => const PreQuizSeedScreen(),
       ),
       GoRoute(path: '/quiz', builder: (_, __) => const QuizScreen()),
 
