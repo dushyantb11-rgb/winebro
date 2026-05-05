@@ -1326,5 +1326,145 @@ const kSeedProducts = <Product>[
         'Paulaner Brewery, founded in 1634 by Minim friars in Munich, '
         'is one of the six breweries permitted to serve at Oktoberfest.',
   ),
+
+  // ───────────────────────────────────────────────────────────────────────
+  //  S8.2 — BRAND EXPANSION (5 new Indian SKUs)
+  //
+  //  Closes the "feels alien to my region" gap flagged in the
+  //  marketing audit. Adds value-tier and iconic-mass-market entries
+  //  the original seed missed.
+  // ───────────────────────────────────────────────────────────────────────
+
+  Product(
+    id: 'big-banyan-shiraz',
+    name: 'Big Banyan Shiraz',
+    category: DrinkCategory.redWine,
+    subcategory: 'Shiraz',
+    region: 'Bangalore, Karnataka',
+    price: 600,
+    fruit: 7,
+    acidity: 5,
+    body: 5,
+    tannin: 5,
+    freshness: 4,
+    complexity: 4,
+    archetypeTags: [PalateArchetype.fruitForward],
+    tastingNotes:
+        'Soft and approachable with ripe plum, dark cherry, and a touch '
+        'of pepper. Smooth tannins, easy weeknight red. Friendly with '
+        'biryani, butter chicken, and Indo-Chinese.',
+    aromas: ['plum', 'cherry', 'black pepper', 'vanilla'],
+    abv: 12.5,
+    grapeVariety: 'Shiraz',
+    origin:
+        'Big Banyan Wines from Karnataka, marketed by John Distilleries '
+        'as approachable everyday wine for the Indian table.',
+  ),
+
+  Product(
+    id: 'reveilo-cabernet-sauvignon',
+    name: 'Reveilo Cabernet Sauvignon',
+    category: DrinkCategory.redWine,
+    subcategory: 'Cabernet Sauvignon',
+    region: 'Nashik, Maharashtra',
+    price: 950,
+    fruit: 6,
+    acidity: 6,
+    body: 6,
+    tannin: 7,
+    freshness: 4,
+    complexity: 6,
+    archetypeTags: [PalateArchetype.boldExplorer],
+    tastingNotes:
+        'Structured Cabernet with blackcurrant, cedar, and a graphite '
+        'streak. Firm tannins, gentle oak. Pairs assertively with '
+        'kebabs, Rogan Josh, and grilled red meat.',
+    aromas: ['blackcurrant', 'cedar', 'graphite', 'tobacco'],
+    abv: 13.5,
+    grapeVariety: 'Cabernet Sauvignon',
+    origin:
+        'Reveilo Wines (formerly Vintage Wines), Nashik. Italian '
+        'winemaker collaboration, focus on Mediterranean varietals.',
+  ),
+
+  Product(
+    id: 'winery52-red',
+    name: 'Winery 52 Reserve Red',
+    category: DrinkCategory.redWine,
+    subcategory: 'Red Blend',
+    region: 'Pune, Maharashtra',
+    price: 850,
+    fruit: 6,
+    acidity: 5,
+    body: 6,
+    tannin: 5,
+    freshness: 4,
+    complexity: 5,
+    archetypeTags: [PalateArchetype.fruitForward, PalateArchetype.boldExplorer],
+    tastingNotes:
+        'Cabernet-Shiraz blend, ripe black fruit, gentle spice, '
+        'rounded oak. Crowd-pleaser at hosting. Built for paneer '
+        'tikka, Rogan Josh, and tandoori platters.',
+    aromas: ['blackberry', 'plum', 'spice', 'cedar'],
+    abv: 13.0,
+    grapeVariety: 'Cabernet Sauvignon-Shiraz',
+    origin:
+        'Winery 52, a younger Pune-based label aimed at the modern '
+        'Indian wine drinker — accessible price, party-friendly profile.',
+  ),
+
+  Product(
+    id: 'tamakua-riesling',
+    name: 'Tamakua Riesling',
+    category: DrinkCategory.whiteWine,
+    subcategory: 'Riesling',
+    region: 'Nashik, Maharashtra',
+    price: 1100,
+    fruit: 7,
+    acidity: 8,
+    body: 3,
+    tannin: 1,
+    freshness: 8,
+    complexity: 5,
+    archetypeTags: [PalateArchetype.crispPurist],
+    tastingNotes:
+        'Off-dry Riesling with green apple, lime zest, and a slight '
+        'petrol note. Crisp acidity makes this the answer to "what do '
+        'I drink with biryani?" — sweetness tames chilli heat.',
+    aromas: ['green apple', 'lime', 'jasmine', 'petrol'],
+    abv: 11.5,
+    grapeVariety: 'Riesling',
+    origin:
+        'Tamakua, a small-batch Nashik label experimenting with '
+        'Riesling — an unusual choice for India that pairs '
+        'unusually well with regional spice.',
+  ),
+
+  Product(
+    id: 'old-monk-7',
+    name: 'Old Monk 7-Year XXX Rum',
+    category: DrinkCategory.rum,
+    subcategory: 'Dark Rum',
+    region: 'Ghaziabad, Uttar Pradesh',
+    price: 450,
+    fruit: 5,
+    acidity: 2,
+    body: 7,
+    tannin: 2,
+    freshness: 3,
+    complexity: 6,
+    archetypeTags: [PalateArchetype.boldExplorer],
+    tastingNotes:
+        'India\'s most iconic rum. Smooth, vanilla-forward dark rum '
+        'aged 7 years. Caramel, molasses, and a soft burn. The cult '
+        'reference point — works neat, with cola, or in winter cocktails.',
+    aromas: ['vanilla', 'caramel', 'molasses', 'cinnamon'],
+    abv: 42.8,
+    grapeVariety: 'Dark Rum',
+    origin:
+        'Old Monk by Mohan Meakin, launched 1954 in Kasauli. Cultural '
+        'institution across South Asia — generations of Indian drinkers '
+        'started here.',
+  ),
 ];
 
