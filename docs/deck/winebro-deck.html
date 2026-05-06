@@ -72,7 +72,14 @@
   .slide.paprika   { background: linear-gradient(135deg, var(--paprika) 0%, var(--paprika-dark) 60%, var(--thunder) 100%); }
   .slide.cream     { background: var(--cream); color: var(--thunder); }
   .slide.thunder   { background: var(--thunder); }
-  .slide.split     { background: linear-gradient(90deg, var(--paprika) 0%, var(--paprika) 50%, var(--thunder) 50%, var(--thunder) 100%); padding: 0; }
+  .slide.split     {
+    background: linear-gradient(90deg, var(--paprika) 0%, var(--paprika) 50%, var(--thunder) 50%, var(--thunder) 100%);
+    padding: 0;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+  .slide.split > div { flex: 1; min-width: 0; }
   .slide.salem     { background: linear-gradient(135deg, var(--salem) 0%, #052b18 100%); }
   .slide.gold      { background: linear-gradient(135deg, #2a1a0f 0%, var(--gold-warm) 100%); }
 
