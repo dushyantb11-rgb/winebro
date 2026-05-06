@@ -6,11 +6,11 @@
 
 ## §1. The Only Things Left To Do (Runbook)
 
-### Step 1 — Confirm Apple Developer Program enrollment ($99/yr)
-- Open **https://developer.apple.com/account**
-- If you see *"Enroll today"* → click it, complete payment + Apple's identity check (~24h to activate). **Hard block until done.**
-- If you see *"Membership: Active"* → continue.
-- Note your **Team ID** (10-char alphanumeric, top-right of the membership page). Save it.
+### Step 1 — Apple Developer Program enrollment ✅ DONE (2026-05-06)
+- **Team ID:** `YWB9J8THH3`
+- **Program:** Apple Developer Program
+- **Enrolled as:** Individual
+- Skip to Step 2.
 
 ### Step 2 — Create the App Store Connect API key
 - Open **https://appstoreconnect.apple.com/access/integrations/api**
