@@ -101,10 +101,10 @@ Phone OTP is the only auth method, so a real Apple test phone number won't work 
 | Field | Value |
 |---|---|
 | Sign-in required | **Yes** |
-| User Name | `+91 9999900001` *(reserved test phone — see Notes for Reviewer)* |
-| Password | `654321` *(static OTP for the reserved test phone — wired in Firebase Auth Console)* |
+| User Name | `+91 1234567890` *(reserved test phone — see Notes for Reviewer)* |
+| Password | `123456` *(static OTP for the reserved test phone — wired in Firebase Auth Console)* |
 
-> **You must do this in Firebase Console first:** Firebase → Authentication → Sign-in method → Phone → "Phone numbers for testing" → add `+91 9999900001` with code `654321`. Apple Reviewer will use this exact pair to sign in. If you don't reserve this number, Apple will reject for "unable to sign in."
+> **Already configured in Firebase Auth** (verified 2026-05-06). The pair `+91 1234567890 / 123456` is registered as a test number; Apple Reviewer can sign in directly. No further Firebase Console work needed.
 
 ### 5b. Notes for Reviewer (paste verbatim)
 
@@ -115,8 +115,8 @@ WineBro is a wine, spirits, and beer pairing app for Indian users.
 The full app is locked behind a phone-OTP sign-in (Firebase Auth).
 For your review, please use the reserved test number:
 
-  Phone:  +91 9999900001
-  OTP:    654321
+  Phone:  +91 1234567890
+  OTP:    123456
 
 This number is configured in our Firebase Auth project as a static
 test credential — it will not actually receive an SMS, and the OTP
@@ -281,8 +281,8 @@ When Codemagic finishes the first iOS build and pushes it to TestFlight:
 - [ ] Promotional text + Description + Keywords + Support URL filled (Section 6)
 - [ ] 8 phone screenshots uploaded
 - [ ] Build selected from TestFlight
-- [ ] App Review Information populated with `+91 9999900001` / `654321`
-- [ ] **Reserved test phone added in Firebase Console** (Auth → Sign-in method → Phone → testing numbers)
+- [ ] App Review Information populated with `+91 1234567890` / `123456`
+- [x] **Reserved test phone in Firebase Console** — `+91 1234567890 / 123456` already configured
 - [ ] Notes for Reviewer pasted from §5b
 - [ ] Contact Information filled
 - [ ] Pricing = Free, Availability = India
@@ -301,8 +301,8 @@ When **Pending Developer Release** appears, you click **Release this version** i
 ## 10. If Apple rejects (likely reasons + my prepared responses)
 
 ### R1 — "Unable to sign in (incorrect OTP)"
-*Cause:* Reserved test phone `+91 9999900001` not added in Firebase Auth Console.
-*Fix:* You add it. Reply to Apple Reviewer in Resolution Center: "Apologies — test phone has been added. Please retry with +91 9999900001 / 654321."
+*Cause:* Test phone pair was registered prior to a Firebase config change, or the reviewer typed the country code differently.
+*Fix:* Verify `+91 1234567890 / 123456` still listed in Firebase Auth → Sign-in method → Phone → "Phone numbers for testing." Reply in Resolution Center clarifying the exact format: "Country: India (+91), Number: 1234567890, OTP: 123456 (no spaces, no leading zeros)."
 
 ### R2 — "Glamorizes or encourages alcohol consumption"
 *Cause:* Some screenshot caption or tagline crossed the line.
