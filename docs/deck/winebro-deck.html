@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>WineBro — Brand & Investor Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:ital,wght@0,500;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paprika: #93003C;
+    --paprika-deep: #6B002C;
+    --paprika-dark: #7A0030;
+    --paprika-light: #B83A65;
+    --paprika-on-dark: #D14B7A;
+    --thunder: #252122;
+    --thunder-light: #3A3438;
+    --salem: #0F8044;
+    --salem-on-dark: #1FBA68;
+    --gold: #C9A14B;
+    --gold-warm: #D9A23A;
+    --cream: #FAEFD8;
+    --ink: #FAEFD8;
+    --shadow: 0 24px 60px rgba(0,0,0,0.55);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #0a0808;
+    color: var(--cream);
+    font-family: 'Montserrat', sans-serif;
+    overflow: hidden;
+  }
+
+  /* Print mode — for "Print to PDF" deck export */
+  @media print {
+    body { overflow: visible; background: white; }
+    .deck { display: block; }
+    .slide {
+      page-break-after: always;
+      width: 100vw; height: 100vh;
+      transform: none !important;
+      position: relative !important;
+      display: flex !important;
+    }
+    .nav, .progress-bar { display: none; }
+  }
+
+  .deck {
+    position: relative;
+    width: 100vw; height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8vh 10vw;
+    overflow: hidden;
+  }
+  .slide.active { display: flex; }
+
+  /* Slide variants */
+  .slide.dark      { background: linear-gradient(135deg, var(--thunder) 0%, var(--paprika-deep) 100%); }
+  .slide.paprika   { background: linear-gradient(135deg, var(--paprika) 0%, var(--paprika-dark) 60%, var(--thunder) 100%); }
+  .slide.cream     { background: var(--cream); color: var(--thunder); }
+  .slide.thunder   { background: var(--thunder); }
+  .slide.split     { background: linear-gradient(90deg, var(--paprika) 0%, var(--paprika) 50%, var(--thunder) 50%, var(--thunder) 100%); padding: 0; }
+  .slide.salem     { background: linear-gradient(135deg, var(--salem) 0%, #052b18 100%); }
+  .slide.gold      { background: linear-gradient(135deg, #2a1a0f 0%, var(--gold-warm) 100%); }
+
+  /* Typography */
+  .eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 1.5vh;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(2.5rem, 6.5vw, 6.5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 3vh;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 4.5vw, 4.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 2vh;
+  }
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 2.4vw, 2rem);
+    line-height: 1.2;
+    margin-bottom: 1.5vh;
+  }
+  .lead {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.2rem, 2.2vw, 1.9rem);
+    line-height: 1.45;
+    opacity: 0.92;
+    max-width: 60ch;
+  }
+  .body {
+    font-size: clamp(0.95rem, 1.4vw, 1.2rem);
+    line-height: 1.6;
+    opacity: 0.92;
+    max-width: 65ch;
+  }
+  .stat {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(4rem, 12vw, 11rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+  }
+  .stat-label {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: clamp(0.9rem, 1.4vw, 1.2rem);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.78;
+    margin-top: 1vh;
+  }
+
+  /* Pill / chip */
+  .pill {
+    display: inline-block;
+    padding: 0.5em 1.1em;
+    border-radius: 999px;
+    background: rgba(250, 239, 216, 0.18);
+    border: 1px solid rgba(250, 239, 216, 0.3);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .pill.gold {
+    background: var(--gold-warm);
+    color: var(--thunder);
+    border: none;
+  }
+  .pill.salem {
+    background: var(--salem-on-dark);
+    color: var(--thunder);
+    border: none;
+  }
+
+  /* Layouts */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4vw; align-items: center; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5vw; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.8vw; }
+
+  .stat-block { display: flex; flex-direction: column; align-items: flex-start; }
+  .feature-card {
+    padding: 2vh 1.8vw;
+    border-radius: 18px;
+    background: rgba(250, 239, 216, 0.08);
+    border: 1px solid rgba(250, 239, 216, 0.18);
+  }
+  .feature-card .icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.14);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.2vh;
+  }
+  .feature-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    font-size: 1.15rem;
+    margin-bottom: 0.5vh;
+  }
+  .feature-card p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    opacity: 0.82;
+  }
+
+  .brand-row {
+    display: flex; flex-wrap: wrap; gap: 1vw 1.5vw;
+    margin-top: 3vh;
+  }
+  .brand-tag {
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 1.5px;
+    padding: 0.6em 1em;
+    border-radius: 12px;
+    color: var(--cream);
+  }
+
+  /* Bottle silhouettes (matching the in-app S8.1 SVG paths) */
+  .bottle {
+    position: absolute;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+  .bottle.right {
+    right: 6vw; top: 50%; transform: translateY(-50%);
+  }
+  .bottle svg { width: 100%; height: 100%; }
+
+  /* Footer + slide number */
+  .slide-meta {
+    position: absolute;
+    bottom: 4vh;
+    left: 10vw;
+    right: 10vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.55;
+  }
+
+  /* Nav */
+  .nav {
+    position: fixed;
+    bottom: 1.5vh; left: 50%;
+    transform: translateX(-50%);
+    display: flex; gap: 8px;
+    z-index: 999;
+    background: rgba(0,0,0,0.55);
+    padding: 6px 12px;
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+  }
+  .nav button {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: var(--cream);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+  }
+  .nav button:hover { background: var(--paprika); border-color: var(--paprika); }
+  .nav .counter {
+    color: var(--cream);
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    align-self: center;
+    padding: 0 8px;
+    font-weight: 700;
+  }
+
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px;
+    background: var(--paprika);
+    transition: width 240ms ease-out;
+    z-index: 1000;
+  }
+
+  /* Slide-specific */
+  .slide.title-slide .stat-strip {
+    margin-top: 4vh;
+    display: flex; gap: 4vw;
+  }
+  .accent-bar {
+    width: 80px; height: 4px;
+    background: var(--gold-warm);
+    margin-bottom: 2.5vh;
+  }
+  ul.checks { list-style: none; padding: 0; }
+  ul.checks li {
+    padding: 0.7em 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-bottom: 1px solid rgba(250,239,216,0.12);
+    display: flex; align-items: flex-start; gap: 0.75em;
+  }
+  ul.checks li::before {
+    content: "•";
+    color: var(--gold-warm);
+    font-size: 1.4em;
+    line-height: 1;
+    margin-top: 0.05em;
+  }
+
+  table.compact {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2vh;
+    font-size: 0.92rem;
+  }
+  table.compact th, table.compact td {
+    text-align: left;
+    padding: 0.7em 0.9em;
+    border-bottom: 1px solid rgba(250,239,216,0.18);
+  }
+  table.compact th {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  table.compact td.metric {
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: var(--gold-warm);
+  }
+
+  .quote {
+    border-left: 3px solid var(--gold-warm);
+    padding-left: 1.5em;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.4rem;
+    line-height: 1.55;
+    max-width: 55ch;
+  }
+</style>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+  <div class="deck" id="deck">
+
+    <!-- 1: TITLE -->
+    <section class="slide active paprika title-slide" data-slide="1">
+      <span class="eyebrow">WineBro · 2026</span>
+      <h1>Your Bro for<br/>every bottle.</h1>
+      <p class="lead">India's first homegrown wine, spirits and beer pairing app — built for biryani, not Bordeaux.</p>
+      <div class="stat-strip">
+        <span class="pill gold">v1.1 launching</span>
+        <span class="pill">Indian-first pairing engine</span>
+        <span class="pill">55 SKUs · 66 dishes · 158 aromas</span>
+      </div>
+      <div class="bottle right" style="width: 26vw; height: 70vh;">
+        <svg viewBox="0 0 100 160" xmlns="http://www.w3.org/2000/svg">
+          <path d="M42 0 L58 0 L58 45 Q58 54 72 61 Q86 67 86 80 L86 150 Q86 160 78 160 L22 160 Q14 160 14 150 L14 80 Q14 67 28 61 Q42 54 42 45 Z" fill="rgba(250,239,216,0.55)"/>
+        </svg>
+      </div>
+      <div class="slide-meta">
+        <span>WineBro · Brand & Investor Deck</span>
+        <span>01 / 12</span>
+      </div>
+    </section>
+
+    <!-- 2: THE PROBLEM -->
+    <section class="slide cream" data-slide="2">
+      <div class="accent-bar"></div>
+      <span class="eyebrow" style="color:var(--paprika)">The problem</span>
+      <h1 style="color: var(--thunder); max-width: 18ch;">Western wine apps don't know our food.</h1>
+      <p class="body" style="color: var(--thunder); margin-top: 3vh;">
+        Open Vivino. Search "what wine pairs with biryani." Get blank stare.
+        Search "Mirchi ka Salan." Get nothing.
+        Search "Macher Jhol." Get the same Australian Shiraz they recommend for everything.
+      </p>
+      <p class="body" style="color: var(--thunder); margin-top: 2vh; font-weight: 700;">
+        India's wine market is going to <span style="color:var(--paprika)">4× by 2030</span>.
+        Not one app is built for our palate.
+      </p>
+      <div class="slide-meta" style="color: var(--thunder); opacity: 0.5;">
+        <span>The problem</span>
+        <span>02 / 12</span>
+      </div>
+    </section>
+
+    <!-- 3: MARKET SIZE -->
+    <section class="slide dark" data-slide="3">
+      <span class="eyebrow">The market</span>
+      <h2>The numbers nobody is serving.</h2>
+      <div class="grid-3" style="margin-top: 4vh;">
+        <div class="stat-block">
+          <div class="stat" style="color: var(--gold-warm);">₹14k Cr</div>
+          <div class="stat-label">Indian wine market by 2030 (4× from today)</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat" style="color: var(--paprika-on-dark);">7%</div>
+          <div class="stat-label">Annual alcobev growth, India</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat" style="color: var(--salem-on-dark);">0</div>
+          <div class="stat-label">Apps built for the Indian palate</div>
+        </div>
+      </div>
+      <p class="lead" style="margin-top: 5vh;">
+        Indian consumers under-buy wine because they don't know what to drink with their food. WineBro removes that friction.
+      </p>
+      <div class="slide-meta">
+        <span>The market</span>
+        <span>03 / 12</span>
+      </div>
+    </section>
+
+    <!-- 4: WHAT IT IS -->
+    <section class="slide paprika" data-slide="4">
+      <span class="eyebrow">The product</span>
+      <h2>A pocket sommelier — built for India.</h2>
+      <div class="grid-4" style="margin-top: 4vh;">
+        <div class="feature-card">
+          <div class="icon">📷</div>
+          <h4>Scan</h4>
+          <p>Snap any bottle. Get tasting notes, pairings, where to buy.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🍛</div>
+          <h4>Pair</h4>
+          <p>Search any dish. Bro ranks 55 bottles by match %.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">📓</div>
+          <h4>Journal</h4>
+          <p>Quick-log in 15 seconds. Or full-sommelier with photos + voice.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🤝</div>
+          <h4>Bro Circle</h4>
+          <p>What your friends are pouring. Real signals, not algorithms.</p>
+        </div>
+      </div>
+      <p class="lead" style="margin-top: 4vh;">
+        Free. No subscription wall. Revenue from affiliate, premium tier, brand B2B.
+      </p>
+      <div class="slide-meta">
+        <span>The product</span>
+        <span>04 / 12</span>
+      </div>
+    </section>
+
+    <!-- 5: REGIONAL COVERAGE -->
+    <section class="slide thunder" data-slide="5">
+      <span class="eyebrow" style="color: var(--gold-warm);">Coverage</span>
+      <h2>Every Indian region is first-class.</h2>
+      <p class="lead" style="margin-top: 2vh;">
+        Bengali. Kashmiri. Hyderabadi. Goan. Rajasthani. Chettinad. Udupi. North Indian. South Indian. Coastal seafood.
+      </p>
+      <div class="brand-row">
+        <span class="brand-tag" style="background: #5D0F1E;">GROVER ZAMPA</span>
+        <span class="brand-tag" style="background: #0E8175;">SULA</span>
+        <span class="brand-tag" style="background: #6E1216;">FRATELLI</span>
+        <span class="brand-tag" style="background: #101010; color:#D9A23A;">KRSMA</span>
+        <span class="brand-tag" style="background: #4D5A2D;">CHAROSA</span>
+        <span class="brand-tag" style="background: #2E5A2E;">BIG BANYAN</span>
+        <span class="brand-tag" style="background: #8B5A2B;">AMRUT</span>
+        <span class="brand-tag" style="background: #13243B;">PAUL JOHN</span>
+        <span class="brand-tag" style="background: #2A1A0F; color:#C9A14B;">RAMPUR</span>
+        <span class="brand-tag" style="background: #3E2415; color:#D9A23A;">OLD MONK</span>
+        <span class="brand-tag" style="background: #E85A1A;">BIRA 91</span>
+        <span class="brand-tag" style="background: #C8102E;">KINGFISHER</span>
+      </div>
+      <p class="body" style="margin-top: 4vh; font-weight: 700; opacity: 0.95;">
+        12 Indian brands. 55 SKUs. ₹450 Old Monk to ₹15,000 Penfolds.
+        <br/>Every price tier. Every regional drinker seen.
+      </p>
+      <div class="slide-meta">
+        <span>Coverage</span>
+        <span>05 / 12</span>
+      </div>
+    </section>
+
+    <!-- 6: AROMA WHEEL -->
+    <section class="slide gold" data-slide="6">
+      <span class="eyebrow">Cultural moat</span>
+      <h2 style="color: var(--cream);">Aam. Jamun. Imli. Tandoor.</h2>
+      <p class="lead" style="color: var(--cream);">
+        158 aromas. <strong>26 are India-only</strong> — and that's the moat. Western apps will never match this without a 24-month catch-up.
+      </p>
+      <div class="grid-3" style="margin-top: 4vh;">
+        <div>
+          <h3 style="color: var(--gold-warm);">Fruity</h3>
+          <p style="color: var(--cream); opacity: 0.85;">Aam (Mango)<br/>Jamun (Indian blackberry)<br/>Munakka<br/>Nimbu</p>
+        </div>
+        <div>
+          <h3 style="color: var(--gold-warm);">Spice</h3>
+          <p style="color: var(--cream); opacity: 0.85;">Elaichi (Cardamom)<br/>Hing (Asafoetida)<br/>Saffron (Kesar)<br/>Mace (Javitri)</p>
+        </div>
+        <div>
+          <h3 style="color: var(--gold-warm);">Smoke & Earth</h3>
+          <p style="color: var(--cream); opacity: 0.85;">Tandoor smoke<br/>Agarbatti (Incense)<br/>Kokum<br/>Imli (Tamarind)</p>
+        </div>
+      </div>
+      <div class="slide-meta">
+        <span>Cultural moat</span>
+        <span>06 / 12</span>
+      </div>
+    </section>
+
+    <!-- 7: DATA ASSETS -->
+    <section class="slide dark" data-slide="7">
+      <span class="eyebrow">Defensibility</span>
+      <h2>10 proprietary data assets — collecting from day 1.</h2>
+      <table class="compact">
+        <tr>
+          <th>Asset</th><th>What we capture</th><th>Year-1 target</th>
+        </tr>
+        <tr><td><strong>D1</strong> Pairing matrix</td><td>Indian-dish ↔ bottle pairings logged</td><td class="metric">50,000</td></tr>
+        <tr><td><strong>D3</strong> Indian-context aroma vocabulary</td><td>Vernacular aroma terms users actually use</td><td class="metric">200</td></tr>
+        <tr><td><strong>D5</strong> Cross-category preference graph</td><td>Wine drinkers who also drink whisky/beer/cocktails</td><td class="metric">5,000</td></tr>
+        <tr><td><strong>D6</strong> Pairing success rate</td><td>"Did Bro get it right?" Yes/Maybe/No feedback</td><td class="metric">5,000</td></tr>
+        <tr><td><strong>D7</strong> Restock behaviour</td><td>Repeat purchase intent signal</td><td class="metric">1,000</td></tr>
+        <tr><td><strong>D10</strong> Occasion-context patterns</td><td>Home vs restaurant vs bar consumption</td><td class="metric">3,000</td></tr>
+      </table>
+      <p class="lead" style="margin-top: 3vh; font-size: 1.1rem;">
+        Every BroCard saved adds a row. Every pairing rated tunes the engine. Every aroma calibration extends the moat.
+      </p>
+      <div class="slide-meta">
+        <span>Defensibility</span>
+        <span>07 / 12</span>
+      </div>
+    </section>
+
+    <!-- 8: TECH -->
+    <section class="slide thunder" data-slide="8">
+      <span class="eyebrow" style="color: var(--salem-on-dark);">Built right</span>
+      <h2>Production-shipping. Not a prototype.</h2>
+      <div class="grid-2" style="margin-top: 4vh; gap: 6vw;">
+        <ul class="checks">
+          <li><strong>36 PRs</strong> merged in 8 production sprints, all per-PR-gated</li>
+          <li><strong>99/99</strong> unit tests passing — pairing engine, gamification, wrap-up</li>
+          <li><strong>11 Cloud Functions</strong> live (push, recommendations, community signals)</li>
+          <li>Pairing engine v1.1 — Bayesian-shrunk community feedback consumption</li>
+        </ul>
+        <ul class="checks">
+          <li>Flutter (iOS + Android, single codebase)</li>
+          <li>Firebase asia-south1 — Firestore, FCM, Storage, Cloud Functions</li>
+          <li>SHA-256 phone-hash friend discovery — privacy-first</li>
+          <li>21+ age gate, owner-only journal reads, AA-compliant theme</li>
+        </ul>
+      </div>
+      <p class="lead" style="margin-top: 3vh; font-size: 1.05rem;">
+        Release APK 29-35 MB. 99-test unit suite. Zero post-merge regressions across 8 sprints.
+      </p>
+      <div class="slide-meta">
+        <span>Built right</span>
+        <span>08 / 12</span>
+      </div>
+    </section>
+
+    <!-- 9: REVENUE -->
+    <section class="slide salem" data-slide="9">
+      <span class="eyebrow">Monetisation</span>
+      <h2>Three horizons. One product.</h2>
+      <div class="grid-3" style="margin-top: 4vh;">
+        <div class="feature-card" style="background: rgba(0,0,0,0.25);">
+          <span class="pill salem">M1 — M6</span>
+          <h4 style="margin-top: 1.5vh;">Affiliate commerce</h4>
+          <p>Every "Buy" tap routes through Flipkart / BigBasket / Amazon partner links. ₹50–150 per conversion. Live now.</p>
+        </div>
+        <div class="feature-card" style="background: rgba(0,0,0,0.25);">
+          <span class="pill salem">M6 — M12</span>
+          <h4 style="margin-top: 1.5vh;">Premium tier</h4>
+          <p>Razorpay subscription. AI sommelier chat, advanced engine, no banners. ₹199/mo or ₹1,499/yr.</p>
+        </div>
+        <div class="feature-card" style="background: rgba(0,0,0,0.25);">
+          <span class="pill salem">M12+</span>
+          <h4 style="margin-top: 1.5vh;">B2B brand dashboard</h4>
+          <p>Sula, Grover, Amrut, Bira pay for cohort intel + featured surfacing. ₹50K–2L/quarter per partner.</p>
+        </div>
+      </div>
+      <p class="lead" style="margin-top: 4vh;">
+        Free to use. Three revenue lines unlocked at different scale tiers. No paywall friction at acquisition.
+      </p>
+      <div class="slide-meta">
+        <span>Monetisation</span>
+        <span>09 / 12</span>
+      </div>
+    </section>
+
+    <!-- 10: BD ASK -->
+    <section class="slide split" data-slide="10">
+      <div style="padding: 8vh 4vw; display: flex; flex-direction: column; justify-content: center;">
+        <span class="eyebrow">Brand partner ask</span>
+        <h2 style="font-size: clamp(1.8rem, 3.6vw, 3.4rem);">No money.<br/>Just 30 minutes.</h2>
+        <p class="body" style="margin-top: 2vh;">
+          Soft cross-promotion on your channels. We give you featured surfacing, push broadcasts on new releases, and a quarterly anonymized cohort report.
+        </p>
+        <ul class="checks" style="margin-top: 2vh;">
+          <li>One Instagram post or newsletter mention per quarter</li>
+          <li>Optional 30-min tasting-team call to refine pairing bias</li>
+          <li>Optional co-branded D2C landing page</li>
+        </ul>
+      </div>
+      <div style="padding: 8vh 4vw; display: flex; flex-direction: column; justify-content: center;">
+        <span class="eyebrow">Investor ask</span>
+        <h2 style="font-size: clamp(1.8rem, 3.6vw, 3.4rem);">₹50L.<br/>18 months.</h2>
+        <p class="body" style="margin-top: 2vh;">
+          Pre-seed runway to 50K MAU + first paid tier launch. Capital deployed against:
+        </p>
+        <ul class="checks" style="margin-top: 2vh;">
+          <li>Photography pipeline (₹5L) — 40 bottle + 60 dish hero photos</li>
+          <li>BD lead (₹15L/yr) — brand partnerships, influencer seeding</li>
+          <li>Performance marketing (₹20L) — Meta + Google, Tier-1 metro</li>
+          <li>Premium tier engineering + AI sommelier (founder-driven)</li>
+        </ul>
+      </div>
+      <div class="slide-meta" style="left: 4vw; right: 4vw;">
+        <span>Two asks · One product</span>
+        <span>10 / 12</span>
+      </div>
+    </section>
+
+    <!-- 11: WHY NOW -->
+    <section class="slide cream" data-slide="11">
+      <div class="accent-bar"></div>
+      <span class="eyebrow" style="color: var(--paprika)">Why now</span>
+      <h1 style="color: var(--thunder); max-width: 18ch;">India is finally drinking wine. We are the answer to "but what?"</h1>
+      <div class="quote" style="color: var(--thunder); margin-top: 4vh;">
+        Indian wine consumption tripled in the last decade. Tier-1 metros lead, but Tier-2 cities are growing faster. The bottleneck for every new drinker is the same: they don't know what to buy or what to drink it with. WineBro is the answer.
+      </div>
+      <div class="slide-meta" style="color: var(--thunder); opacity: 0.5;">
+        <span>Why now</span>
+        <span>11 / 12</span>
+      </div>
+    </section>
+
+    <!-- 12: CLOSING -->
+    <section class="slide paprika" data-slide="12">
+      <span class="eyebrow">Let's pour something</span>
+      <h1>Your Bro for<br/>every bottle.</h1>
+      <p class="lead" style="margin-top: 2vh;">India's first homegrown wine pairing app — built for biryani, not Bordeaux.</p>
+      <div style="margin-top: 5vh; display: flex; flex-direction: column; gap: 1vh;">
+        <p style="font-size: 1rem; opacity: 0.9;"><strong>App:</strong> winebro.web.app</p>
+        <p style="font-size: 1rem; opacity: 0.9;"><strong>BD + investor:</strong> [your email]</p>
+        <p style="font-size: 1rem; opacity: 0.9;"><strong>Phone:</strong> [your number]</p>
+      </div>
+      <div class="bottle right" style="width: 28vw; height: 75vh;">
+        <svg viewBox="0 0 100 160" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 0 L60 0 L60 20 L85 28 Q92 32 92 42 L92 150 Q92 160 84 160 L16 160 Q8 160 8 150 L8 42 Q8 32 15 28 L40 20 Z" fill="rgba(250,239,216,0.55)"/>
+        </svg>
+      </div>
+      <div class="slide-meta">
+        <span>Drink responsibly · 21+ only</span>
+        <span>12 / 12</span>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav">
+    <button onclick="prev()" aria-label="Previous">‹</button>
+    <span class="counter" id="counter">01 / 12</span>
+    <button onclick="next()" aria-label="Next">›</button>
+    <button onclick="window.print()" aria-label="Print to PDF" title="Print to PDF" style="font-size:0.85rem;">PDF</button>
+  </div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let i = 0;
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+
+  function show(n) {
+    slides[i].classList.remove('active');
+    i = ((n % total) + total) % total;
+    slides[i].classList.add('active');
+    counter.textContent =
+      String(i+1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+    progress.style.width = ((i+1)/total*100) + '%';
+  }
+  function next() { show(i+1); }
+  function prev() { show(i-1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') next();
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') prev();
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(total-1);
+  });
+
+  document.addEventListener('click', e => {
+    if (e.target.closest('.nav') || e.target.closest('button')) return;
+    next();
+  });
+
+  show(0);
+</script>
+</body>
+</html>
