@@ -453,22 +453,44 @@ add_text(s, Inches(0.6), Inches(6.4), Inches(12), Inches(0.7),
 add_slide_meta(s, "Monetisation", "09 / 12")
 
 
-# ---- 10. TWO ASKS ----
+# ---- 10. TWO ASKS (split slide — left=brand, right=investor) ----
 s = prs.slides.add_slide(blank)
-# Split background
-left_bg = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, WIDE / 2, TALL)
+
+# Slide is 13.333" wide. Mid-line at 6.667". Each half is 6.667" wide.
+# Left padding 0.6" + right padding 0.6" inside each half → content
+# width per half = 6.667 - 1.2 = 5.467".
+HALF_W = WIDE / 2                        # 6.667 in
+LEFT_X = Inches(0.6)
+LEFT_W = Inches(5.4)                     # safely inside left half
+RIGHT_X = HALF_W + Inches(0.6)           # 7.267 in
+RIGHT_W = Inches(5.4)                    # safely inside right half
+
+# Background halves
+left_bg = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, HALF_W, TALL)
 left_bg.fill.solid(); left_bg.fill.fore_color.rgb = PAPRIKA
 left_bg.line.fill.background()
-right_bg = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, WIDE / 2, 0, WIDE / 2, TALL)
+right_bg = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, HALF_W, 0, HALF_W, TALL)
 right_bg.fill.solid(); right_bg.fill.fore_color.rgb = THUNDER
 right_bg.line.fill.background()
 
-# Left side — Brand BD
-add_eyebrow(s, Inches(0.6), Inches(0.6), "Brand partner ask")
-add_text(s, Inches(0.6), Inches(1.1), Inches(5.8), Inches(2.0),
+# Subtle gold divider so the eye reads the split intentionally.
+divider = s.shapes.add_shape(
+    MSO_SHAPE.RECTANGLE,
+    HALF_W - Emu(6350), Inches(1.5),  # ~0.5pt wide
+    Emu(12700), Inches(4.5)
+)
+divider.fill.solid(); divider.fill.fore_color.rgb = GOLD_WARM
+divider.line.fill.background()
+divider.shadow.inherit = False
+
+# ── Left half: Brand partner ask ──────────────────────
+add_text(s, LEFT_X, Inches(0.6), LEFT_W, Inches(0.4),
+         "BRAND PARTNER ASK",
+         font=MONT, size=10, bold=True, color=CREAM, spacing=1.0)
+add_text(s, LEFT_X, Inches(1.1), LEFT_W, Inches(2.4),
          "No money.\nJust 30 minutes.",
-         font=PLAYFAIR, size=42, bold=True, color=CREAM, spacing=1.0)
-add_text(s, Inches(0.6), Inches(3.5), Inches(5.8), Inches(1.5),
+         font=PLAYFAIR, size=44, bold=True, color=CREAM, spacing=0.95)
+add_text(s, LEFT_X, Inches(3.6), LEFT_W, Inches(1.5),
          "Soft cross-promotion on your channels. We give you featured "
          "surfacing, push broadcasts on new releases, and a quarterly "
          "anonymized cohort report.",
@@ -479,16 +501,18 @@ asks_left = [
     "Optional co-branded D2C landing page",
 ]
 for idx, item in enumerate(asks_left):
-    add_text(s, Inches(0.6), Inches(5.2 + idx * 0.45),
-             Inches(5.8), Inches(0.5),
+    add_text(s, LEFT_X, Inches(5.3 + idx * 0.45),
+             LEFT_W, Inches(0.5),
              "•  " + item, font=MONT, size=10, color=CREAM, spacing=1.4)
 
-# Right side — Investor
-add_eyebrow(s, Inches(7.0), Inches(0.6), "Investor ask")
-add_text(s, Inches(7.0), Inches(1.1), Inches(5.8), Inches(2.0),
+# ── Right half: Investor ask ──────────────────────────
+add_text(s, RIGHT_X, Inches(0.6), RIGHT_W, Inches(0.4),
+         "INVESTOR ASK",
+         font=MONT, size=10, bold=True, color=CREAM, spacing=1.0)
+add_text(s, RIGHT_X, Inches(1.1), RIGHT_W, Inches(2.4),
          "₹50L.\n18 months.",
-         font=PLAYFAIR, size=42, bold=True, color=CREAM, spacing=1.0)
-add_text(s, Inches(7.0), Inches(3.5), Inches(5.8), Inches(1.5),
+         font=PLAYFAIR, size=44, bold=True, color=CREAM, spacing=0.95)
+add_text(s, RIGHT_X, Inches(3.6), RIGHT_W, Inches(1.5),
          "Pre-seed runway to 50K MAU + first paid tier launch. "
          "Capital deployed against:",
          font=MONT, size=11, color=CREAM, spacing=1.5)
@@ -499,8 +523,8 @@ asks_right = [
     "Premium tier engineering + AI sommelier (founder-driven)",
 ]
 for idx, item in enumerate(asks_right):
-    add_text(s, Inches(7.0), Inches(5.2 + idx * 0.45),
-             Inches(5.8), Inches(0.5),
+    add_text(s, RIGHT_X, Inches(5.3 + idx * 0.45),
+             RIGHT_W, Inches(0.5),
              "•  " + item, font=MONT, size=10, color=CREAM, spacing=1.4)
 
 add_slide_meta(s, "Two asks · One product", "10 / 12")
