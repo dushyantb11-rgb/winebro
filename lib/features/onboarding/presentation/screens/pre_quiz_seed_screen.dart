@@ -86,9 +86,9 @@ class _PreQuizSeedScreenState extends State<PreQuizSeedScreen> {
     final l10n = context.l10n;
 
     return Scaffold(
-      backgroundColor: colors.charcoal,
+      backgroundColor: colors.background,
       appBar: AppBar(
-        backgroundColor: colors.charcoal,
+        backgroundColor: colors.background,
         elevation: 0,
         leading: const SizedBox(),
         actions: [

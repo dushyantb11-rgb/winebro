@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:winebro/core/theme/app_colors.dart';
 
 class LoadingButton extends StatelessWidget {
   const LoadingButton({
@@ -20,12 +21,12 @@ class LoadingButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 height: 20,
                 width: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  color: Colors.white,
+                  color: context.appColors.onPrimary,
                 ),
               )
             : Text(label),

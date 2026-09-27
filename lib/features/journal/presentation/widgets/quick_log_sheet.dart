@@ -212,7 +212,7 @@ class _QuickLogSheetState extends ConsumerState<QuickLogSheet> {
         expand: false,
         builder: (_, scrollController) => Container(
           decoration: BoxDecoration(
-            color: colors.charcoal,
+            color: colors.background,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
           ),
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
@@ -343,12 +343,12 @@ class _QuickLogSheetState extends ConsumerState<QuickLogSheet> {
                 child: ElevatedButton(
                   onPressed: _canSave && !_saving ? _save : null,
                   child: _saving
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2.5,
-                            color: Colors.white,
+                            color: colors.onPrimary,
                           ),
                         )
                       : Text(context.l10n.quickLogSave),

@@ -22,8 +22,8 @@ class GradientScaffold extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: useSplashGradient
-                ? [colors.charcoal, colors.charcoalDeep, colors.paprikaDark]
-                : [colors.charcoal, colors.charcoalDeep],
+                ? [colors.background, colors.backgroundDeep, colors.paprikaDark]
+                : [colors.background, colors.backgroundDeep],
           ),
         ),
         child: SafeArea(child: child),

@@ -94,8 +94,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              colors.charcoal,
-              colors.charcoalDeep,
+              colors.background,
+              colors.backgroundDeep,
               colors.paprikaDark,
             ],
           ),

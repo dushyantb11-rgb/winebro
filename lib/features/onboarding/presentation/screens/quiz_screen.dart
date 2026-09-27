@@ -89,7 +89,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [colors.charcoal, colors.charcoalDeep],
+            colors: [colors.background, colors.backgroundDeep],
           ),
         ),
         child: SafeArea(
@@ -337,7 +337,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
               Text(
                 _sliders[axis]!.round().toString(),
                 style: TextStyle(
-                  color: colors.gold,
+                  color: colors.highlight,
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
                 ),
@@ -388,7 +388,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [colors.charcoal, colors.charcoalDeep],
+            colors: [colors.background, colors.backgroundDeep],
           ),
         ),
         child: SafeArea(
@@ -414,7 +414,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                 Icon(
                   profile.archetype.icon,
                   size: 48,
-                  color: colors.gold,
+                  color: colors.highlight,
                 ),
                 const SizedBox(height: 12),
                 Text(
@@ -423,7 +423,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                     fontFamily: 'PlayfairDisplay',
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
-                    color: colors.gold,
+                    color: colors.highlight,
                   ),
                 ),
                 const SizedBox(height: 8),

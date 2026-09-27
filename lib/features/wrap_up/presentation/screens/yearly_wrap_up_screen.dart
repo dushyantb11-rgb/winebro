@@ -64,7 +64,7 @@ class _YearlyWrapUpScreenState extends ConsumerState<YearlyWrapUpScreen> {
     final wrapAsync = ref.watch(yearlyWrapUpProvider);
 
     return Scaffold(
-      backgroundColor: colors.charcoal,
+      backgroundColor: colors.background,
       body: SafeArea(
         child: wrapAsync.when(
           loading: () => Center(

@@ -114,30 +114,30 @@ class AppTheme {
         ? ColorScheme.dark(
             primary: colors.paprika,
             secondary: colors.salem,
-            tertiary: colors.gold,
-            surface: colors.charcoal,
+            tertiary: colors.highlight,
+            surface: colors.background,
             error: colors.error,
-            onPrimary: Colors.white,
-            onSecondary: Colors.white,
+            onPrimary: colors.onPrimary,
+            onSecondary: colors.onPrimary,
             onSurface: colors.textPrimary,
-            onError: Colors.white,
+            onError: colors.onPrimary,
           )
         : ColorScheme.light(
             primary: colors.paprika,
             secondary: colors.salem,
-            tertiary: colors.gold,
-            surface: colors.charcoal,
+            tertiary: colors.highlight,
+            surface: colors.background,
             error: colors.error,
-            onPrimary: Colors.white,
-            onSecondary: Colors.white,
+            onPrimary: colors.onPrimary,
+            onSecondary: colors.onPrimary,
             onSurface: colors.textPrimary,
-            onError: Colors.white,
+            onError: colors.onPrimary,
           );
 
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
-      scaffoldBackgroundColor: colors.charcoal,
+      scaffoldBackgroundColor: colors.background,
       colorScheme: colorScheme,
       fontFamily: 'Montserrat',
       textTheme: _textTheme.apply(
@@ -145,7 +145,7 @@ class AppTheme {
         displayColor: colors.textPrimary,
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: colors.charcoal,
+        backgroundColor: colors.background,
         foregroundColor: colors.textPrimary,
         elevation: 0,
         scrolledUnderElevation: 0,
@@ -182,7 +182,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: colors.paprika,
-          foregroundColor: Colors.white,
+          foregroundColor: colors.onPrimary,
           padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(999),
@@ -272,7 +272,7 @@ class AppTheme {
         thickness: 1,
       ),
       bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: colors.charcoal,
+        backgroundColor: colors.background,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
@@ -281,7 +281,7 @@ class AppTheme {
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: colors.paprika,
-        foregroundColor: Colors.white,
+        foregroundColor: colors.onPrimary,
         elevation: 8,
         shape: const CircleBorder(),
       ),
