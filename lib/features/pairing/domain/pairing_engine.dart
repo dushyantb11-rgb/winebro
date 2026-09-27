@@ -88,17 +88,16 @@ class PairingEngine {
       final score = (ruleScore * 100).clamp(kScoreFloor, kScoreCeiling);
 
       final strategy = _determinePairingStrategy(dish.foodProperties, product);
+      final curated = _curatedPairing(dish, product);
 
       results.add(FoodPairingResult(
         dish: dish,
         product: product,
         score: score,
-        strategy: strategy,
-        explanation: _generatePairingExplanation(
-          dish,
-          product,
-          strategy,
-        ),
+        strategy: curated?.strategy ?? strategy,
+        explanation: curated?.broTip ??
+            _generatePairingExplanation(dish, product, strategy),
+        isCurated: curated != null,
       ));
     }
 
@@ -141,6 +140,7 @@ class PairingEngine {
         occasionBonus: userMatch.occasionBonus,
         frequencyPenalty: 0,
         feedbackBonus: feedbackBonus,
+        broTip: _curatedPairing(dish, product)?.broTip,
       ));
     }
 
@@ -165,6 +165,11 @@ class PairingEngine {
     if (agg == null) return 0;
     return agg.signedShrunkBias() * 2 * kFeedbackBiasCapPoints;
   }
+
+  /// Hand-written pairing for this dish and drink, if one exists in the
+  /// dish catalogue.
+  DishPairing? _curatedPairing(Dish dish, Product product) =>
+      dish.pairings.where((p) => p.productId == product.id).firstOrNull;
 
   double _weightedCosineSimilarity(PalateProfile user, Product product) {
     var dotProduct = 0.0;
@@ -360,6 +365,7 @@ class PairingResult {
     required this.occasionBonus,
     required this.frequencyPenalty,
     this.feedbackBonus = 0,
+    this.broTip,
   });
 
   final Product product;
@@ -374,6 +380,10 @@ class PairingResult {
   /// community signal exists for this (product, dish) pair.
   final double feedbackBonus;
 
+  /// Hand-written Bro Tip when the dish catalogue has a curated pairing
+  /// for this dish and drink. Null otherwise.
+  final String? broTip;
+
   int get matchPercent => score.round();
 }
 
@@ -384,6 +394,7 @@ class FoodPairingResult {
     required this.score,
     required this.strategy,
     required this.explanation,
+    this.isCurated = false,
   });
 
   final Dish dish;
@@ -391,6 +402,10 @@ class FoodPairingResult {
   final double score;
   final PairingStrategy strategy;
   final String explanation;
+
+  /// True when [explanation] is a hand-written Bro Tip rather than the
+  /// generic template sentence.
+  final bool isCurated;
 
   int get matchPercent => score.round();
 }

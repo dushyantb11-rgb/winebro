@@ -30,7 +30,8 @@ const kSeedProducts = <Product>[
         'cut grass. Clean citrus finish with bright acidity typical of '
         'Nashik terroir.',
     aromas: ['gooseberry', 'green apple', 'cut grass', 'lime zest'],
-    abv: 12.5,
+    // Producer tech sheet (Sula Sauvignon Blanc, 2022): 13.0% v/v.
+    abv: 13.0,
     grapeVariety: 'Sauvignon Blanc',
     origin:
         'From Sula Vineyards in Nashik, the pioneer of Indian winemaking '

@@ -19,6 +19,7 @@ import 'package:winebro/features/journal/domain/journal_entry.dart';
 import 'package:winebro/features/journal/presentation/widgets/occasion_chips.dart';
 import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
 import 'package:winebro/features/journal/presentation/widgets/voice_capture_sheet.dart';
+import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/features/profile/data/gamification_service.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
 import 'package:winebro/shared/widgets/segmented_chip_selector.dart';
@@ -620,11 +621,19 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
             localPath: _notesAudioPath!,
           );
     }
+    // Link the entry to the catalogue product when the name matches, so
+    // community counts (CF-11) and restock can find it. Free-text drinks
+    // keep the entry id.
+    final typedName = _nameController.text.trim();
+    final catalogProduct = ref
+        .read(allProductsProvider)
+        .where((p) => p.name.toLowerCase() == typedName.toLowerCase())
+        .firstOrNull;
     final entry = JournalEntry(
       id: id,
       userId: uid,
-      productId: id,
-      productName: _nameController.text.trim(),
+      productId: catalogProduct?.id ?? id,
+      productName: typedName,
       category: _category,
       region: _regionController.text.trim(),
       rating: _rating,
