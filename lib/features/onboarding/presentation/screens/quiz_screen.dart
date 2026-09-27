@@ -7,10 +7,15 @@ import 'package:winebro/features/auth/presentation/providers/auth_provider.dart'
 import 'package:winebro/features/onboarding/domain/quiz_engine.dart';
 import 'package:winebro/features/pairing/domain/palate_profile.dart';
 import 'package:winebro/features/onboarding/presentation/providers/quiz_provider.dart';
+import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/shared/widgets/palate_radar_chart.dart';
 
 class QuizScreen extends ConsumerStatefulWidget {
-  const QuizScreen({super.key});
+  const QuizScreen({this.triedProductIds = const [], super.key});
+
+  /// Bottles picked on the pre-quiz "Which of these have you tried?"
+  /// screen. Used as a light prior on the palate profile.
+  final List<String> triedProductIds;
 
   @override
   ConsumerState<QuizScreen> createState() => _QuizScreenState();
@@ -24,13 +29,18 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   final _sliders = <PalateAxis, double>{
     for (final axis in PalateAxis.values) axis: 5.0,
   };
+
+  /// Only sliders the user actually moved override the quiz result.
+  /// An untouched slider must not pull the profile towards 5.
+  final _touchedSliders = <PalateAxis>{};
   bool _showResult = false;
   PalateProfile? _generatedProfile;
 
   bool get _showChaatStep =>
       _selectedFoods.contains('pani-puri');
 
-  int get _totalSteps => _showChaatStep ? 4 : 3;
+  /// Index of the last step: food, [chaat], drink, sliders.
+  int get _totalSteps => _showChaatStep ? 3 : 2;
 
   int get _adjustedStep {
     if (!_showChaatStep && _step >= 1) return _step + 1;
@@ -62,9 +72,24 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   void _generateProfile() {
     final engine = const QuizEngine();
     final foodAnswers = kQuizStep1Foods.where((a) => _selectedFoods.contains(a.id)).toList();
-    final chaatAnswer = _selectedChaat != null ? kQuizStep2Chaat.firstWhere((a) => a.id == _selectedChaat) : null;
+    // The chaat answer only counts if Pani Puri is still picked.
+    final chaatAnswer = _showChaatStep && _selectedChaat != null
+        ? kQuizStep2Chaat.firstWhere((a) => a.id == _selectedChaat)
+        : null;
     final drinkAnswer = kQuizStep3Drinks.firstWhere((a) => a.id == _selectedDrink);
-    _generatedProfile = engine.generateProfile(foodAnswers: foodAnswers, chaatAnswer: chaatAnswer, drinkAnswer: drinkAnswer, sliderOverrides: _sliders);
+    final catalog = ref.read(allProductsProvider);
+    final tried = catalog
+        .where((p) => widget.triedProductIds.contains(p.id))
+        .toList();
+    _generatedProfile = engine.generateProfile(
+      foodAnswers: foodAnswers,
+      chaatAnswer: chaatAnswer,
+      drinkAnswer: drinkAnswer,
+      sliderOverrides: {
+        for (final axis in _touchedSliders) axis: _sliders[axis]!,
+      },
+      triedProducts: tried,
+    );
     setState(() => _showResult = true);
   }
 
@@ -358,7 +383,10 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
               min: 0,
               max: 10,
               divisions: 10,
-              onChanged: (v) => setState(() => _sliders[axis] = v),
+              onChanged: (v) => setState(() {
+                _sliders[axis] = v;
+                _touchedSliders.add(axis);
+              }),
             ),
           ),
           Row(

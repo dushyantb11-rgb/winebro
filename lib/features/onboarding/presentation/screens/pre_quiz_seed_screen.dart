@@ -77,7 +77,10 @@ class _PreQuizSeedScreenState extends State<PreQuizSeedScreen> {
     }
 
     if (!mounted) return;
-    context.go('/quiz');
+    context.go(
+      '/quiz',
+      extra: persist ? _selected.toList() : const <String>[],
+    );
   }
 
   @override
