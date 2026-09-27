@@ -12,10 +12,11 @@
  *   Open Food Facts                              ODbL (data), CC BY-SA 3.0 (photos)
  *   Wikidata                                     CC0 1.0
  *   Wikimedia Commons                            per file, read at import
+ *   BJCP 2021 styles via beerjson/bjcp-json      MIT (numeric ranges only)
+ *   Indian Food 101 (Kaggle, nehaprabhavalkar)   CC0 1.0
  *
  * Usage (from app/functions, Application Default Credentials):
- *   node scripts/enrich-open-data.js --xwines <XWines_Full_100K_wines.csv>
- *   node scripts/enrich-open-data.js --xwines <csv> --write
+ *   node scripts/enrich-open-data.js --xwines <XWines_Full_100K_wines.csv>  *     --bjcp <bjcp_styleguide-2021.json> --if101 <indian_food.csv> [--write]
  * Without --write it prints what it would store.
  */
 const fs = require("fs");
@@ -26,15 +27,22 @@ const PROJECT_ID = "winebro";
 const UA = "WineBro-open-data/1.0 (theaimindshub@gmail.com)";
 const args = process.argv.slice(2);
 const write = args.includes("--write");
-const xwIndex = args.indexOf("--xwines");
-const xwinesPath = xwIndex >= 0 ? args[xwIndex + 1] : null;
+const argValue = (name) => {
+  const i = args.indexOf(name);
+  return i >= 0 ? args[i + 1] : null;
+};
+const xwinesPath = argValue("--xwines");
+const bjcpPath = argValue("--bjcp");
+const if101Path = argValue("--if101");
 
-const matches = JSON.parse(
+const matchFile = JSON.parse(
   fs.readFileSync(
     path.join(__dirname, "..", "..", "tool", "open_data", "matches.json"),
     "utf8"
   )
-).products;
+);
+const matches = matchFile.products;
+const dishMatches = matchFile.dishes ?? {};
 const today = new Date().toISOString().slice(0, 10);
 
 async function getJson(url) {
@@ -86,6 +94,48 @@ function loadXWines() {
     if (wanted.has(r.WineID)) byId[r.WineID] = r;
   }
   return byId;
+}
+
+/** BJCP styles by id, numeric ranges only (no guideline text). */
+function loadBjcp() {
+  const wanted = new Set(
+    Object.values(matches).map((m) => m.bjcpStyleId).filter(Boolean)
+  );
+  if (wanted.size === 0) return {};
+  if (!bjcpPath) throw new Error("--bjcp <json> is required");
+  const out = {};
+  const range = (r) =>
+    r ? { min: r.minimum?.value ?? null, max: r.maximum?.value ?? null } : null;
+  const walk = (o) => {
+    if (Array.isArray(o)) return o.forEach(walk);
+    if (!o || typeof o !== "object") return;
+    if (o.style_id && wanted.has(o.style_id)) {
+      out[o.style_id] = {
+        styleId: o.style_id,
+        name: o.name,
+        abv: range(o.alcohol_by_volume),
+        ibu: range(o.international_bitterness_units),
+        srm: range(o.color),
+      };
+    }
+    Object.values(o).forEach(walk);
+  };
+  walk(JSON.parse(fs.readFileSync(bjcpPath, "utf8")));
+  return out;
+}
+
+function loadIndianFood101() {
+  const wanted = new Set(
+    Object.values(dishMatches).map((m) => m.indianFood101Name).filter(Boolean)
+  );
+  if (wanted.size === 0) return {};
+  if (!if101Path) throw new Error("--if101 <csv> is required");
+  const out = {};
+  for (const r of parseCsv(fs.readFileSync(if101Path, "utf8"))) {
+    const name = (r.name ?? "").trim();
+    if (wanted.has(name)) out[name] = r;
+  }
+  return out;
 }
 
 async function loadWikidata() {
@@ -164,6 +214,8 @@ async function openFoodFacts(code) {
 
 (async () => {
   const xwines = loadXWines();
+  const bjcp = loadBjcp();
+  const if101 = loadIndianFood101();
   const wikidata = await loadWikidata();
   const updates = {};
 
@@ -213,6 +265,17 @@ async function openFoodFacts(code) {
       };
     }
 
+    if (m.bjcpStyleId && bjcp[m.bjcpStyleId]) {
+      openData.bjcpStyle = {
+        ...bjcp[m.bjcpStyleId],
+        evidence: "BJCP 2021 lists this beer as a commercial example",
+        source: "BJCP 2021 Style Guidelines (beerjson/bjcp-json)",
+        licence: "MIT",
+        url: "https://github.com/beerjson/bjcp-json",
+        retrievedAt: today,
+      };
+    }
+
     if (m.commonsBottleImage) {
       const img = await commonsImage(m.commonsBottleImage);
       if (img) openData.bottlePhoto = img;
@@ -221,11 +284,38 @@ async function openFoodFacts(code) {
     if (Object.keys(openData).length) updates[id] = openData;
   }
 
+  // "-1" marks a missing value in Indian Food 101.
+  const clean = (v) => (v && v !== "-1" ? v : null);
+  const dishUpdates = {};
+  for (const [id, m] of Object.entries(dishMatches)) {
+    const r = m.indianFood101Name && if101[m.indianFood101Name];
+    if (!r) continue;
+    dishUpdates[id] = {
+      indianFood101: {
+        name: r.name.trim(),
+        ingredients: r.ingredients.split(",").map((s) => s.trim()).filter(Boolean),
+        diet: clean(r.diet),
+        flavourProfile: clean(r.flavor_profile),
+        course: clean(r.course),
+        state: clean(r.state),
+        region: clean(r.region),
+        source: "Indian Food 101 (Kaggle)",
+        licence: "CC0 1.0",
+        url: "https://www.kaggle.com/datasets/nehaprabhavalkar/indian-food-101",
+        note: "Community dataset; flavour labels are coarse",
+        retrievedAt: today,
+      },
+    };
+  }
+
   const count = (k) => Object.values(updates).filter((u) => u[k]).length;
   console.log(
     `products with open data: ${Object.keys(updates).length}/${Object.keys(matches).length}` +
       ` | X-Wines ${count("xwines")} | Open Food Facts ${count("openFoodFacts")}` +
-      ` | Wikidata ${count("wikidata")} | bottle photo ${count("bottlePhoto")}`
+      ` | Wikidata ${count("wikidata")} | bottle photo ${count("bottlePhoto")}` +
+      ` | BJCP style ${count("bjcpStyle")}` +
+      `
+dishes with open data: ${Object.keys(dishUpdates).length}/${Object.keys(dishMatches).length}`
   );
 
   if (!write) {
@@ -238,14 +328,24 @@ async function openFoodFacts(code) {
   admin.initializeApp({ projectId: PROJECT_ID });
   const db = admin.firestore();
   const batch = db.batch();
+  const stamp = admin.firestore.FieldValue.serverTimestamp();
   for (const [id, openData] of Object.entries(updates)) {
     batch.update(db.collection("products").doc(id), {
       openData,
-      openDataUpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      openDataUpdatedAt: stamp,
+    });
+  }
+  for (const [id, openData] of Object.entries(dishUpdates)) {
+    batch.update(db.collection("dishes").doc(id), {
+      openData,
+      openDataUpdatedAt: stamp,
     });
   }
   await batch.commit();
-  console.log(`wrote openData to ${Object.keys(updates).length} products`);
+  console.log(
+    `wrote openData to ${Object.keys(updates).length} products and ` +
+      `${Object.keys(dishUpdates).length} dishes`
+  );
 })().catch((e) => {
   console.error(e);
   process.exit(1);

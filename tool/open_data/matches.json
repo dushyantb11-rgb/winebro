@@ -1,5 +1,5 @@
 {
- "_readme": "Reviewed links from each WineBro product to open datasets. Edit by hand; enrich-open-data.js reads it. xwinesId = X-Wines WineID (CC0). offBarcode = Open Food Facts code (ODbL, images CC BY-SA). wikidata* = Wikidata QIDs (CC0). commonsBottleImage = Wikimedia Commons file that shows this bottle (licence read at import).",
+ "_readme": "Reviewed links from each WineBro product to open datasets. Edit by hand; enrich-open-data.js reads it. xwinesId = X-Wines WineID (CC0). offBarcode = Open Food Facts code (ODbL, images CC BY-SA). wikidata* = Wikidata QIDs (CC0). commonsBottleImage = Wikimedia Commons file that shows this bottle (licence read at import). bjcpStyleId = BJCP 2021 style that lists this beer as a commercial example (beerjson/bjcp-json, MIT). dishes.indianFood101Name = row name in Kaggle 'Indian Food 101' (CC0).",
  "products": {
   "sula-sauvignon-blanc": {
    "xwinesId": 194346,
@@ -152,20 +152,24 @@
    "offBarcode": "5410228169604",
    "wikidataProducer": "Q1134872",
    "wikidataProduct": "Q25388400",
-   "commonsBottleImage": "Hoegaarden original belgian white ale.JPG"
+   "commonsBottleImage": "Hoegaarden original belgian white ale.JPG",
+   "bjcpStyleId": "24A"
   },
   "guinness-draught": {
    "offBarcode": "5000213101223",
-   "wikidataProduct": "Q194297"
+   "wikidataProduct": "Q194297",
+   "bjcpStyleId": "15B"
   },
   "chimay-blue": {
    "wikidataProducer": "Q860761",
    "wikidataProduct": "Q116439938",
-   "commonsBottleImage": "Chimay Bleue.JPG"
+   "commonsBottleImage": "Chimay Bleue.JPG",
+   "bjcpStyleId": "26D"
   },
   "sierra-nevada-pale-ale": {
    "offBarcode": "0083783000016",
-   "wikidataProducer": "Q2289193"
+   "wikidataProducer": "Q2289193",
+   "bjcpStyleId": "18B"
   },
   "paulaner-hefeweizen": {
    "wikidataProducer": "Q127305"
@@ -179,5 +183,125 @@
    "wikidataProduct": "Q762996",
    "commonsBottleImage": "Old Monk Rum.jpg"
   }
+ },
+ "dishes": {
+  "aloo-gobi": {
+   "indianFood101Name": "Aloo gobi"
+  },
+  "amritsari-kulcha": {},
+  "appam-with-stew": {},
+  "avial": {
+   "indianFood101Name": "Avial"
+  },
+  "baingan-bharta": {},
+  "bisi-bele-bath": {
+   "indianFood101Name": "Bisi bele bath"
+  },
+  "bombay-duck-fry": {},
+  "butter-chicken": {
+   "indianFood101Name": "Butter chicken"
+  },
+  "chettinad-chicken": {},
+  "chicken-chettinad": {},
+  "chicken-malai-tikka": {},
+  "chole-bhature": {
+   "indianFood101Name": "Chole bhature"
+  },
+  "crab-masala": {},
+  "dal-baati-churma": {
+   "indianFood101Name": "Daal baati churma"
+  },
+  "dal-makhani": {
+   "indianFood101Name": "Dal makhani"
+  },
+  "fish-tikka": {},
+  "gajar-ka-halwa": {
+   "indianFood101Name": "Gajar ka halwa"
+  },
+  "galouti-kebab": {},
+  "goan-fish-curry": {},
+  "gulab-jamun": {
+   "indianFood101Name": "Gulab jamun"
+  },
+  "hyderabadi-biryani": {},
+  "hyderabadi-haleem": {},
+  "jalebi": {
+   "indianFood101Name": "Jalebi"
+  },
+  "kadhi-pakora": {
+   "indianFood101Name": "Kadhi pakoda"
+  },
+  "kakori-kebab": {},
+  "kashmiri-yakhni": {},
+  "kathi-roll": {},
+  "keema-matar": {},
+  "kerala-fish-curry": {},
+  "koliwada-fish-fry": {},
+  "kosha-mangsho": {},
+  "kulfi": {},
+  "laal-maas": {},
+  "macher-jhol": {},
+  "malabar-parotta-chicken-curry": {},
+  "malai-kofta": {},
+  "mangalorean-fish-gassi": {},
+  "masala-dosa": {
+   "indianFood101Name": "Masala Dosa"
+  },
+  "meen-pollichathu": {},
+  "mirchi-ka-salan": {},
+  "nihari": {},
+  "palak-paneer": {
+   "indianFood101Name": "Palak paneer"
+  },
+  "paneer-tikka": {},
+  "paneer-tikka-masala": {
+   "indianFood101Name": "Paneer tikka masala"
+  },
+  "pani-puri": {
+   "indianFood101Name": "Pani puri"
+  },
+  "paniyaram": {
+   "indianFood101Name": "Kuzhi paniyaram"
+  },
+  "pav-bhaji": {
+   "indianFood101Name": "Pav Bhaji"
+  },
+  "pongal": {
+   "indianFood101Name": "Pongal"
+  },
+  "pork-vindaloo": {},
+  "prawn-balchao": {},
+  "rajma-chawal": {
+   "indianFood101Name": "Rajma chaval"
+  },
+  "ras-malai": {
+   "indianFood101Name": "Ras malai"
+  },
+  "rasam": {
+   "indianFood101Name": "Rasam"
+  },
+  "rogan-josh": {},
+  "rogan-josh-kashmiri": {},
+  "sambar": {
+   "indianFood101Name": "Sambar"
+  },
+  "samosa-chaat": {},
+  "sandesh": {
+   "indianFood101Name": "Sandesh"
+  },
+  "seekh-kebab": {},
+  "sev-puri": {},
+  "shahi-paneer": {
+   "indianFood101Name": "Shahi paneer"
+  },
+  "shahi-tukda": {
+   "indianFood101Name": "Shahi tukra"
+  },
+  "sorpotel": {},
+  "surmai-tawa-fry": {},
+  "tandoori-chicken": {
+   "indianFood101Name": "Tandoori Chicken"
+  },
+  "vada-pav": {}
  }
 }
