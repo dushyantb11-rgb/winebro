@@ -1,11 +1,12 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
-import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
 
 /// Pre-quiz seed — "Which of these have you tried?"
@@ -44,10 +45,12 @@ class _PreQuizSeedScreenState extends State<PreQuizSeedScreen> {
   ];
 
   List<Product> get _anchors {
+    final catalog = ProviderScope.containerOf(context, listen: false)
+        .read(allProductsProvider);
     return _anchorIds
-        .map((id) => kSeedProducts.firstWhere(
+        .map((id) => catalog.firstWhere(
               (p) => p.id == id,
-              orElse: () => kSeedProducts.first,
+              orElse: () => catalog.first,
             ))
         .toList();
   }

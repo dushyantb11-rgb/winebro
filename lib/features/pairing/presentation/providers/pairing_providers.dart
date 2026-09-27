@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
 import 'package:winebro/core/services/firebase_providers.dart';
@@ -5,6 +7,7 @@ import 'package:winebro/features/pairing/data/seed_dishes.dart';
 import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/dish.dart';
 import 'package:winebro/features/pairing/domain/palate_profile.dart';
+import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/features/pairing/domain/pairing_engine.dart';
 import 'package:winebro/features/pairing_feedback/data/pairing_aggregate_repository.dart';
 import 'package:winebro/features/pairing_feedback/domain/pairing_aggregate.dart';
@@ -21,9 +24,51 @@ final userPalateProvider = FutureProvider<PalateProfile?>((ref) async {
   return data != null ? PalateProfile.fromMap(data) : null;
 });
 
-final allProductsProvider = Provider((_) => kSeedProducts);
+/// Reads a read-only catalogue collection, ordered by `sortOrder`.
+/// A document that fails to parse is skipped, so one bad row cannot
+/// empty the whole list.
+Stream<List<T>> _catalogStream<T>(
+  String collection,
+  T Function(Map<String, dynamic>) fromMap,
+) {
+  return FirebaseFirestore.instance
+      .collection(collection)
+      .orderBy('sortOrder')
+      .snapshots()
+      .map((snap) {
+    final items = <T>[];
+    for (final doc in snap.docs) {
+      try {
+        items.add(fromMap(doc.data()));
+      } on Object catch (e) {
+        debugPrint('Skipping $collection/${doc.id}: $e');
+      }
+    }
+    return items;
+  });
+}
 
-final allDishesProvider = Provider((_) => kSeedDishes);
+final _remoteProductsProvider = StreamProvider<List<Product>>(
+  (ref) => _catalogStream('products', Product.fromMap),
+);
+
+final _remoteDishesProvider = StreamProvider<List<Dish>>(
+  (ref) => _catalogStream('dishes', Dish.fromMap),
+);
+
+/// Drink catalogue. Firestore `products` is the source of truth. The
+/// bundled seed list is used only until the first snapshot arrives, when
+/// the collection is empty, or when it cannot be read.
+final allProductsProvider = Provider<List<Product>>((ref) {
+  final remote = ref.watch(_remoteProductsProvider).valueOrNull;
+  return (remote == null || remote.isEmpty) ? kSeedProducts : remote;
+});
+
+/// Dish catalogue. Same source rules as [allProductsProvider].
+final allDishesProvider = Provider<List<Dish>>((ref) {
+  final remote = ref.watch(_remoteDishesProvider).valueOrNull;
+  return (remote == null || remote.isEmpty) ? kSeedDishes : remote;
+});
 
 final groupedDishesProvider =
     Provider<Map<FoodCategory, List<Dish>>>((ref) {

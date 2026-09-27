@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:string_similarity/string_similarity.dart';
+import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_motion.dart';
@@ -13,8 +14,6 @@ import 'package:winebro/features/journal/domain/journal_entry.dart';
 import 'package:winebro/features/journal/presentation/screens/journal_screen.dart';
 import 'package:winebro/features/journal/presentation/widgets/occasion_chips.dart';
 import 'package:winebro/features/profile/data/gamification_service.dart';
-import 'package:winebro/features/pairing/data/seed_dishes.dart';
-import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/dish.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/shared/widgets/brand_label_card.dart';
@@ -23,12 +22,12 @@ import 'package:winebro/shared/widgets/brand_label_card.dart';
 /// barrier from 90 seconds (Pro 6-step) to ≤15 seconds.
 ///
 /// Required:
-///   - Product name (autocomplete from kSeedProducts; OR free-text if
+///   - Product name (autocomplete from the product catalogue; OR free-text if
 ///     scanned/manual entry not in catalogue)
 ///   - Star rating (1-5)
 ///
 /// Optional:
-///   - foodPaired (autocomplete from kSeedDishes) — feeds D1 data asset
+///   - foodPaired (autocomplete from the dish catalogue) — feeds D1 data asset
 ///   - buyAgain toggle — feeds D7 data asset
 ///
 /// Save creates a sparse JournalEntry document. Pro mode upgrade CTA
@@ -96,10 +95,10 @@ class _QuickLogSheetState extends ConsumerState<QuickLogSheet> {
       _searchController.text = widget.prefillName!;
       _customName = widget.prefillName;
       // Try to match an existing product first
-      _selectedProduct = kSeedProducts.firstWhere(
+      _selectedProduct = ref.read(allProductsProvider).firstWhere(
         (p) => p.id == widget.prefillProductId ||
             p.name.toLowerCase() == widget.prefillName!.toLowerCase(),
-        orElse: () => kSeedProducts.first,
+        orElse: () => ref.read(allProductsProvider).first,
       );
       if (_selectedProduct?.name.toLowerCase() !=
           widget.prefillName!.toLowerCase()) {
@@ -395,7 +394,11 @@ class _SearchField extends StatelessWidget {
     final query = controller.text.trim();
     final showSuggestions = focusNode.hasFocus && query.length >= 2;
     final matches = showSuggestions
-        ? _matchProducts(query).take(5).toList()
+        ? _matchProducts(
+            query,
+            ProviderScope.containerOf(context, listen: false)
+                .read(allProductsProvider),
+          ).take(5).toList()
         : <Product>[];
 
     return Column(
@@ -481,9 +484,9 @@ class _SearchField extends StatelessWidget {
     );
   }
 
-  List<Product> _matchProducts(String query) {
+  List<Product> _matchProducts(String query, List<Product> catalog) {
     final q = query.toLowerCase();
-    final scored = kSeedProducts
+    final scored = catalog
         .map((p) => (
               p,
               StringSimilarity.compareTwoStrings(q, p.name.toLowerCase()) +
@@ -512,7 +515,11 @@ class _DishField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final query = controller.text.trim();
-    final matches = query.length >= 2 ? _matchDishes(query).take(4).toList() : <Dish>[];
+    final matches = query.length >= 2 ? _matchDishes(
+            query,
+            ProviderScope.containerOf(context, listen: false)
+                .read(allDishesProvider),
+          ).take(4).toList() : <Dish>[];
 
     return Column(
       children: [
@@ -566,9 +573,9 @@ class _DishField extends StatelessWidget {
     );
   }
 
-  List<Dish> _matchDishes(String query) {
+  List<Dish> _matchDishes(String query, List<Dish> catalog) {
     final q = query.toLowerCase();
-    return kSeedDishes
+    return catalog
         .where((d) =>
             d.name.toLowerCase().contains(q) ||
             StringSimilarity.compareTwoStrings(q, d.name.toLowerCase()) > 0.3)
