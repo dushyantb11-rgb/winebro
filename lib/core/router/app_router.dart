@@ -98,7 +98,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             GoRoute(path: '/', builder: (_, __) => const HomeScreen()),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/pair', builder: (_, __) => const PairScreen()),
+            GoRoute(
+              path: '/pair',
+              builder: (_, state) => PairScreen(
+                initialProductId: state.uri.queryParameters['product'],
+              ),
+            ),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(

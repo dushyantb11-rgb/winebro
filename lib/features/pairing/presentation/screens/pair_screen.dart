@@ -32,7 +32,11 @@ import 'package:winebro/shared/widgets/product_action_row.dart';
 ///   Drink → Food     pick a drink, get food suggestions
 ///   Occasion         pick an occasion, get drink suggestions
 class PairScreen extends ConsumerStatefulWidget {
-  const PairScreen({super.key});
+  const PairScreen({this.initialProductId, super.key});
+
+  /// Opens Pair in drink-to-food mode with this product selected, e.g.
+  /// after a label scan.
+  final String? initialProductId;
 
   @override
   ConsumerState<PairScreen> createState() => _PairScreenState();
@@ -64,12 +68,33 @@ class _PairScreenState extends ConsumerState<PairScreen> {
   @override
   void initState() {
     super.initState();
+    _applyInitialProduct();
     _placeholderTimer = Timer.periodic(const Duration(seconds: 4), (_) {
       if (mounted && _query.isEmpty) {
         setState(() => _placeholderIndex =
             (_placeholderIndex + 1) % _placeholders.length);
       }
     });
+  }
+
+  @override
+  void didUpdateWidget(PairScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialProductId != oldWidget.initialProductId) {
+      _applyInitialProduct();
+    }
+  }
+
+  void _applyInitialProduct() {
+    final id = widget.initialProductId;
+    if (id == null) return;
+    final product =
+        ref.read(allProductsProvider).where((p) => p.id == id).firstOrNull;
+    if (product == null) return;
+    _mode = PairMode.drinkToFood;
+    _selectedDish = null;
+    _selectedOccasion = null;
+    _selectedProduct = product;
   }
 
   @override
