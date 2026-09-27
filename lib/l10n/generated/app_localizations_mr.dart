@@ -501,8 +501,55 @@ class AppLocalizationsMr extends AppLocalizations {
   String get homeBroCircleEyebrow => 'BRO CIRCLE';
 
   @override
-  String homeBroCircleSocialProof(int percent) {
-    return '$percent% of bros pair this with Indian food';
+  String productBroCircleTasters(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bros tasted this in the last 7 days',
+      one: '1 bro tasted this in the last 7 days',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String productBroCircleTopPairing(String dish, int percent) {
+    return 'Most often with $dish ($percent%)';
+  }
+
+  @override
+  String get productOpenFactsTitle => 'FACTS FROM OPEN SOURCES';
+
+  @override
+  String get productOpenFactAlcohol => 'Alcohol';
+
+  @override
+  String get productOpenFactProducer => 'Producer';
+
+  @override
+  String get productOpenFactBrand => 'Brand';
+
+  @override
+  String get productOpenFactBeerStyle => 'Beer style';
+
+  @override
+  String get productOpenFactPairsWith => 'Often paired with';
+
+  @override
+  String get productOpenFactMatches => 'MATCHES OURS';
+
+  @override
+  String get productOpenFactDiffers => 'SOURCES DIFFER';
+
+  @override
+  String get productOwnContentLabel => 'Taste profile and notes:';
+
+  @override
+  String get productOwnContentNote =>
+      'written by WineBro, not yet checked by a sommelier.';
+
+  @override
+  String productPhotoCredit(String credit) {
+    return 'Photo: $credit';
   }
 
   @override

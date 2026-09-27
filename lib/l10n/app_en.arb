@@ -505,10 +505,40 @@
   "homeBroCircleEyebrow": "BRO CIRCLE",
   "@homeBroCircleEyebrow": {"description": "Bro Circle strip eyebrow"},
 
-  "homeBroCircleSocialProof": "{percent}% of bros pair this with Indian food",
-  "@homeBroCircleSocialProof": {
-    "description": "Social proof one-liner on product detail",
-    "placeholders": {"percent": {"type": "int"}}
+  "productBroCircleTasters": "{count, plural, =1{1 bro tasted this in the last 7 days} other{{count} bros tasted this in the last 7 days}}",
+  "@productBroCircleTasters": {
+    "description": "Real Bro Circle count on product detail, from community_signals",
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "productBroCircleTopPairing": "Most often with {dish} ({percent}%)",
+  "@productBroCircleTopPairing": {
+    "description": "Most common food logged with this drink by the community",
+    "placeholders": {"dish": {"type": "String"}, "percent": {"type": "int"}}
+  },
+  "productOpenFactsTitle": "FACTS FROM OPEN SOURCES",
+  "@productOpenFactsTitle": {"description": "Eyebrow over open-data facts on product detail"},
+  "productOpenFactAlcohol": "Alcohol",
+  "@productOpenFactAlcohol": {"description": "Open fact label"},
+  "productOpenFactProducer": "Producer",
+  "@productOpenFactProducer": {"description": "Open fact label"},
+  "productOpenFactBrand": "Brand",
+  "@productOpenFactBrand": {"description": "Open fact label"},
+  "productOpenFactBeerStyle": "Beer style",
+  "@productOpenFactBeerStyle": {"description": "Open fact label"},
+  "productOpenFactPairsWith": "Often paired with",
+  "@productOpenFactPairsWith": {"description": "Open fact label for food types"},
+  "productOpenFactMatches": "MATCHES OURS",
+  "@productOpenFactMatches": {"description": "Tag when open data agrees with ours"},
+  "productOpenFactDiffers": "SOURCES DIFFER",
+  "@productOpenFactDiffers": {"description": "Tag when open data disagrees with ours"},
+  "productOwnContentLabel": "Taste profile and notes:",
+  "@productOwnContentLabel": {"description": "Bold lead-in of the own-content note"},
+  "productOwnContentNote": "written by WineBro, not yet checked by a sommelier.",
+  "@productOwnContentNote": {"description": "Honest note on hand-authored product content"},
+  "productPhotoCredit": "Photo: {credit}",
+  "@productPhotoCredit": {
+    "description": "Attribution line required by the photo licence",
+    "placeholders": {"credit": {"type": "String"}}
   },
 
   "homeBroTipHeader": "BRO TIP OF THE DAY",
