@@ -60,6 +60,33 @@ Next step proposed: photograph labels (shop visit or users' scans in the app),
 read ABV and pack size with the scanner's OCR, and store them as
 `facts.abv` with source "label photo" and the photo itself.
 
+## Stage 4 result (2026-10-05)
+
+Run inside a Claude Code session (no API key): three independent estimators,
+each on all 111 drinks from a different angle (measured facts / style norms /
+comparison with scale anchors); code compared them (`combine_estimates.py
+round2`); a reviewer settled disagreements and hard-fact conflicts with a
+stated reason; code re-checked and set confidence (`final`). Stored in
+Firestore `pilot_candidates/{id}.aiEstimate`, status `estimated`. The API
+version of the same pipeline is `ai_estimate.py`.
+
+| Confidence | Drinks | Meaning |
+|---|---|---|
+| high | 31 | estimators agree within 1, a hard taste fact (X-Wines band or BJCP style) backs it, reviewer saw no doubt |
+| medium | 76 | consistent, but scored from style knowledge only (all 26 whiskies, all brandies and rums) |
+| low | 4 | conflicts with a source left open, or little-known drinks: Fratelli Shiraz Rosé, Sula Sauvignon Blanc, SDU Madera Shiraz, Winery 52 Red |
+
+Notes:
+- The three estimators are the same model, so their close agreement (110 of
+  111 within 1 point) shows consistency, not accuracy. That is why "high"
+  also needs a hard fact.
+- The reviewer kept 4 values against X-Wines bands with reasons (e.g. a rosé
+  cannot be "Full-bodied"); 2 of those stay as open conflicts.
+- Data issue found: Open Food Facts lists Corona Extra at 1.36% ABV (wrong;
+  ignored).
+- App label for these: "Estimated from published facts" + confidence. Only a
+  sommelier review makes a drink `verified`.
+
 ## Stages
 
 | # | Stage | Who | Output | Done when |
@@ -67,7 +94,7 @@ read ABV and pack size with the scanner's OCR, and store them as
 | 1 | Pick the 111 drinks | Claude | `pilot_list.json`, Firestore `pilot_candidates` | ✅ |
 | 2 | Collect facts | Claude (scripts) | `facts.*` with source per field | ✅ first pass; ABV gap for Indian spirits and beer needs label photos |
 | 3 | Link open data | Claude | `openData` (X-Wines, Open Food Facts, Wikidata, Commons, BJCP) | ✅ `--matches tool/pilot/open_data_matches.json --collection pilot_candidates` |
-| 4 | AI draft | Claude | `aiDraft`: notes, aromas, six scores, with the facts it used | every drink has a draft |
+| 4 | AI estimate | Claude | `aiEstimate`: notes, aromas, six scores, confidence, inputs and all rounds | ✅ 111 estimated (2026-10-05) |
 | 5 | Sommelier review | Sommelier | approve / edit / reject per drink | 111 reviewed |
 | 6 | Publish | Claude | approved rows copied to `products` with `verified: true` | app shows them |
 
