@@ -1092,6 +1092,36 @@ abstract class AppLocalizations {
   /// **'written by WineBro, not yet checked by a sommelier.'**
   String get productOwnContentNote;
 
+  /// Label on AI-estimated taste profile and notes
+  ///
+  /// In en, this message translates to:
+  /// **'estimated from published facts, {confidence} confidence. Not yet checked by a sommelier.'**
+  String productEstimateNote(String confidence);
+
+  /// Label once a sommelier approved the taste profile
+  ///
+  /// In en, this message translates to:
+  /// **'checked by our sommelier.'**
+  String get productVerifiedNote;
+
+  /// Estimate confidence level
+  ///
+  /// In en, this message translates to:
+  /// **'high'**
+  String get confidenceHigh;
+
+  /// Estimate confidence level
+  ///
+  /// In en, this message translates to:
+  /// **'medium'**
+  String get confidenceMedium;
+
+  /// Estimate confidence level
+  ///
+  /// In en, this message translates to:
+  /// **'low'**
+  String get confidenceLow;
+
   /// Attribution line required by the photo licence
   ///
   /// In en, this message translates to:
@@ -1589,6 +1619,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove'**
   String get wishlistRemove;
+
+  /// Buy button when we have no sourced price
+  ///
+  /// In en, this message translates to:
+  /// **'Find to buy'**
+  String get actionBuyNoPrice;
 
   /// Buy button on Pair results / detail
   ///

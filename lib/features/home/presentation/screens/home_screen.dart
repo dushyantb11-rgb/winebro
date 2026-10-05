@@ -355,16 +355,19 @@ class HomeScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                '${product.subcategory} · ${product.region}',
+                product.subtitle,
                 style: TextStyle(
                     color: colors.textSecondary,
                     fontSize: 14,
                     fontWeight: FontWeight.w600),
               ),
-              if (product.abv != null) ...[
+              if (product.abv != null || product.hasPrice) ...[
                 const SizedBox(height: 4),
                 Text(
-                  '${product.abv}% ABV  ·  ₹${product.price.toStringAsFixed(0)}',
+                  [
+                    if (product.abv != null) '${product.abv}% ABV',
+                    if (product.hasPrice) '₹${product.price.toStringAsFixed(0)}',
+                  ].join('  ·  '),
                   style: TextStyle(color: colors.textTertiary, fontSize: 13),
                 ),
               ],
@@ -404,7 +407,7 @@ class HomeScreen extends ConsumerWidget {
                 OpenFactsSection(facts: openFacts.facts),
                 const SizedBox(height: 12),
               ],
-              const OwnContentNote(),
+              OwnContentNote(product: product),
               const SizedBox(height: 20),
               ProductBroCircleLine(product: product),
               ProductActionRow(
@@ -518,7 +521,7 @@ class _TonightsPourCard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            '${product.subcategory} · ${product.region}',
+            product.subtitle,
             style: TextStyle(
               color: colors.inkOnHero.withValues(alpha: 0.78),
               fontSize: 13,
@@ -652,7 +655,7 @@ class _ContinueStoryCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '${next.subcategory} · ${next.region}',
+                        next.subtitle,
                         style: TextStyle(
                           color: colors.textTertiary,
                           fontSize: 12,

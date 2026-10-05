@@ -162,7 +162,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${product.subcategory} · ${product.region}',
+                    product.subtitle,
                     style: TextStyle(
                       color: colors.textTertiary,
                       fontSize: 12,
