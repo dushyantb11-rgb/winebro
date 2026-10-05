@@ -7,13 +7,18 @@
  *   node scripts/load-pilot.js           dry run
  *   node scripts/load-pilot.js --write   writes to project winebro
  *
- * Merges by id, so later stages (facts, aiDraft, review) are kept.
+ * Also writes tool/pilot/facts.json (stage 2, from collect_facts.py) into
+ * `facts`. Merges by id, so later stages (aiDraft, review) are kept.
  */
 const fs = require("fs");
 const path = require("path");
 const admin = require("firebase-admin");
 
 const write = process.argv.includes("--write");
+const factsPath = path.join(__dirname, "..", "..", "tool", "pilot", "facts.json");
+const facts = fs.existsSync(factsPath)
+  ? JSON.parse(fs.readFileSync(factsPath, "utf8"))
+  : {};
 const list = JSON.parse(
   fs.readFileSync(
     path.join(__dirname, "..", "..", "tool", "pilot", "pilot_list.json"),
@@ -42,7 +47,14 @@ const list = JSON.parse(
       ref,
       {
         ...d,
-        ...(snap.exists ? {} : { status: "selected" }),
+        ...(facts[d.id] && Object.keys(facts[d.id]).length
+          ? { facts: facts[d.id] }
+          : {}),
+        // Move forward only from the first two stages; later stages
+        // (drafted, in_review, approved, rejected) are never reset.
+        ...(!snap.exists || ["selected", "facts"].includes(snap.get("status"))
+          ? { status: facts[d.id] && Object.keys(facts[d.id]).length ? "facts" : "selected" }
+          : {}),
         selectedAt: admin.firestore.FieldValue.serverTimestamp(),
       },
       { merge: true }

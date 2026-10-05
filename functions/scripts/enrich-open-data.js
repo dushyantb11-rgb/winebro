@@ -34,13 +34,16 @@ const argValue = (name) => {
 const xwinesPath = argValue("--xwines");
 const bjcpPath = argValue("--bjcp");
 const if101Path = argValue("--if101");
+// --matches <file> (default tool/open_data/matches.json) and
+// --collection <name> (default products) let the same import run for
+// the data pilot: --matches tool/pilot/open_data_matches.json
+// --collection pilot_candidates
+const matchesPath =
+  argValue("--matches") ??
+  path.join(__dirname, "..", "..", "tool", "open_data", "matches.json");
+const collection = argValue("--collection") ?? "products";
 
-const matchFile = JSON.parse(
-  fs.readFileSync(
-    path.join(__dirname, "..", "..", "tool", "open_data", "matches.json"),
-    "utf8"
-  )
-);
+const matchFile = JSON.parse(fs.readFileSync(matchesPath, "utf8"));
 const matches = matchFile.products;
 const dishMatches = matchFile.dishes ?? {};
 const today = new Date().toISOString().slice(0, 10);
@@ -330,7 +333,7 @@ dishes with open data: ${Object.keys(dishUpdates).length}/${Object.keys(dishMatc
   const batch = db.batch();
   const stamp = admin.firestore.FieldValue.serverTimestamp();
   for (const [id, openData] of Object.entries(updates)) {
-    batch.update(db.collection("products").doc(id), {
+    batch.update(db.collection(collection).doc(id), {
       openData,
       openDataUpdatedAt: stamp,
     });

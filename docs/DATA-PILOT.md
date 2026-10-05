@@ -35,13 +35,38 @@ code in the KSBCL Karnataka list. Not found there (check another state
 list): 8PM Premium Black, 1965 rum, Contessa rum, Indri Trini, Grover
 Reserve Collection Chenin Blanc.
 
+## Stage 2 result (2026-10-05)
+
+Script: `tool/pilot/collect_facts.py` → `tool/pilot/facts.json` → Firestore `pilot_candidates/{id}.facts`.
+
+| Fact | Source | Drinks |
+|---|---|---|
+| Official name, supplier, pack sizes | KSBCL Karnataka price list | 51 |
+| Wine ABV | Kerala BEVCO list, declared proof x 4/7 | 12 |
+| Wine ABV, grapes, region, body, acidity, food types | X-Wines (CC0) | 13 |
+| ABV from the producer's own page | Amrut, Carlsberg Group | 3 |
+
+What we learned:
+- **Kerala "proof" is real only for wine.** Every beer shows exactly 5.0% or
+  6.0% and every spirit 42.86%; Paul John Bold (46% on the label) also shows
+  42.86%. For beer and spirits it is the excise band, so it is not used.
+- **Indian producer websites do not publish ABV.** 3 of 39 spirits and beers
+  had it on an official page; the rest are age-gated, blocked or have no specs.
+- **Wine ABV differs by about 0.5% between sources**, which is normal between
+  vintages. Both values are kept.
+
+So for Indian spirits and beer the genuine source is the **bottle label**.
+Next step proposed: photograph labels (shop visit or users' scans in the app),
+read ABV and pack size with the scanner's OCR, and store them as
+`facts.abv` with source "label photo" and the photo itself.
+
 ## Stages
 
 | # | Stage | Who | Output | Done when |
 |---|---|---|---|---|
 | 1 | Pick the 111 drinks | Claude | `pilot_list.json`, Firestore `pilot_candidates` | ✅ |
-| 2 | Collect facts | Claude (scripts) | `facts.*` with source per field | every drink has ABV, style, region, producer with a source, or a logged gap |
-| 3 | Link open data | Claude | `openData` (X-Wines, Open Food Facts, Wikidata, Commons, BJCP) | re-run `enrich-open-data.js` on the new ids |
+| 2 | Collect facts | Claude (scripts) | `facts.*` with source per field | ✅ first pass; ABV gap for Indian spirits and beer needs label photos |
+| 3 | Link open data | Claude | `openData` (X-Wines, Open Food Facts, Wikidata, Commons, BJCP) | ✅ `--matches tool/pilot/open_data_matches.json --collection pilot_candidates` |
 | 4 | AI draft | Claude | `aiDraft`: notes, aromas, six scores, with the facts it used | every drink has a draft |
 | 5 | Sommelier review | Sommelier | approve / edit / reject per drink | 111 reviewed |
 | 6 | Publish | Claude | approved rows copied to `products` with `verified: true` | app shows them |

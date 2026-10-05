@@ -1,0 +1,6 @@
+{
+ "_readme": "Values seen on a producer or brand-owner page, checked 2026-10-05. Most Indian producer sites do not publish ABV (age gates, brand pages without specs); those drinks have no entry here.",
+ "amrut-indian-single-malt": {"abv": {"value": 46.0, "source": "Amrut Distilleries (producer)", "url": "https://amrutdistilleries.com/amrut-single-malts-varients/", "date": "2026-10-05", "note": "Amrut Indian Single Malt Whisky – 46%"}},
+ "tuborg-green": {"abv": {"value": 4.6, "source": "Carlsberg Group (brand owner)", "url": "https://www.carlsberggroup.com/products/tuborg/tuborg-green/", "date": "2026-10-05", "note": "ABV: 4.6%; global page, Indian bottling may differ"}},
+ "tuborg-strong": {"abv": {"value": 6.1, "source": "Carlsberg Group (brand owner)", "url": "https://www.carlsberggroup.com/products/tuborg/tuborg-strong/", "date": "2026-10-05", "note": "6.1%; global page, Indian bottling may differ"}}
+}
