@@ -1,0 +1,1989 @@
+{
+ "sula-sauvignon-blanc": {
+  "abvKerala": {
+   "value": 12.5,
+   "source": "Kerala BEVCO price list (declared proof)",
+   "url": "https://bevco.in/wp-content/uploads/REPORTS/2024/01/PRICE%20LIST/PRICE-LIST___19-01-2024_PRICE-LIST-OF-INDIAN-MADE-ITEMS-W.E.F-19-01-2024.pdf",
+   "date": "2024-01-19",
+   "note": "SULA VINEYARDS SAUVIGNON BLANC, proof 21.87"
+  }
+ },
+ "sula-shiraz": {},
+ "grover-zampa-la-reserve": {},
+ "grover-zampa-vijay-amritraj": {},
+ "fratelli-sette": {
+  "abvKerala": {
+   "value": 13.5,
+   "source": "Kerala BEVCO price list (declared proof)",
+   "url": "https://bevco.in/wp-content/uploads/REPORTS/2024/01/PRICE%20LIST/PRICE-LIST___19-01-2024_PRICE-LIST-OF-INDIAN-MADE-ITEMS-W.E.F-19-01-2024.pdf",
+   "date": "2024-01-19",
+   "note": "FRATELLI WINES SETTE, proof 23.62"
+  }
+ },
+ "fratelli-tilt-rose": {},
+ "krsma-sangiovese": {},
+ "krsma-cabernet-sauvignon": {},
+ "charosa-reserve-shiraz": {},
+ "york-arros": {},
+ "big-banyan-merlot": {
+  "abvKerala": {
+   "value": 14.0,
+   "source": "Kerala BEVCO price list (declared proof)",
+   "url": "https://bevco.in/wp-content/uploads/REPORTS/2024/01/PRICE%20LIST/PRICE-LIST___19-01-2024_PRICE-LIST-OF-INDIAN-MADE-ITEMS-W.E.F-19-01-2024.pdf",
+   "date": "2024-01-19",
+   "note": "BIG BANYAN MERLOT RED WINE, proof 24.5"
+  }
+ },
+ "soma-chenin-blanc": {},
+ "four-seasons-barrique-shiraz": {},
+ "vallonne-merlot": {},
+ "sdu-madera-shiraz": {},
+ "cloudy-bay-sauvignon-blanc": {},
+ "penfolds-bin-389": {},
+ "antinori-tignanello": {},
+ "marques-de-riscal-reserva": {},
+ "kim-crawford-sauvignon-blanc": {},
+ "catena-zapata-malbec": {},
+ "louis-jadot-beaujolais-villages": {},
+ "oyster-bay-pinot-noir": {},
+ "torres-vina-sol": {},
+ "jacobs-creek-double-barrel-shiraz": {},
+ "ruffino-chianti-classico": {},
+ "moet-chandon-imperial": {},
+ "santa-margherita-pinot-grigio": {},
+ "robert-mondavi-cabernet-sauvignon": {},
+ "chateau-leoville-barton": {},
+ "amrut-fusion": {},
+ "paul-john-brilliance": {},
+ "rampur-select": {},
+ "glenfiddich-12": {},
+ "lagavulin-16": {},
+ "talisker-10": {},
+ "glenmorangie-original": {},
+ "jameson-irish-whiskey": {},
+ "jim-beam-bourbon": {},
+ "monkey-shoulder": {},
+ "bira-91-white": {},
+ "bira-91-blonde": {},
+ "simba-stout": {},
+ "white-owl-spark": {},
+ "kingfisher-ultra": {},
+ "hoegaarden": {},
+ "guinness-draught": {},
+ "chimay-blue": {},
+ "sierra-nevada-pale-ale": {},
+ "paulaner-hefeweizen": {},
+ "big-banyan-shiraz": {
+  "abvKerala": {
+   "value": 14.0,
+   "source": "Kerala BEVCO price list (declared proof)",
+   "url": "https://bevco.in/wp-content/uploads/REPORTS/2024/01/PRICE%20LIST/PRICE-LIST___19-01-2024_PRICE-LIST-OF-INDIAN-MADE-ITEMS-W.E.F-19-01-2024.pdf",
+   "date": "2024-01-19",
+   "note": "BIG BANYAN VINEYARDS SHIRAZ RED WINE, proof 24.5"
+  }
+ },
+ "reveilo-cabernet-sauvignon": {},
+ "winery52-red": {},
+ "tamakua-riesling": {},
+ "old-monk-7": {},
+ "mcdowells-no1-reserve-whisky": {
+  "officialName": {
+   "value": "McDowells No.1 Reserve Whisky",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-May-20",
+   "note": "item code 60100401"
+  },
+  "supplierKarnataka": {
+   "value": "United Spirits Ltd-Sub L O Of Kbd Sugars And Dist- Ltd (0006)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-May-20"
+  },
+  "packSizesMl": {
+   "value": [
+    60,
+    90,
+    180,
+    375,
+    750,
+    1000,
+    2000
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-May-20"
+  }
+ },
+ "royal-stag-deluxe-whisky": {
+  "officialName": {
+   "value": "Royal Stag Delux Whisky",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "29-Dec-11",
+   "note": "item code 1750100101"
+  },
+  "supplierKarnataka": {
+   "value": "Pernod Ricard India Pvt Ltd - L/O Of Bhatia Wine Merchants Pvt Ltd (0175)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "29-Dec-11"
+  },
+  "packSizesMl": {
+   "value": [],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "29-Dec-11"
+  }
+ },
+ "imperial-blue-whisky": {
+  "officialName": {
+   "value": "Imperial Blue Superior Grain Whisky",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "15-May-26",
+   "note": "item code 910100301"
+  },
+  "supplierKarnataka": {
+   "value": "Pernod Ricard India (P) Ltd - L/O Universal Bottler Pvt Ltd (0091)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "15-May-26"
+  },
+  "packSizesMl": {
+   "value": [],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "15-May-26"
+  }
+ },
+ "officers-choice-whisky": {
+  "officialName": {
+   "value": "Officers Choice Special Whisky",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-Sep-23",
+   "note": "item code 150101101"
+  },
+  "supplierKarnataka": {
+   "value": "Unistil Alcoblends Pvt Ltd (0015)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-Sep-23"
+  },
+  "packSizesMl": {
+   "value": [
+    90,
+    180,
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-Sep-23"
+  }
+ },
+ "blenders-pride-whisky": {
+  "officialName": {
+   "value": "Blenders Pride Rare Premium Whisky",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "26-Jul-26",
+   "note": "item code 910100101"
+  },
+  "supplierKarnataka": {
+   "value": "Pernod Ricard India (P) Ltd - L/O Universal Bottler Pvt Ltd (0091)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "26-Jul-26"
+  },
+  "packSizesMl": {
+   "value": [],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "26-Jul-26"
+  }
+ },
+ "royal-challenge-whisky": {
+  "officialName": {
+   "value": "Royal Challenge Finest Premium Whisky",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "03-Aug-18",
+   "note": "item code 200102601"
+  },
+  "supplierKarnataka": {
+   "value": "United Spirits Ltd - Formerly Mcdowell And Co-Ltd, Bangalore (0020)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "03-Aug-18"
+  },
+  "packSizesMl": {
+   "value": [
+    60,
+    180,
+    375,
+    750,
+    1000,
+    2000
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "03-Aug-18"
+  }
+ },
+ "8pm-whisky": {
+  "officialName": {
+   "value": "8pm Classic Whisky",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-Mar-09",
+   "note": "item code 620100501"
+  },
+  "supplierKarnataka": {
+   "value": "B T And F C Private Limited (0062)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-Mar-09"
+  },
+  "packSizesMl": {
+   "value": [
+    180,
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-Mar-09"
+  }
+ },
+ "8pm-premium-black-whisky": {},
+ "royal-green-whisky": {
+  "officialName": {
+   "value": "Royal Green Deluxe Blended Whisky",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "06-Aug-18",
+   "note": "item code 970101101"
+  },
+  "supplierKarnataka": {
+   "value": "Shashi Distilleries Private Ltd (0097)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "06-Aug-18"
+  },
+  "packSizesMl": {
+   "value": [
+    180,
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "06-Aug-18"
+  }
+ },
+ "iconiq-white-whisky": {
+  "officialName": {
+   "value": "Iconiq White Grand International Grain Whisky",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "06-Jun-26",
+   "note": "item code 5350100901"
+  },
+  "supplierKarnataka": {
+   "value": "Allied Blenders & Distillers Pvt Ltd-BTW Sarvada Distilleries(0535)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "06-Jun-26"
+  },
+  "packSizesMl": {
+   "value": [
+    180,
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "06-Jun-26"
+  }
+ },
+ "sterling-reserve-b7-whisky": {
+  "officialName": {
+   "value": "Sterling Reserve B7 Prime Blended Whisky",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-Mar-25",
+   "note": "item code 5350101101"
+  },
+  "supplierKarnataka": {
+   "value": "Allied Blenders & Distillers Pvt Ltd-BTW Sarvada Distilleries(0535)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-Mar-25"
+  },
+  "packSizesMl": {
+   "value": [
+    90,
+    180,
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-Mar-25"
+  }
+ },
+ "directors-special-whisky": {
+  "officialName": {
+   "value": "Directors Special Whisky",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "29-Aug-24",
+   "note": "item code 200102401"
+  },
+  "supplierKarnataka": {
+   "value": "United Spirits Ltd - Formerly Mcdowell And Co-Ltd, Bangalore (0020)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "29-Aug-24"
+  },
+  "packSizesMl": {
+   "value": [
+    90,
+    180,
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "29-Aug-24"
+  }
+ },
+ "signature-rare-aged-whisky": {
+  "officialName": {
+   "value": "Signature Rare Aged Whisky",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "13-May-26",
+   "note": "item code 200101901"
+  },
+  "supplierKarnataka": {
+   "value": "United Spirits Ltd - Formerly Mcdowell And Co-Ltd, Bangalore (0020)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "13-May-26"
+  },
+  "packSizesMl": {
+   "value": [
+    60,
+    180,
+    375,
+    750,
+    1000,
+    2000
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "13-May-26"
+  }
+ },
+ "mansion-house-brandy": {
+  "officialName": {
+   "value": "Mansion House French Brandy",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-Apr-06",
+   "note": "item code 340200901"
+  },
+  "supplierKarnataka": {
+   "value": "Ugar Sugar Works Ltd (0034)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-Apr-06"
+  },
+  "packSizesMl": {
+   "value": [
+    90,
+    180,
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-Apr-06"
+  }
+ },
+ "old-admiral-vsop-brandy": {
+  "officialName": {
+   "value": "Old Admiral VSOP Brandy",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "11-Mar-09",
+   "note": "item code 220200701"
+  },
+  "supplierKarnataka": {
+   "value": "Empee Distilleries Ltd (0022)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "11-Mar-09"
+  },
+  "packSizesMl": {
+   "value": [
+    180,
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "11-Mar-09"
+  }
+ },
+ "courier-napoleon-brandy": {
+  "officialName": {
+   "value": "Courier Napoleon French Brandy",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-Apr-06",
+   "note": "item code 340201001"
+  },
+  "supplierKarnataka": {
+   "value": "Ugar Sugar Works Ltd (0034)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-Apr-06"
+  },
+  "packSizesMl": {
+   "value": [
+    180,
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-Apr-06"
+  }
+ },
+ "silver-cup-brandy": {
+  "officialName": {
+   "value": "Amruts Silver Cup Brandy",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "04-Apr-17",
+   "note": "item code 90200801"
+  },
+  "supplierKarnataka": {
+   "value": "Amrut Distilleries Pvt Ltd (0009)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "04-Apr-17"
+  },
+  "packSizesMl": {
+   "value": [
+    90,
+    180,
+    375,
+    750,
+    1000
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "04-Apr-17"
+  }
+ },
+ "morpheus-xo-brandy": {
+  "officialName": {
+   "value": "Morpheus XO Blended Premium Brandy",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-May-20",
+   "note": "item code 240200801"
+  },
+  "supplierKarnataka": {
+   "value": "Kalpatharu Breweries And Distilleries Pvt Ltd (0024)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-May-20"
+  },
+  "packSizesMl": {
+   "value": [
+    60,
+    180,
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-May-20"
+  }
+ },
+ "mcdowells-no1-brandy": {
+  "officialName": {
+   "value": "No.1 Mcdowells Indian Brandy",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "13-May-26",
+   "note": "item code 5240200201"
+  },
+  "supplierKarnataka": {
+   "value": "United Spirits Ltd-S/L of Hermes Distillery Pvt Ltd(0524)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "13-May-26"
+  },
+  "packSizesMl": {
+   "value": [
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "13-May-26"
+  }
+ },
+ "mcdowells-celebration-rum": {
+  "officialName": {
+   "value": "McDowells No.1 Celebration Deluxe XXX Rum",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "05-Apr-17",
+   "note": "item code 220300901"
+  },
+  "supplierKarnataka": {
+   "value": "Empee Distilleries Ltd (0022)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "05-Apr-17"
+  },
+  "packSizesMl": {
+   "value": [
+    375,
+    750,
+    1000
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "05-Apr-17"
+  }
+ },
+ "1965-rum": {},
+ "old-port-rum": {
+  "officialName": {
+   "value": "Old Port XXX Rum",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "06-Apr-15",
+   "note": "item code 90300501"
+  },
+  "supplierKarnataka": {
+   "value": "Amrut Distilleries Pvt Ltd (0009)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "06-Apr-15"
+  },
+  "packSizesMl": {
+   "value": [
+    60,
+    90,
+    100,
+    180,
+    375,
+    500,
+    750,
+    1000
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "06-Apr-15"
+  }
+ },
+ "contessa-rum": {},
+ "magic-moments-vodka": {
+  "officialName": {
+   "value": "Magic Moments Grain Vodka",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "18-Mar-09",
+   "note": "item code 620600101"
+  },
+  "supplierKarnataka": {
+   "value": "B T And F C Private Limited (0062)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "18-Mar-09"
+  },
+  "packSizesMl": {
+   "value": [
+    180,
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "18-Mar-09"
+  }
+ },
+ "indri-trini-whisky": {},
+ "godawan-fruit-spice-whisky": {
+  "officialName": {
+   "value": "Godawan Single Malt Fruit And Spice Artisan Whisky",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "22-May-26",
+   "note": "item code 6770100117"
+  },
+  "supplierKarnataka": {
+   "value": "United Spirits Ltd-Unit Alwar(0677)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "22-May-26"
+  },
+  "packSizesMl": {
+   "value": [
+    700
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "22-May-26"
+  }
+ },
+ "amrut-indian-single-malt": {
+  "officialName": {
+   "value": "Amrut Indian Single Malt Whisky",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "25-Jul-26",
+   "note": "item code 90101601"
+  },
+  "supplierKarnataka": {
+   "value": "Amrut Distilleries Pvt Ltd (0009)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "25-Jul-26"
+  },
+  "packSizesMl": {
+   "value": [
+    50,
+    750,
+    4500
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "25-Jul-26"
+  },
+  "abv": {
+   "value": 46.0,
+   "source": "Amrut Distilleries (producer)",
+   "url": "https://amrutdistilleries.com/amrut-single-malts-varients/",
+   "date": "2026-10-05",
+   "note": "Amrut Indian Single Malt Whisky – 46%"
+  }
+ },
+ "sula-chenin-blanc": {
+  "officialName": {
+   "value": "Sula Chenin Blanc White Wine",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "10-Apr-12",
+   "note": "item code 420700701"
+  },
+  "supplierKarnataka": {
+   "value": "Elite Vintage Winery India Pvt- Ltd- (0042)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "10-Apr-12"
+  },
+  "packSizesMl": {
+   "value": [
+    180,
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "10-Apr-12"
+  },
+  "abvKerala": {
+   "value": 12.0,
+   "source": "Kerala BEVCO price list (declared proof)",
+   "url": "https://bevco.in/wp-content/uploads/REPORTS/2024/01/PRICE%20LIST/PRICE-LIST___19-01-2024_PRICE-LIST-OF-INDIAN-MADE-ITEMS-W.E.F-19-01-2024.pdf",
+   "date": "2024-01-19",
+   "note": "SULA VINEYARDS CHENIN BLANC, proof 21.0"
+  },
+  "abvXWines": {
+   "value": 12.5,
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "grapes": {
+   "value": [
+    "Chenin Blanc"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "region": {
+   "value": "Nashik",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "bodyXWines": {
+   "value": "Light-bodied",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "acidityXWines": {
+   "value": "Medium",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "pairsWithXWines": {
+   "value": [
+    "Shellfish",
+    "Lean Fish",
+    "Fruit Dessert"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  }
+ },
+ "sula-cabernet-shiraz": {
+  "officialName": {
+   "value": "Sula Cabernet Shiraz Red Wine",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "10-Apr-12",
+   "note": "item code 420702501"
+  },
+  "supplierKarnataka": {
+   "value": "Elite Vintage Winery India Pvt- Ltd- (0042)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "10-Apr-12"
+  },
+  "packSizesMl": {
+   "value": [
+    180,
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "10-Apr-12"
+  },
+  "abvKerala": {
+   "value": 13.5,
+   "source": "Kerala BEVCO price list (declared proof)",
+   "url": "https://bevco.in/wp-content/uploads/REPORTS/2024/01/PRICE%20LIST/PRICE-LIST___19-01-2024_PRICE-LIST-OF-INDIAN-MADE-ITEMS-W.E.F-19-01-2024.pdf",
+   "date": "2024-01-19",
+   "note": "SULA VINEYARDS SHIRAZ CABERNET, proof 23.62"
+  },
+  "abvXWines": {
+   "value": 13.0,
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "grapes": {
+   "value": [
+    "Syrah/Shiraz",
+    "Cabernet Sauvignon"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "region": {
+   "value": "Nashik",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "bodyXWines": {
+   "value": "Medium-bodied",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "acidityXWines": {
+   "value": "Medium",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "pairsWithXWines": {
+   "value": [
+    "Beef",
+    "Lamb",
+    "Spicy Food",
+    "Maturated Cheese",
+    "Hard Cheese",
+    "Poultry"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  }
+ },
+ "sula-dindori-reserve-shiraz": {
+  "officialName": {
+   "value": "Dindori Reserve Shiraz",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "10-May-24",
+   "note": "item code 5230703101"
+  },
+  "supplierKarnataka": {
+   "value": "Sula Vineyards Pvt Ltd(0523)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "10-May-24"
+  },
+  "packSizesMl": {
+   "value": [
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "10-May-24"
+  },
+  "abvKerala": {
+   "value": 14.0,
+   "source": "Kerala BEVCO price list (declared proof)",
+   "url": "https://bevco.in/wp-content/uploads/REPORTS/2024/01/PRICE%20LIST/PRICE-LIST___19-01-2024_PRICE-LIST-OF-INDIAN-MADE-ITEMS-W.E.F-19-01-2024.pdf",
+   "date": "2024-01-19",
+   "note": "SULA DINDORI RESERVE SHIRAZ, proof 24.5"
+  },
+  "abvXWines": {
+   "value": 13.5,
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "grapes": {
+   "value": [
+    "Syrah/Shiraz",
+    "Cabernet Sauvignon"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "region": {
+   "value": "Nashik",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "bodyXWines": {
+   "value": "Full-bodied",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "acidityXWines": {
+   "value": "Medium",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "pairsWithXWines": {
+   "value": [
+    "Beef",
+    "Lamb",
+    "Spicy Food",
+    "Maturated Cheese",
+    "Hard Cheese",
+    "Poultry"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  }
+ },
+ "sula-dindori-reserve-viognier": {
+  "officialName": {
+   "value": "Sula Dindori Reserve Viognier White Wine",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "21-Nov-20",
+   "note": "item code 1520702201"
+  },
+  "supplierKarnataka": {
+   "value": "Sula Vineyards Pvt Ltd - Formerly Nashik Vintners Pvt Ltd (0152)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "21-Nov-20"
+  },
+  "packSizesMl": {
+   "value": [
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "21-Nov-20"
+  },
+  "abvXWines": {
+   "value": 14.0,
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "grapes": {
+   "value": [
+    "Viognier"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "region": {
+   "value": "Nashik",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "bodyXWines": {
+   "value": "Full-bodied",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "acidityXWines": {
+   "value": "Medium",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "pairsWithXWines": {
+   "value": [
+    "Pork",
+    "Game Meat",
+    "Shellfish",
+    "Spicy Food",
+    "Poultry",
+    "Soft Cheese"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  }
+ },
+ "sula-zinfandel": {
+  "officialName": {
+   "value": "Sula Zinfandel",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "21-Nov-20",
+   "note": "item code 1520702601"
+  },
+  "supplierKarnataka": {
+   "value": "Sula Vineyards Pvt Ltd - Formerly Nashik Vintners Pvt Ltd (0152)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "21-Nov-20"
+  },
+  "packSizesMl": {
+   "value": [
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "21-Nov-20"
+  },
+  "abvKerala": {
+   "value": 13.5,
+   "source": "Kerala BEVCO price list (declared proof)",
+   "url": "https://bevco.in/wp-content/uploads/REPORTS/2024/01/PRICE%20LIST/PRICE-LIST___19-01-2024_PRICE-LIST-OF-INDIAN-MADE-ITEMS-W.E.F-19-01-2024.pdf",
+   "date": "2024-01-19",
+   "note": "SULA VINEYARDS ZINFANDEL, proof 23.62"
+  },
+  "abvXWines": {
+   "value": 13.0,
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "grapes": {
+   "value": [
+    "Zinfandel"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "region": {
+   "value": "Nashik",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "bodyXWines": {
+   "value": "Full-bodied",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "acidityXWines": {
+   "value": "High",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "pairsWithXWines": {
+   "value": [
+    "Beef",
+    "Lamb",
+    "Goat Cheese"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  }
+ },
+ "sula-riesling": {
+  "officialName": {
+   "value": "Sula Riesling White Wine",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "21-Nov-20",
+   "note": "item code 1520702701"
+  },
+  "supplierKarnataka": {
+   "value": "Sula Vineyards Pvt Ltd - Formerly Nashik Vintners Pvt Ltd (0152)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "21-Nov-20"
+  },
+  "packSizesMl": {
+   "value": [
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "21-Nov-20"
+  },
+  "abvKerala": {
+   "value": 11.0,
+   "source": "Kerala BEVCO price list (declared proof)",
+   "url": "https://bevco.in/wp-content/uploads/REPORTS/2024/01/PRICE%20LIST/PRICE-LIST___19-01-2024_PRICE-LIST-OF-INDIAN-MADE-ITEMS-W.E.F-19-01-2024.pdf",
+   "date": "2024-01-19",
+   "note": "SULA VINEYARDS RIESLING, proof 19.25"
+  },
+  "abvXWines": {
+   "value": 10.5,
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "grapes": {
+   "value": [
+    "Riesling"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "region": {
+   "value": "Nashik",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "bodyXWines": {
+   "value": "Light-bodied",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "acidityXWines": {
+   "value": "Medium",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "pairsWithXWines": {
+   "value": [
+    "Pork",
+    "Rich Fish",
+    "Spicy Food",
+    "Sweet Dessert",
+    "Vegetarian",
+    "Poultry"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  }
+ },
+ "sula-late-harvest-chenin": {
+  "officialName": {
+   "value": "Sula Late Harvest Chenin Blanc",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-Nov-24",
+   "note": "item code 1960700601"
+  },
+  "supplierKarnataka": {
+   "value": "Sula Vineyards Pvt Ltd-Unit-II (0196)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-Nov-24"
+  },
+  "packSizesMl": {
+   "value": [
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-Nov-24"
+  },
+  "abvXWines": {
+   "value": 13.5,
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "grapes": {
+   "value": [
+    "Chenin Blanc"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "region": {
+   "value": "Nashik",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "bodyXWines": {
+   "value": "Full-bodied",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "acidityXWines": {
+   "value": "High",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "pairsWithXWines": {
+   "value": [
+    "Shellfish",
+    "Lean Fish",
+    "Fruit Dessert"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  }
+ },
+ "sula-zinfandel-rose": {
+  "officialName": {
+   "value": "Sula Zinfandel Rose",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "21-Nov-20",
+   "note": "item code 1520702501"
+  },
+  "supplierKarnataka": {
+   "value": "Sula Vineyards Pvt Ltd - Formerly Nashik Vintners Pvt Ltd (0152)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "21-Nov-20"
+  },
+  "packSizesMl": {
+   "value": [
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "21-Nov-20"
+  },
+  "abvKerala": {
+   "value": 11.5,
+   "source": "Kerala BEVCO price list (declared proof)",
+   "url": "https://bevco.in/wp-content/uploads/REPORTS/2024/01/PRICE%20LIST/PRICE-LIST___19-01-2024_PRICE-LIST-OF-INDIAN-MADE-ITEMS-W.E.F-19-01-2024.pdf",
+   "date": "2024-01-19",
+   "note": "SULA VINEYARDS ZINFANDEL ROSE, proof 20.12"
+  },
+  "abvXWines": {
+   "value": 12.0,
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "grapes": {
+   "value": [
+    "Zinfandel"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "region": {
+   "value": "Nashik",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "bodyXWines": {
+   "value": "Medium-bodied",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "acidityXWines": {
+   "value": "Medium",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "pairsWithXWines": {
+   "value": [
+    "Beef",
+    "Lamb",
+    "Chicken",
+    "Goat Cheese"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  }
+ },
+ "sula-satori-merlot": {
+  "officialName": {
+   "value": "Satori Merlot Red Wine",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "05-Dec-18",
+   "note": "item code 1520701801"
+  },
+  "supplierKarnataka": {
+   "value": "Sula Vineyards Pvt Ltd - Formerly Nashik Vintners Pvt Ltd (0152)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "05-Dec-18"
+  },
+  "packSizesMl": {
+   "value": [
+    180,
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "05-Dec-18"
+  },
+  "abvXWines": {
+   "value": 13.5,
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "grapes": {
+   "value": [
+    "Merlot"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "region": {
+   "value": "Nashik",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "bodyXWines": {
+   "value": "Medium-bodied",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "acidityXWines": {
+   "value": "Medium",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "pairsWithXWines": {
+   "value": [
+    "Beef",
+    "Game Meat"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  }
+ },
+ "sula-dindori-reserve-chardonnay": {
+  "officialName": {
+   "value": "Sula Dindori Reserve Chardonnay White Wine",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-Nov-24",
+   "note": "item code 1960702301"
+  },
+  "supplierKarnataka": {
+   "value": "Sula Vineyards Pvt Ltd-Unit-II (0196)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-Nov-24"
+  },
+  "packSizesMl": {
+   "value": [
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-Nov-24"
+  }
+ },
+ "sula-source-chenin-reserve": {
+  "officialName": {
+   "value": "The Source Chenin Blanc Reserve",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "29-Aug-24",
+   "note": "item code 5360704401"
+  },
+  "supplierKarnataka": {
+   "value": "Sula Vineyards Ltd(0536)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "29-Aug-24"
+  },
+  "packSizesMl": {
+   "value": [
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "29-Aug-24"
+  }
+ },
+ "sula-source-sauvignon-reserve": {
+  "officialName": {
+   "value": "The Source Sauvignon Blanc Reserve",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "29-Aug-24",
+   "note": "item code 5360704201"
+  },
+  "supplierKarnataka": {
+   "value": "Sula Vineyards Ltd(0536)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "29-Aug-24"
+  },
+  "packSizesMl": {
+   "value": [
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "29-Aug-24"
+  }
+ },
+ "chandon-brut-india": {
+  "officialName": {
+   "value": "Chandon Brut",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-Jan-14",
+   "note": "item code 1130701401"
+  },
+  "supplierKarnataka": {
+   "value": "York Winery Pvt Ltd (0113)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-Jan-14"
+  },
+  "packSizesMl": {
+   "value": [
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-Jan-14"
+  }
+ },
+ "grover-art-collection-sb": {
+  "officialName": {
+   "value": "Grover Art Collection Sauvignon Blanc White Wine",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-Nov-16",
+   "note": "item code 790701301"
+  },
+  "supplierKarnataka": {
+   "value": "Grover Vineyards P Ltd (0079)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-Nov-16"
+  },
+  "packSizesMl": {
+   "value": [
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-Nov-16"
+  },
+  "abvKerala": {
+   "value": 12.0,
+   "source": "Kerala BEVCO price list (declared proof)",
+   "url": "https://bevco.in/wp-content/uploads/REPORTS/2024/01/PRICE%20LIST/PRICE-LIST___19-01-2024_PRICE-LIST-OF-INDIAN-MADE-ITEMS-W.E.F-19-01-2024.pdf",
+   "date": "2024-01-19",
+   "note": "GROVER ART COLLECTION SAUVIGNON BLANC, proof 21.0"
+  },
+  "abvXWines": {
+   "value": 13.5,
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "grapes": {
+   "value": [
+    "Sauvignon Blanc"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "region": {
+   "value": "Bangalore",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "bodyXWines": {
+   "value": "Light-bodied",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "acidityXWines": {
+   "value": "High",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "pairsWithXWines": {
+   "value": [
+    "Rich Fish",
+    "Shellfish",
+    "Vegetarian"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  }
+ },
+ "grover-reserve-collection-chenin": {
+  "abvXWines": {
+   "value": 13.5,
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "grapes": {
+   "value": [
+    "Chenin Blanc"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "region": {
+   "value": "Bangalore",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "bodyXWines": {
+   "value": "Full-bodied",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "acidityXWines": {
+   "value": "High",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "pairsWithXWines": {
+   "value": [
+    "Shellfish",
+    "Lean Fish",
+    "Fruit Dessert"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  }
+ },
+ "fratelli-shiraz-rose": {
+  "officialName": {
+   "value": "Fratelli Shiraz Rose",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "25-Oct-16",
+   "note": "item code 470703301"
+  },
+  "supplierKarnataka": {
+   "value": "Hampi Heritage Wine Yards (P) Ltd (0047)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "25-Oct-16"
+  },
+  "packSizesMl": {
+   "value": [
+    375,
+    750
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "25-Oct-16"
+  },
+  "abvKerala": {
+   "value": 12.5,
+   "source": "Kerala BEVCO price list (declared proof)",
+   "url": "https://bevco.in/wp-content/uploads/REPORTS/2024/01/PRICE%20LIST/PRICE-LIST___19-01-2024_PRICE-LIST-OF-INDIAN-MADE-ITEMS-W.E.F-19-01-2024.pdf",
+   "date": "2024-01-19",
+   "note": "FRATELLI WINES SHIRAZ ROSE, proof 21.87"
+  },
+  "abvXWines": {
+   "value": 13.5,
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "grapes": {
+   "value": [
+    "Syrah/Shiraz"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "region": {
+   "value": "Maharashtra",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "bodyXWines": {
+   "value": "Full-bodied",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "acidityXWines": {
+   "value": "Medium",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "pairsWithXWines": {
+   "value": [
+    "Beef",
+    "Lamb",
+    "Spicy Food",
+    "Maturated Cheese",
+    "Hard Cheese"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  }
+ },
+ "reveilo-late-harvest-chenin": {
+  "officialName": {
+   "value": "Reveilo Late Harvest Chenin Blanc White Wine",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "20-Oct-12",
+   "note": "item code 1690700910"
+  },
+  "supplierKarnataka": {
+   "value": "Vintage Wines Pvt Ltd (0169)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "20-Oct-12"
+  },
+  "packSizesMl": {
+   "value": [
+    375
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "20-Oct-12"
+  },
+  "abvXWines": {
+   "value": 17.0,
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "grapes": {
+   "value": [
+    "Chenin Blanc"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "region": {
+   "value": "Nashik",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "bodyXWines": {
+   "value": "Medium-bodied",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "acidityXWines": {
+   "value": "High",
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  },
+  "pairsWithXWines": {
+   "value": [
+    "Shellfish",
+    "Lean Fish",
+    "Fruit Dessert"
+   ],
+   "source": "X-Wines (CC0)",
+   "url": "https://github.com/rogerioxavier/X-Wines",
+   "date": "2022"
+  }
+ },
+ "kingfisher-premium": {
+  "officialName": {
+   "value": "Kingfisher Premium Lager Beer",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "03-Apr-19",
+   "note": "item code 2020900100"
+  },
+  "supplierKarnataka": {
+   "value": "United Breweries Ltd (0202)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "03-Apr-19"
+  },
+  "packSizesMl": {
+   "value": [
+    330,
+    650
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "03-Apr-19"
+  }
+ },
+ "kingfisher-strong": {
+  "officialName": {
+   "value": "Kingfisher Strong Premium Beer",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "03-Apr-19",
+   "note": "item code 2020900300"
+  },
+  "supplierKarnataka": {
+   "value": "United Breweries Ltd (0202)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "03-Apr-19"
+  },
+  "packSizesMl": {
+   "value": [
+    250,
+    330,
+    650
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "03-Apr-19"
+  }
+ },
+ "budweiser": {
+  "officialName": {
+   "value": "Budweiser King Of Beers",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "08-Apr-12",
+   "note": "item code 2700900100"
+  },
+  "supplierKarnataka": {
+   "value": "Privilege Industries Ltd (0270)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "08-Apr-12"
+  },
+  "packSizesMl": {
+   "value": [
+    330,
+    650
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "08-Apr-12"
+  }
+ },
+ "budweiser-magnum": {
+  "officialName": {
+   "value": "Budweiser Magnum Beer",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "05-Apr-23",
+   "note": "item code 2120901900"
+  },
+  "supplierKarnataka": {
+   "value": "S P R Distilleries Pvt Ltd (0212)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "05-Apr-23"
+  },
+  "packSizesMl": {
+   "value": [
+    330,
+    650
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "05-Apr-23"
+  }
+ },
+ "tuborg-green": {
+  "officialName": {
+   "value": "Tuborg Green Beer",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-May-26",
+   "note": "item code 2050900400"
+  },
+  "supplierKarnataka": {
+   "value": "Carlsberg India Pvt Ltd (0205)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-May-26"
+  },
+  "packSizesMl": {
+   "value": [
+    330,
+    650
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-May-26"
+  },
+  "abv": {
+   "value": 4.6,
+   "source": "Carlsberg Group (brand owner)",
+   "url": "https://www.carlsberggroup.com/products/tuborg/tuborg-green/",
+   "date": "2026-10-05",
+   "note": "ABV: 4.6%; global page, Indian bottling may differ"
+  }
+ },
+ "tuborg-strong": {
+  "officialName": {
+   "value": "Tuborg Strong Beer",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "22-Sep-11",
+   "note": "item code 2680900400"
+  },
+  "supplierKarnataka": {
+   "value": "Carlsberg India Pvt Ltd-Telangana (0268)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "22-Sep-11"
+  },
+  "packSizesMl": {
+   "value": [
+    330,
+    500,
+    650
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "22-Sep-11"
+  },
+  "abv": {
+   "value": 6.1,
+   "source": "Carlsberg Group (brand owner)",
+   "url": "https://www.carlsberggroup.com/products/tuborg/tuborg-strong/",
+   "date": "2026-10-05",
+   "note": "6.1%; global page, Indian bottling may differ"
+  }
+ },
+ "carlsberg-smooth": {
+  "officialName": {
+   "value": "Carlsberg Smooth Premium Beer",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-May-26",
+   "note": "item code 2050900200"
+  },
+  "supplierKarnataka": {
+   "value": "Carlsberg India Pvt Ltd (0205)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-May-26"
+  },
+  "packSizesMl": {
+   "value": [
+    330,
+    650
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "14-May-26"
+  }
+ },
+ "heineken-lager": {
+  "officialName": {
+   "value": "HEINEKEN LAGER BEER",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "12-May-26",
+   "note": "item code 2100902400"
+  },
+  "supplierKarnataka": {
+   "value": "United Breweries Ltd-Nanjangud (0210)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "12-May-26"
+  },
+  "packSizesMl": {
+   "value": [
+    330,
+    650
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "12-May-26"
+  }
+ },
+ "haywards-5000": {
+  "officialName": {
+   "value": "Haywards 5000 Super Strong Beer",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-Apr-06",
+   "note": "item code 2070901100"
+  },
+  "supplierKarnataka": {
+   "value": "Mysore Breweries Ltd (0207)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-Apr-06"
+  },
+  "packSizesMl": {
+   "value": [
+    330,
+    650
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "07-Apr-06"
+  }
+ },
+ "knock-out-strong": {
+  "officialName": {
+   "value": "Knock Out Super Strong Beer",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "04-Jul-26",
+   "note": "item code 2170903900"
+  },
+  "supplierKarnataka": {
+   "value": "Anheuser Busch InBev India Ltd(0217)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "04-Jul-26"
+  },
+  "packSizesMl": {
+   "value": [
+    330,
+    650
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "04-Jul-26"
+  }
+ },
+ "corona-extra": {
+  "officialName": {
+   "value": "Corona Extra Beer",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "21-Aug-09",
+   "note": "item code 3510900111"
+  },
+  "supplierKarnataka": {
+   "value": "Brindco Sales Private Limited - Beer (0351)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "21-Aug-09"
+  },
+  "packSizesMl": {
+   "value": [
+    330,
+    355
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "21-Aug-09"
+  }
+ },
+ "stella-artois": {
+  "officialName": {
+   "value": "Stella Artois",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "13-Apr-16",
+   "note": "item code 3510901011"
+  },
+  "supplierKarnataka": {
+   "value": "Brindco Sales Private Limited - Beer (0351)",
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "13-Apr-16"
+  },
+  "packSizesMl": {
+   "value": [
+    330
+   ],
+   "source": "KSBCL Karnataka price list",
+   "url": "https://ksbcl.karnataka.gov.in/uploads/supplier%20wise%20item%20wise%20pricing%20details%20as%20on%2031_1789544043.pdf",
+   "date": "13-Apr-16"
+  }
+ }
+}
