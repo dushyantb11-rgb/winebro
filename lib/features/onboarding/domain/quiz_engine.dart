@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
 import 'package:winebro/features/pairing/domain/palate_profile.dart';
+import 'package:winebro/features/pairing/domain/product.dart';
+
+/// Weight of the "bottles I have tried" prior, as a share of one quiz
+/// answer. The average tried bottle (0-10 per axis) is scaled so it
+/// counts about as much as one dish or drink answer.
+const double kTriedPriorWeight = 0.5;
 
 class QuizEngine {
   const QuizEngine();
@@ -10,6 +16,7 @@ class QuizEngine {
     QuizAnswer? chaatAnswer,
     required QuizAnswer drinkAnswer,
     Map<PalateAxis, double>? sliderOverrides,
+    List<Product> triedProducts = const [],
   }) {
 
     final rawScores = <PalateAxis, double>{
@@ -30,6 +37,14 @@ class QuizEngine {
 
     for (final entry in drinkAnswer.axisContributions.entries) {
       rawScores[entry.key] = rawScores[entry.key]! + entry.value;
+    }
+
+    if (triedProducts.isNotEmpty) {
+      for (final axis in PalateAxis.values) {
+        final avg = triedProducts.map((p) => p[axis]).reduce((a, b) => a + b) /
+            triedProducts.length;
+        rawScores[axis] = rawScores[axis]! + avg * kTriedPriorWeight;
+      }
     }
 
     final normalizedQuiz = _normalize(rawScores);
