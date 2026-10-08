@@ -1,5 +1,18 @@
 {
   "projects": {
     "default": "winebro"
-  }
+  },
+  "targets": {
+    "winebro": {
+      "hosting": {
+        "app": [
+          "winebro"
+        ],
+        "admin": [
+          "winebro-console"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
