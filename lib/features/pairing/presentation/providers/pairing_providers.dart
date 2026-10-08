@@ -3,8 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
 import 'package:winebro/core/services/firebase_providers.dart';
-import 'package:winebro/features/pairing/data/seed_dishes.dart';
-import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/dish.dart';
 import 'package:winebro/features/pairing/domain/palate_profile.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
@@ -56,19 +54,36 @@ final _remoteDishesProvider = StreamProvider<List<Dish>>(
   (ref) => _catalogStream('dishes', Dish.fromMap),
 );
 
-/// Drink catalogue. Firestore `products` is the source of truth. The
-/// bundled seed list is used only until the first snapshot arrives, when
-/// the collection is empty, or when it cannot be read.
-final allProductsProvider = Provider<List<Product>>((ref) {
-  final remote = ref.watch(_remoteProductsProvider).valueOrNull;
-  return (remote == null || remote.isEmpty) ? kSeedProducts : remote;
+/// Where the catalogue stands. Screens show a [CatalogStateBanner] for
+/// anything other than [CatalogStatus.ready]; the bundled seed lists are
+/// never substituted silently (Firestore's own cache covers offline use).
+enum CatalogStatus { loading, ready, empty, error }
+
+final catalogStatusProvider = Provider<CatalogStatus>((ref) {
+  final products = ref.watch(_remoteProductsProvider);
+  final dishes = ref.watch(_remoteDishesProvider);
+  if (products.hasError || dishes.hasError) return CatalogStatus.error;
+  if (products.isLoading || dishes.isLoading) return CatalogStatus.loading;
+  if ((products.valueOrNull ?? const []).isEmpty) return CatalogStatus.empty;
+  return CatalogStatus.ready;
 });
 
-/// Dish catalogue. Same source rules as [allProductsProvider].
-final allDishesProvider = Provider<List<Dish>>((ref) {
-  final remote = ref.watch(_remoteDishesProvider).valueOrNull;
-  return (remote == null || remote.isEmpty) ? kSeedDishes : remote;
-});
+/// Re-subscribes to both catalogue streams after an error.
+final catalogRefreshProvider = Provider<void Function()>((ref) => () {
+      ref.invalidate(_remoteProductsProvider);
+      ref.invalidate(_remoteDishesProvider);
+    });
+
+/// Drink catalogue from Firestore `products`. Empty while loading or on
+/// error; see [catalogStatusProvider].
+final allProductsProvider = Provider<List<Product>>(
+  (ref) => ref.watch(_remoteProductsProvider).valueOrNull ?? const [],
+);
+
+/// Dish catalogue from Firestore `dishes`. Same rules as [allProductsProvider].
+final allDishesProvider = Provider<List<Dish>>(
+  (ref) => ref.watch(_remoteDishesProvider).valueOrNull ?? const [],
+);
 
 final groupedDishesProvider =
     Provider<Map<FoodCategory, List<Dish>>>((ref) {

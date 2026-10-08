@@ -12,7 +12,7 @@ import { BATCH_LIMIT } from "./constants";
 
 export const streakCalculator = onSchedule(
   {
-    schedule: "35 18 * * *", // 00:05 IST = 18:35 UTC
+    schedule: "5 0 * * *", // 00:05 IST (cron is read in timeZone below)
     timeZone: "Asia/Kolkata",
     retryCount: 3,
     memory: "256MiB",

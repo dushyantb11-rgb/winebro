@@ -16,6 +16,7 @@ import 'package:winebro/features/pairing/domain/dish.dart';
 import 'package:winebro/features/pairing/domain/pairing_engine.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
+import 'package:winebro/shared/widgets/catalog_state_banner.dart';
 import 'package:winebro/shared/widgets/brand_label_card.dart';
 import 'package:winebro/shared/widgets/cuisine_icon.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
@@ -33,11 +34,23 @@ import 'package:winebro/shared/widgets/product_action_row.dart';
 ///   Drink → Food     pick a drink, get food suggestions
 ///   Occasion         pick an occasion, get drink suggestions
 class PairScreen extends ConsumerStatefulWidget {
-  const PairScreen({this.initialProductId, super.key});
+  const PairScreen({
+    this.initialProductId,
+    this.initialDishId,
+    this.initialQuery,
+    super.key,
+  });
 
   /// Opens Pair in drink-to-food mode with this product selected, e.g.
   /// after a label scan.
   final String? initialProductId;
+
+  /// Opens Pair with a known food selected, e.g. from Home's meal shortcut.
+  final String? initialDishId;
+
+  /// Prefills food search for a user-entered meal/menu. Search remains
+  /// intentionally editable because it is not a confirmed dish identity.
+  final String? initialQuery;
 
   @override
   ConsumerState<PairScreen> createState() => _PairScreenState();
@@ -102,6 +115,7 @@ class _PairScreenState extends ConsumerState<PairScreen> {
   void initState() {
     super.initState();
     _applyInitialProduct();
+    _applyInitialDishAndQuery();
     _placeholderTimer = Timer.periodic(const Duration(seconds: 4), (_) {
       if (mounted && _query.isEmpty) {
         setState(() => _placeholderIndex =
@@ -116,6 +130,10 @@ class _PairScreenState extends ConsumerState<PairScreen> {
     if (widget.initialProductId != oldWidget.initialProductId) {
       _applyInitialProduct();
     }
+    if (widget.initialDishId != oldWidget.initialDishId ||
+        widget.initialQuery != oldWidget.initialQuery) {
+      _applyInitialDishAndQuery();
+    }
   }
 
   void _applyInitialProduct() {
@@ -128,6 +146,35 @@ class _PairScreenState extends ConsumerState<PairScreen> {
     _selectedDish = null;
     _selectedOccasion = null;
     _selectedProduct = product;
+  }
+
+  void _applyInitialDishAndQuery() {
+    final dishId = widget.initialDishId;
+    if (dishId != null) {
+      final dish = ref
+          .read(allDishesProvider)
+          .where((d) => d.id == dishId)
+          .firstOrNull;
+      if (dish != null) {
+        _mode = PairMode.foodToDrink;
+        _selectedProduct = null;
+        _selectedOccasion = null;
+        _selectedDish = dish;
+        _searchController.clear();
+        _query = '';
+        return;
+      }
+    }
+
+    final query = widget.initialQuery?.trim();
+    if (query != null && query.isNotEmpty) {
+      _mode = PairMode.foodToDrink;
+      _selectedProduct = null;
+      _selectedOccasion = null;
+      _selectedDish = null;
+      _searchController.text = query;
+      _query = query;
+    }
   }
 
   @override
@@ -171,6 +218,9 @@ class _PairScreenState extends ConsumerState<PairScreen> {
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
+            const SliverToBoxAdapter(
+              child: CatalogStateBanner(padding: EdgeInsets.fromLTRB(20, 12, 20, 0)),
+            ),
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),

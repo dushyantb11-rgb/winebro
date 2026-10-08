@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -109,12 +110,7 @@ class SettingsScreen extends ConsumerWidget {
                 isDestructive: true,
               );
               if (confirmed == true && context.mounted) {
-                // TODO: wire to account deletion endpoint when ready
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(context.l10n.settingsDeleteComingSoon),
-                  ),
-                );
+                await _deleteAccount(context, ref);
               }
             },
           ),
@@ -216,6 +212,26 @@ class SettingsScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// Calls CF-04 (removes every document, photo, token and index row,
+  /// then the sign-in itself) and returns to the login screen.
+  Future<void> _deleteAccount(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
+    messenger.showSnackBar(SnackBar(content: Text(l10n.settingsDeleting)));
+    try {
+      await FirebaseFunctions.instanceFor(region: 'asia-south1')
+          .httpsCallable('deleteAccount')
+          .call<Map<String, dynamic>>();
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(SnackBar(content: Text(l10n.settingsDeleted)));
+      await ref.read(authStateProvider.notifier).signOut();
+      if (context.mounted) context.go('/login');
+    } on FirebaseFunctionsException catch (e) {
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(SnackBar(content: Text(l10n.settingsDeleteFailed(e.message ?? e.code))));
+    }
   }
 
   Future<bool?> _confirm(

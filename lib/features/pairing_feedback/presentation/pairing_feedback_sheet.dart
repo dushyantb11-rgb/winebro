@@ -102,7 +102,6 @@ class _PairingFeedbackSheetState extends ConsumerState<PairingFeedbackSheet> {
     final productId = _entry!['productId'] as String? ?? '';
     final productName = _entry!['productName'] as String? ?? '';
     final foodPaired = _entry!['foodPaired'] as String? ?? '';
-    final dishKey = _normalizeDishKey(foodPaired);
     final feedback = PairingFeedback(
       id: '${uid}_${widget.entryId}',
       userId: uid,
@@ -114,63 +113,13 @@ class _PairingFeedbackSheetState extends ConsumerState<PairingFeedbackSheet> {
       respondedAt: DateTime.now(),
     );
 
-    final firestore = FirebaseFirestore.instance;
+    // Only the feedback row is written here. CF-12b verifies the journal
+    // entry belongs to this user and updates pairing_aggregates.
     final feedbackRef =
-        firestore.collection('pairing_feedback').doc(feedback.id);
-    final aggregateRef = firestore
-        .collection('pairing_aggregates')
-        .doc('${productId}__$dishKey');
+        FirebaseFirestore.instance.collection('pairing_feedback').doc(feedback.id);
 
     try {
-      await firestore.runTransaction((tx) async {
-        // Idempotent: write feedback (set, not add) and increment
-        // aggregate atomically. Re-tap of the same response is a
-        // no-op write, but we use a sentinel field to avoid double
-        // counting if the user changed their mind on a re-tap.
-        final existing = await tx.get(feedbackRef);
-        final prior = existing.exists
-            ? PairingResponse.fromCode(existing.data()?['response'] as String?)
-            : null;
-
-        tx.set(feedbackRef, feedback.toMap());
-
-        final aggregateDoc = await tx.get(aggregateRef);
-        final aggregateData =
-            aggregateDoc.data() ?? <String, dynamic>{};
-        int yes = (aggregateData['yes'] as int?) ?? 0;
-        int maybe = (aggregateData['maybe'] as int?) ?? 0;
-        int no = (aggregateData['no'] as int?) ?? 0;
-
-        if (prior != null) {
-          // Reverse the previous tally before applying the new one.
-          switch (prior) {
-            case PairingResponse.yes:
-              yes = yes > 0 ? yes - 1 : 0;
-            case PairingResponse.maybe:
-              maybe = maybe > 0 ? maybe - 1 : 0;
-            case PairingResponse.no:
-              no = no > 0 ? no - 1 : 0;
-          }
-        }
-        switch (response) {
-          case PairingResponse.yes:
-            yes += 1;
-          case PairingResponse.maybe:
-            maybe += 1;
-          case PairingResponse.no:
-            no += 1;
-        }
-
-        tx.set(aggregateRef, {
-          'productId': productId,
-          'dishKey': dishKey,
-          'yes': yes,
-          'maybe': maybe,
-          'no': no,
-          'total': yes + maybe + no,
-          'lastUpdatedAt': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true));
-      });
+      await feedbackRef.set(feedback.toMap());
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -180,13 +129,6 @@ class _PairingFeedbackSheetState extends ConsumerState<PairingFeedbackSheet> {
     } catch (_) {
       if (mounted) setState(() => _saving = false);
     }
-  }
-
-  String _normalizeDishKey(String dish) {
-    return dish
-        .toLowerCase()
-        .replaceAll(RegExp(r'[^a-z0-9]+'), '_')
-        .replaceAll(RegExp(r'^_+|_+$'), '');
   }
 
   @override

@@ -2393,6 +2393,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please confirm you are 21+ and accept the policies to continue.'**
   String get ageGateRequired;
+
+  /// Banner while the catalogue loads
+  ///
+  /// In en, this message translates to:
+  /// **'Loading the drinks and dishes…'**
+  String get catalogLoading;
+
+  /// Banner when Firestore returns no products
+  ///
+  /// In en, this message translates to:
+  /// **'The catalogue is empty right now. Please check back soon.'**
+  String get catalogEmpty;
+
+  /// Banner when the catalogue stream fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load the catalogue. Check your connection and try again.'**
+  String get catalogError;
+
+  /// Snackbar while CF-04 runs
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting your account and data…'**
+  String get settingsDeleting;
+
+  /// Snackbar after deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Your account and all your data have been deleted.'**
+  String get settingsDeleted;
+
+  /// Snackbar when deletion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not delete the account: {reason}'**
+  String settingsDeleteFailed(String reason);
 }
 
 class _AppLocalizationsDelegate

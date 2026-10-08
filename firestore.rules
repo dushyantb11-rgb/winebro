@@ -2,6 +2,21 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    function optStr(d, k, max) { return !(k in d) || d[k] == null || (d[k] is string && d[k].size() <= max); }
+    function optBool(d, k) { return !(k in d) || d[k] == null || d[k] is bool; }
+    function optInt(d, k, lo, hi) { return !(k in d) || d[k] == null || (d[k] is int && d[k] >= lo && d[k] <= hi); }
+    function validJournal(d, uid, entryId) {
+      return d.id == entryId && d.userId == uid
+        && d.productName is string && d.productName.size() > 0 && d.productName.size() <= 200
+        && d.rating is int && d.rating >= 1 && d.rating <= 5
+        && d.createdAt is string && d.createdAt.size() <= 40
+        && optStr(d, 'productId', 120) && optStr(d, 'category', 64) && optStr(d, 'region', 120)
+        && optStr(d, 'notes', 4000) && optStr(d, 'foodPaired', 200) && optStr(d, 'occasion', 64)
+        && optStr(d, 'bottlePhotoUrl', 1000) && optStr(d, 'labelPhotoUrl', 1000) && optStr(d, 'notesAudioUrl', 1000)
+        && optInt(d, 'pairingRating', 1, 5)
+        && optBool(d, 'isFavorite') && optBool(d, 'isWishlist') && optBool(d, 'buyAgain');
+    }
+
 
     // ─── USERS ────────────────────────────────────────────
     match /users/{uid} {
@@ -18,10 +33,10 @@ service cloud.firestore {
       match /journal/{entryId} {
         allow read: if request.auth != null && request.auth.uid == uid;
         allow create: if request.auth != null && request.auth.uid == uid
-                      && request.resource.data.keys().hasAll(['productName', 'rating', 'createdAt'])
-                      && request.resource.data.rating >= 1
-                      && request.resource.data.rating <= 5;
-        allow update: if request.auth != null && request.auth.uid == uid;
+                      && validJournal(request.resource.data, uid, entryId);
+        allow update: if request.auth != null && request.auth.uid == uid
+                      && validJournal(request.resource.data, uid, entryId)
+                      && request.resource.data.createdAt == resource.data.createdAt;
         allow delete: if request.auth != null && request.auth.uid == uid;
       }
 
@@ -77,15 +92,26 @@ service cloud.firestore {
 
       // ─── GAMIFICATION STATE ───────────────────────────
       match /gamification/{docId} {
+        // Computed by CF-02 from users/{uid}/events; never written by the app.
         allow read: if request.auth != null && request.auth.uid == uid;
-        // Only Cloud Functions should write gamification state
-        // to prevent XP cheating. But for Phase 1 (no cloud functions),
-        // allow client writes with validation.
-        allow write: if request.auth != null && request.auth.uid == uid
-                     && request.resource.data.xp >= 0
-                     && request.resource.data.level >= 0
-                     && request.resource.data.level <= 3
-                     && request.resource.data.streak >= 0;
+        allow write: if false;
+      }
+
+      match /events/{eventId} {
+        // Append-only action log (scan, journalEntry, pairing). CF-02 marks processedAt.
+        allow read: if request.auth != null && request.auth.uid == uid;
+        allow create: if request.auth != null && request.auth.uid == uid
+                      && request.resource.data.type in ['scan', 'journalEntry', 'pairing']
+                      && request.resource.data.createdAt == request.time
+                      && !('processedAt' in request.resource.data)
+                      && !('xpAwarded' in request.resource.data)
+                      && (!('category' in request.resource.data) || (request.resource.data.category is string && request.resource.data.category.size() <= 64))
+                      && (!('withFoodPairing' in request.resource.data) || request.resource.data.withFoodPairing is bool);
+        allow update, delete: if false;
+      }
+
+      match /private/{docId} {
+        allow read, write: if false; // server-side counters (rate limits)
       }
     }
 
@@ -115,9 +141,8 @@ service cloud.firestore {
     // The hash is sha256(E.164 phone) — irreversible without the
     // original number.
     match /phone_index/{hash} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null
-                   && request.resource.data.uid == request.auth.uid;
+      // Keyed by a peppered HMAC; written and read only by CF-13 callables.
+      allow read, write: if false;
     }
 
     // ─── PAIRING FEEDBACK (D6 — pairing success rate) ────
@@ -127,25 +152,22 @@ service cloud.firestore {
     // CF-09/engine read via Admin SDK. Aggregates are append-only
     // counter docs maintained client-side via transaction.
     match /pairing_feedback/{feedbackId} {
-      allow read: if request.auth != null
-                  && resource.data.userId == request.auth.uid;
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
       allow create, update: if request.auth != null
-                            && request.resource.data.userId == request.auth.uid
-                            && request.resource.data.response in ['yes', 'maybe', 'no'];
+                   && request.resource.data.userId == request.auth.uid
+                   && feedbackId == request.auth.uid + '_' + request.resource.data.entryId
+                   && request.resource.data.entryId is string
+                   && request.resource.data.productId is string
+                   && request.resource.data.response in ['yes', 'maybe', 'no']
+                   && !('applied' in request.resource.data)
+                   && !('appliedAt' in request.resource.data);
       allow delete: if false;
     }
 
     match /pairing_aggregates/{aggregateId} {
-      // Aggregates are world-readable by signed-in users — they feed
-      // engine v1.1 ranking shown to every user. Writes constrained
-      // to non-negative monotonic counters; no userId field, so any
-      // signed-in user may bump (transactional logic in client +
-      // server-side validator in CF-02 for anti-cheat in Sprint 3).
+      // Computed by CF-12b from pairing_feedback; the app only reads.
       allow read: if request.auth != null;
-      allow write: if request.auth != null
-                   && request.resource.data.yes >= 0
-                   && request.resource.data.maybe >= 0
-                   && request.resource.data.no >= 0;
+      allow write: if false;
     }
 
     // ─── APP CONFIG (rules, reference lists) ─────────────

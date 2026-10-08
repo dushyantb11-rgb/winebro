@@ -1176,5 +1176,17 @@
   "ageGateTrailing": ".",
   "@ageGateTrailing": {"description": "Trailing punctuation"},
   "ageGateRequired": "Please confirm you are 21+ and accept the policies to continue.",
-  "@ageGateRequired": {"description": "Snackbar when checkbox unchecked"}
+  "@ageGateRequired": {"description": "Snackbar when checkbox unchecked"},
+  "catalogLoading": "Loading the drinks and dishes…",
+  "@catalogLoading": {"description": "Banner while the catalogue loads"},
+  "catalogEmpty": "The catalogue is empty right now. Please check back soon.",
+  "@catalogEmpty": {"description": "Banner when Firestore returns no products"},
+  "catalogError": "Could not load the catalogue. Check your connection and try again.",
+  "@catalogError": {"description": "Banner when the catalogue stream fails"},
+  "settingsDeleting": "Deleting your account and data…",
+  "@settingsDeleting": {"description": "Snackbar while CF-04 runs"},
+  "settingsDeleted": "Your account and all your data have been deleted.",
+  "@settingsDeleted": {"description": "Snackbar after deletion"},
+  "settingsDeleteFailed": "Could not delete the account: {reason}",
+  "@settingsDeleteFailed": {"description": "Snackbar when deletion fails", "placeholders": {"reason": {"type": "String"}}}
 }

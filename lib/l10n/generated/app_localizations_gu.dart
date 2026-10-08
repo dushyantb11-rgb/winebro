@@ -1278,4 +1278,27 @@ class AppLocalizationsGu extends AppLocalizations {
   @override
   String get ageGateRequired =>
       'Please confirm you are 21+ and accept the policies to continue.';
+
+  @override
+  String get catalogLoading => 'Loading the drinks and dishes…';
+
+  @override
+  String get catalogEmpty =>
+      'The catalogue is empty right now. Please check back soon.';
+
+  @override
+  String get catalogError =>
+      'Could not load the catalogue. Check your connection and try again.';
+
+  @override
+  String get settingsDeleting => 'Deleting your account and data…';
+
+  @override
+  String get settingsDeleted =>
+      'Your account and all your data have been deleted.';
+
+  @override
+  String settingsDeleteFailed(String reason) {
+    return 'Could not delete the account: $reason';
+  }
 }

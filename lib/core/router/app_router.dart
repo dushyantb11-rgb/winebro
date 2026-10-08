@@ -108,6 +108,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               path: '/pair',
               builder: (_, state) => PairScreen(
                 initialProductId: state.uri.queryParameters['product'],
+                initialDishId: state.uri.queryParameters['dish'],
+                initialQuery: state.uri.queryParameters['query'],
               ),
             ),
           ]),
