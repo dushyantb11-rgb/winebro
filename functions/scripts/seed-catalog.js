@@ -14,8 +14,9 @@
  *   node scripts/seed-catalog.js            dry run, prints counts
  *   node scripts/seed-catalog.js --write    writes to project winebro
  *
- * Rows are upserted by id. Rows in Firestore that are not in the file
- * are left alone and listed, never deleted.
+ * Rows are upserted by id (merge, so `openData` from enrich-open-data.js
+ * survives a re-seed). Rows in Firestore that are not in the file are
+ * left alone and listed, never deleted.
  */
 const path = require("path");
 const fs = require("fs");
@@ -50,7 +51,7 @@ async function upload(collection, rows) {
         verified: false,
         seedVersion: SEED_VERSION,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
+      }, { merge: true }); // keep openData written by enrich-open-data.js
     }
     await batch.commit();
   }
