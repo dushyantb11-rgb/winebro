@@ -153,7 +153,7 @@ class OpenFacts {
         credit: [
           bottle['author'],
           bottle['licence'],
-          'Wikimedia Commons',
+          bottle['source'] ?? 'Wikimedia Commons',
         ].whereType<String>().where((s) => s.isNotEmpty).join(' · '),
       );
     } else if (off?['imageUrl'] is String) {

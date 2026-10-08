@@ -22,6 +22,7 @@ class VoiceCaptureSheet extends ConsumerStatefulWidget {
 
   static Future<VoiceCaptureResult?> show(BuildContext context) {
     return showModalBottomSheet<VoiceCaptureResult>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

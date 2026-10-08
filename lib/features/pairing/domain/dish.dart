@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
+import 'package:winebro/features/pairing/domain/open_facts.dart';
 
 class Dish {
   const Dish({
@@ -9,6 +10,7 @@ class Dish {
     required this.foodProperties,
     required this.pairings,
     this.description,
+    this.photo,
   });
 
   final String id;
@@ -17,6 +19,9 @@ class Dish {
   final List<FoodProperty> foodProperties;
   final List<DishPairing> pairings;
   final String? description;
+
+  /// Open-licence dish photo with its credit (Firestore openData.photo).
+  final OpenPhoto? photo;
 
   IconData get icon => category.icon;
 
@@ -46,6 +51,7 @@ class Dish {
         .map((p) => DishPairing.fromMap(p as Map<String, dynamic>))
         .toList(),
     description: map['description'] as String?,
+    photo: _photoFrom(map['openData']),
   );
 }
 
@@ -97,3 +103,16 @@ enum FoodProperty {
   final String displayName;
 }
 
+OpenPhoto? _photoFrom(Object? openData) {
+  if (openData is! Map) return null;
+  final p = openData['photo'];
+  if (p is! Map || p['imageUrl'] is! String) return null;
+  return OpenPhoto(
+    imageUrl: p['imageUrl'] as String,
+    pageUrl: p['pageUrl'] as String?,
+    credit: [p['author'], p['licence'], p['source'] ?? 'Wikimedia Commons']
+        .whereType<String>()
+        .where((s) => s.isNotEmpty)
+        .join(' · '),
+  );
+}

@@ -58,6 +58,7 @@ class QuickLogSheet extends ConsumerStatefulWidget {
     String? prefillProductId,
   }) {
     return showModalBottomSheet<bool>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -443,6 +444,7 @@ class _SearchField extends StatelessWidget {
                         productName: p.name,
                         category: p.category.group,
                         size: BrandLabelSize.compact,
+                        photoUrl: p.displayImageUrl,
                       ),
                       const SizedBox(width: 12),
                       Expanded(

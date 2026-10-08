@@ -1,33 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1A1A2E"/>
-      <stop offset="100%" stop-color="#0F172A"/>
-    </linearGradient>
-    <linearGradient id="accent" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#93003C"/>
-      <stop offset="100%" stop-color="#6E002D"/>
-    </linearGradient>
-  </defs>
-
-  <!-- Background -->
-  <rect width="1024" height="1024" rx="224" fill="url(#bg)"/>
-
-  <!-- Wine glass silhouette -->
-  <g transform="translate(512, 340)">
-    <!-- Glass bowl -->
-    <ellipse cx="0" cy="0" rx="140" ry="160" fill="url(#accent)" opacity="0.9"/>
-    <!-- Stem -->
-    <rect x="-12" y="140" width="24" height="180" rx="12" fill="#93003C"/>
-    <!-- Base -->
-    <ellipse cx="0" cy="340" rx="90" ry="16" fill="#93003C"/>
-    <!-- Wine level -->
-    <ellipse cx="0" cy="40" rx="110" ry="100" fill="#B8145E" opacity="0.6"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">WineBro app icon</title>
+  <desc id="desc">A cream wine glass with Paprika wine on a solid Paprika background.</desc>
+  <!-- Default colour master: deliberately full-bleed; the platform supplies the outer mask. -->
+  <rect width="1024" height="1024" fill="#93003C"/>
+  <g fill="#FAF6EE">
+    <!-- Filled bowl keeps the mark legible at 16–32px; the inner wine plane is cut back in brand colour. -->
+    <path d="M334 226C304 348 319 500 387 578C437 636 587 636 637 578C705 500 720 348 690 226Z"/>
+    <path d="M490 618H534V766H490Z"/>
+    <path d="M356 788C356 767 426 752 512 752C598 752 668 767 668 788C668 809 598 824 512 824C426 824 356 809 356 788Z"/>
   </g>
-
-  <!-- Text: W -->
-  <text x="512" y="900" text-anchor="middle"
-    font-family="serif" font-weight="900" font-size="160" fill="white" opacity="0.15">
-    WB
-  </text>
+  <!-- Wine area: intentionally the same Paprika as the background, leaving a sturdy cream glass silhouette. -->
+  <path d="M366 407Q512 372 658 407L651 468C640 532 594 579 512 579C430 579 384 532 373 468Z" fill="#93003C"/>
 </svg>

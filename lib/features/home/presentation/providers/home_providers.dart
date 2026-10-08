@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:winebro/core/services/firebase_providers.dart';
 import 'package:winebro/features/home/domain/community_signal.dart';
 import 'package:winebro/features/journal/domain/journal_entry.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
@@ -60,7 +60,7 @@ final tonightsPourProvider = FutureProvider<Product?>((ref) async {
 
 final continueStoryProvider =
     FutureProvider<({JournalEntry last, Product next})?>((ref) async {
-  final uid = FirebaseAuth.instance.currentUser?.uid;
+  final uid = ref.watch(currentUidProvider);
   if (uid == null) return null;
 
   final snap = await FirebaseFirestore.instance
@@ -113,7 +113,7 @@ final continueStoryProvider =
 // ============================================================
 
 final restockProvider = FutureProvider<JournalEntry?>((ref) async {
-  final uid = FirebaseAuth.instance.currentUser?.uid;
+  final uid = ref.watch(currentUidProvider);
   if (uid == null) return null;
 
   final now = DateTime.now();
@@ -177,7 +177,7 @@ final communitySignalsProvider =
 ///      seed products so Day-1 users still see something useful.
 final broCircleProvider = Provider<List<BroCircleSignal>>((ref) {
   final signalsAsync = ref.watch(communitySignalsProvider);
-  final signals = signalsAsync.value ?? const <CommunitySignal>[];
+  final signals = signalsAsync.valueOrNull ?? const <CommunitySignal>[];
   final catalog = ref.watch(allProductsProvider);
 
   Product? seedProductFor(String id) =>

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:string_similarity/string_similarity.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:winebro/core/affiliate/affiliate_url_resolver.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
@@ -55,15 +56,47 @@ class _PairScreenState extends ConsumerState<PairScreen> {
   Product? _selectedProduct;
   Occasion? _selectedOccasion;
 
-  static const _placeholders = [
-    'butter chicken…',
-    'single malt…',
-    'anniversary dinner…',
-    'pizza margherita…',
-    'rainy Friday night…',
-    'biryani…',
-    'old monk on the rocks…',
-  ];
+  // Search examples per mode, so food search never suggests an occasion.
+  static const _placeholders = {
+    PairMode.foodToDrink: ['butter chicken…', 'biryani…', 'masala dosa…', 'paneer tikka…', 'goan fish curry…'],
+    PairMode.drinkToFood: ['Sula Sauvignon Blanc…', 'Old Monk…', 'Amrut…', 'Kingfisher…', 'Royal Stag…'],
+    PairMode.occasion: ['date night…', 'celebration…', 'beach day…', 'business dinner…'],
+  };
+
+  final _speech = stt.SpeechToText();
+  bool _listening = false;
+
+  Future<void> _toggleVoice() async {
+    HapticFeedback.lightImpact();
+    if (_listening) {
+      await _speech.stop();
+      if (mounted) setState(() => _listening = false);
+      return;
+    }
+    final ready = await _speech.initialize(onError: (_) {
+      if (mounted) setState(() => _listening = false);
+    });
+    if (!mounted) return;
+    if (!ready) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.voiceUnavailable)),
+      );
+      return;
+    }
+    setState(() => _listening = true);
+    await _speech.listen(
+      localeId: 'en_IN',
+      listenFor: const Duration(seconds: 8),
+      onResult: (r) {
+        if (!mounted) return;
+        setState(() {
+          _searchController.text = r.recognizedWords;
+          _query = r.recognizedWords;
+          if (r.finalResult) _listening = false;
+        });
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -72,7 +105,7 @@ class _PairScreenState extends ConsumerState<PairScreen> {
     _placeholderTimer = Timer.periodic(const Duration(seconds: 4), (_) {
       if (mounted && _query.isEmpty) {
         setState(() => _placeholderIndex =
-            (_placeholderIndex + 1) % _placeholders.length);
+            (_placeholderIndex + 1) % _placeholders[_mode]!.length);
       }
     });
   }
@@ -100,6 +133,7 @@ class _PairScreenState extends ConsumerState<PairScreen> {
   @override
   void dispose() {
     _placeholderTimer?.cancel();
+    _speech.cancel();
     _searchController.dispose();
     super.dispose();
   }
@@ -195,17 +229,10 @@ class _PairScreenState extends ConsumerState<PairScreen> {
                             prefixIcon: Icon(Icons.search,
                                 color: colors.textTertiary),
                             suffixIcon: IconButton(
-                              icon: Icon(Icons.mic_none,
-                                  color: colors.textSecondary),
-                              tooltip: 'Voice (coming soon)',
-                              onPressed: () {
-                                HapticFeedback.lightImpact();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(context.l10n.voiceComingSoon),
-                                  ),
-                                );
-                              },
+                              icon: Icon(_listening ? Icons.mic : Icons.mic_none,
+                                  color: _listening ? colors.paprika : colors.textSecondary),
+                              tooltip: context.l10n.voiceSearch,
+                              onPressed: _toggleVoice,
                             ),
                           ),
                         ),
@@ -282,13 +309,15 @@ class _PairScreenState extends ConsumerState<PairScreen> {
   }
 
   String _hintFor(PairMode m) {
+    final examples = _placeholders[m]!;
+    final example = examples[_placeholderIndex % examples.length];
     return switch (m) {
-      PairMode.foodToDrink =>
-        'What are you eating? Try ${_placeholders[_placeholderIndex]}',
-      PairMode.drinkToFood => 'What are you drinking?',
-      PairMode.occasion => 'What\'s the occasion?',
+      PairMode.foodToDrink => 'What are you eating? Try $example',
+      PairMode.drinkToFood => 'What are you drinking? Try $example',
+      PairMode.occasion => "What's the occasion? Try $example",
     };
   }
+
 }
 
 // ============================================================
@@ -674,44 +703,56 @@ class _EmptyState extends ConsumerWidget {
     }
 
     final isFood = mode == PairMode.foodToDrink;
-    final dishes = ref.read(allDishesProvider).take(8).toList();
-    final products = ref.read(allProductsProvider).take(8).toList();
+    final l10n = context.l10n;
+
+    // Real groupings from our data; nothing here claims "trending".
+    final rows = <(String, List<Widget>)>[];
+    if (isFood) {
+      final dishes = ref.watch(allDishesProvider);
+      for (final cat in FoodCategory.values) {
+        final inCat = dishes.where((d) => d.category == cat).toList();
+        if (inCat.isEmpty) continue;
+        rows.add((
+          cat.displayName.toUpperCase(),
+          [for (final d in inCat) _TrendingDishCard(dish: d, onTap: () => onPickDish(d))],
+        ));
+      }
+    } else {
+      final products = ref.watch(allProductsProvider);
+      List<Widget> cards(Iterable<Product> ps) =>
+          [for (final p in ps) _TrendingDrinkCard(product: p, onTap: () => onPickProduct(p))];
+      final best = products.where((p) => p.bestSellerNote != null);
+      if (best.isNotEmpty) rows.add((l10n.pairRowBestSellers, cards(best)));
+      rows.add((l10n.pairRowWines, cards(products.where((p) => p.category.group == 'Wine'))));
+      rows.add((l10n.pairRowWhisky, cards(products.where((p) => p.category == DrinkCategory.whisky))));
+      rows.add((l10n.pairRowSpirits, cards(products.where((p) => p.category.group == 'Spirits' && p.category != DrinkCategory.whisky))));
+      rows.add((l10n.pairRowBeer, cards(products.where((p) => p.category.group == 'Beer'))));
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-          child: Text(
-            isFood ? 'TRENDING DISHES' : 'TRENDING POURS',
-            style: context.eyebrow.copyWith(color: colors.textTertiary),
-          ),
-        ),
-        SizedBox(
-          height: 180,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.fromLTRB(20, 0, 8, 0),
-            itemCount: isFood ? dishes.length : products.length,
-            itemBuilder: (context, i) {
-              if (isFood) {
-                final d = dishes[i];
-                return Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: _TrendingDishCard(dish: d, onTap: () => onPickDish(d)),
-                );
-              }
-              final p = products[i];
-              return Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: _TrendingDrinkCard(
-                  product: p,
-                  onTap: () => onPickProduct(p),
-                ),
-              );
-            },
-          ),
-        ),
+        for (final (title, items) in rows)
+          if (items.isNotEmpty) ...[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+              child: Text(
+                title,
+                style: context.eyebrow.copyWith(color: colors.textTertiary),
+              ),
+            ),
+            SizedBox(
+              height: 180,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.fromLTRB(20, 0, 8, 0),
+                itemCount: items.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                itemBuilder: (_, i) => items[i],
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
       ],
     );
   }
@@ -776,6 +817,7 @@ class _TrendingDishCard extends StatelessWidget {
       child: HeroPhotoCard(
         aspectRatio: 7 / 9,
         borderRadius: 18,
+        imageUrl: dish.photo?.imageUrl,
         gradientColors: [colors.paprikaDeep, colors.paprika, colors.paprikaDark],
         onTap: () {
           HapticFeedback.selectionClick();
@@ -820,7 +862,7 @@ class _TrendingDrinkCard extends StatelessWidget {
       child: HeroPhotoCard(
         aspectRatio: 8 / 9,
         borderRadius: 18,
-        imageUrl: product.imageUrl,
+        imageUrl: product.displayImageUrl,
         gradientColors: [colors.thunder, colors.paprikaDeep],
         onTap: () {
           HapticFeedback.selectionClick();
@@ -1012,7 +1054,7 @@ class _BrosPickPairingCard extends StatelessWidget {
     final p = result.product;
 
     return HeroPhotoCard(
-      imageUrl: p.imageUrl,
+      imageUrl: p.displayImageUrl,
       gradientColors: [colors.paprika, colors.paprikaDeep, colors.thunder],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1065,9 +1107,7 @@ class _BrosPickPairingCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            [p.subtitle, if (p.hasPrice) '₹${p.price.toStringAsFixed(0)}']
-                .where((s) => s.isNotEmpty)
-                .join(' · '),
+            p.subtitle,
             style: TextStyle(
               fontFamily: 'Montserrat',
               fontSize: 12,
@@ -1199,6 +1239,7 @@ class _AlternateCard extends StatelessWidget {
                 productName: p.name,
                 category: p.category.group,
                 size: BrandLabelSize.compact,
+                photoUrl: p.displayImageUrl,
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -1217,9 +1258,7 @@ class _AlternateCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      [p.subcategory, if (p.hasPrice) '₹${p.price.toStringAsFixed(0)}']
-                          .where((s) => s.isNotEmpty)
-                          .join(' · '),
+                      p.subcategory,
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 12,

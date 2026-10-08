@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:winebro/core/utils/formatters.dart';
 import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
@@ -310,6 +311,7 @@ class HomeScreen extends ConsumerWidget {
     final openFacts = product.openFacts;
 
     showModalBottomSheet<void>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -361,13 +363,10 @@ class HomeScreen extends ConsumerWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.w600),
               ),
-              if (product.abv != null || product.hasPrice) ...[
+              if (product.abv != null) ...[
                 const SizedBox(height: 4),
                 Text(
-                  [
-                    if (product.abv != null) '${product.abv}% ABV',
-                    if (product.hasPrice) '₹${product.price.toStringAsFixed(0)}',
-                  ].join('  ·  '),
+                  '${formatAbv(product.abv!)} ABV',
                   style: TextStyle(color: colors.textTertiary, fontSize: 13),
                 ),
               ],
@@ -469,7 +468,7 @@ class _TonightsPourCard extends StatelessWidget {
     final colors = context.appColors;
 
     return HeroPhotoCard(
-      imageUrl: product.imageUrl,
+      imageUrl: product.displayImageUrl,
       onTap: onTap,
       gradientColors: [
         colors.paprikaDeep,
@@ -636,6 +635,7 @@ class _ContinueStoryCard extends StatelessWidget {
                   productName: next.name,
                   category: next.category.group,
                   size: BrandLabelSize.compact,
+                  photoUrl: next.displayImageUrl,
                 ),
                 const SizedBox(width: 14),
                 Expanded(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:winebro/features/settings/presentation/screens/photo_credits_screen.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/providers/locale_provider.dart';
 import 'package:winebro/core/providers/theme_provider.dart';
@@ -19,6 +21,13 @@ import 'package:winebro/features/friends/domain/friend.dart';
 ///   About              privacy policy, terms, version
 ///
 /// No nav tab — pushed from a "Settings" row at the bottom of Profile.
+/// Installed app version, e.g. "1.0.0 (10)", read from the platform so it
+/// always matches the build.
+final _appVersionProvider = FutureProvider<String>((ref) async {
+  final info = await PackageInfo.fromPlatform();
+  return '${info.version} (${info.buildNumber})';
+});
+
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -126,9 +135,17 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () => _open(Uri.parse('https://winebro.web.app/terms.html')),
           ),
           _SettingsTile(
+            icon: Icons.photo_library_outlined,
+            title: context.l10n.photoCreditsTitle,
+            colors: colors,
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const PhotoCreditsScreen()),
+            ),
+          ),
+          _SettingsTile(
             icon: Icons.info_outline,
             title: context.l10n.settingsVersion,
-            subtitle: '0.1.0',
+            subtitle: ref.watch(_appVersionProvider).valueOrNull ?? '',
             colors: colors,
           ),
           const SizedBox(height: 40),
@@ -159,6 +176,7 @@ class SettingsScreen extends ConsumerWidget {
     final colors = context.appColors;
     final current = ref.read(localeProvider);
     showModalBottomSheet<void>(
+      useRootNavigator: true,
       context: context,
       builder: (_) => SafeArea(
         child: Column(
@@ -380,7 +398,7 @@ class _PrivacyVisibilityTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final visibility =
-        ref.watch(profileVisibilityProvider).value ?? ProfileVisibility.friendsOnly;
+        ref.watch(profileVisibilityProvider).valueOrNull ?? ProfileVisibility.friendsOnly;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       child: Column(

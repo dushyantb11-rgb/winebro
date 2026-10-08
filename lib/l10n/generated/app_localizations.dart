@@ -1533,7 +1533,7 @@ abstract class AppLocalizations {
   /// Settings footer
   ///
   /// In en, this message translates to:
-  /// **'Drink responsibly. 18+'**
+  /// **'Drink responsibly. Legal drinking age only.'**
   String get settingsResponsibly;
 
   /// Language picker sheet title
@@ -1619,6 +1619,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove'**
   String get wishlistRemove;
+
+  /// Friendly load error
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load this right now. Check your connection and try again.'**
+  String get loadErrorMessage;
+
+  /// Retry button
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tryAgain;
+
+  /// Mic button tooltip on Pair
+  ///
+  /// In en, this message translates to:
+  /// **'Search by voice'**
+  String get voiceSearch;
+
+  /// Speech recognition could not start
+  ///
+  /// In en, this message translates to:
+  /// **'Voice search isn\'t available on this phone.'**
+  String get voiceUnavailable;
+
+  /// Pair row: drinks in a published sales ranking
+  ///
+  /// In en, this message translates to:
+  /// **'INDIA\'S BEST-SELLERS'**
+  String get pairRowBestSellers;
+
+  /// Pair row
+  ///
+  /// In en, this message translates to:
+  /// **'WINES'**
+  String get pairRowWines;
+
+  /// Pair row
+  ///
+  /// In en, this message translates to:
+  /// **'WHISKY'**
+  String get pairRowWhisky;
+
+  /// Pair row
+  ///
+  /// In en, this message translates to:
+  /// **'RUM, BRANDY, GIN & VODKA'**
+  String get pairRowSpirits;
+
+  /// Pair row
+  ///
+  /// In en, this message translates to:
+  /// **'BEER'**
+  String get pairRowBeer;
+
+  /// Settings item and screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Photo credits'**
+  String get photoCreditsTitle;
+
+  /// Intro on the photo credits screen
+  ///
+  /// In en, this message translates to:
+  /// **'Drink and dish photos come from Wikimedia Commons and Open Food Facts under open licences. Tap a row to see the original.'**
+  String get photoCreditsIntro;
 
   /// Buy button when we have no sourced price
   ///
@@ -2295,7 +2361,7 @@ abstract class AppLocalizations {
   /// Age gate leading text
   ///
   /// In en, this message translates to:
-  /// **'I\'m 21 or older. I\'ll drink responsibly. I agree to WineBro\'s '**
+  /// **'I\'m of legal drinking age in my state. I\'ll drink responsibly. I agree to WineBro\'s '**
   String get ageGateLeading;
 
   /// Privacy link in age gate

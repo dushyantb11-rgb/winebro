@@ -66,8 +66,13 @@ class EmotionTile extends StatelessWidget {
                     children: [
                       Icon(icon, color: colors.inkOnHero, size: 20),
                       const SizedBox(height: 8),
-                      Text(
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
                         label,
+                        maxLines: 1,
+                        softWrap: false,
                         style: TextStyle(
                           fontFamily: 'PlayfairDisplay',
                           fontSize: 22,
@@ -76,6 +81,7 @@ class EmotionTile extends StatelessWidget {
                           letterSpacing: -0.5,
                           height: 1,
                         ),
+                      ),
                       ),
                     ],
                   ),

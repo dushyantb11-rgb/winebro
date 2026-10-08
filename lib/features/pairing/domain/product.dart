@@ -25,6 +25,7 @@ class Product {
     this.openData,
     this.estimateConfidence,
     this.verified = false,
+    this.bestSellerNote,
   })  : assert(fruit >= 0 && fruit <= 10),
         assert(acidity >= 0 && acidity <= 10),
         assert(body >= 0 && body <= 10),
@@ -58,12 +59,20 @@ class Product {
 
   OpenFacts get openFacts => OpenFacts.fromOpenData(openData, ourAbv: abv);
 
+  /// Image for cards: our own image, else the open-licence photo (its
+  /// credit is on the product sheet and the Photo credits page).
+  String? get displayImageUrl => imageUrl ?? openFacts.photo?.imageUrl;
+
   /// Confidence of the published taste estimate ("high" / "medium" /
   /// "low"), or null when the taste profile is hand-authored.
   final String? estimateConfidence;
 
   /// True once a sommelier has approved the taste profile and notes.
   final bool verified;
+
+  /// e.g. "#2 whisky worldwide, Millionaires' Club 2025" when a published
+  /// sales ranking lists this drink; null otherwise.
+  final String? bestSellerNote;
 
   /// Pricing is not sourced for every drink yet; 0 means "no price".
   bool get hasPrice => price > 0;
@@ -128,6 +137,7 @@ class Product {
       openData: openData,
       estimateConfidence: estimateConfidence,
       verified: verified,
+      bestSellerNote: bestSellerNote,
     );
   }
 
@@ -193,6 +203,9 @@ class Product {
           ? (map['estimate'] as Map)['confidence'] as String?
           : null,
       verified: map['verified'] == true,
+      bestSellerNote: map['bestSeller'] is Map
+          ? (map['bestSeller'] as Map)['note'] as String?
+          : null,
     );
   }
 

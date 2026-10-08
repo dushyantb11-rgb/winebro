@@ -25,6 +25,7 @@ class BrandLabelCard extends StatelessWidget {
     required this.category,
     this.size = BrandLabelSize.tile,
     this.showTagline = false,
+    this.photoUrl,
     super.key,
   });
 
@@ -34,15 +35,31 @@ class BrandLabelCard extends StatelessWidget {
   final BrandLabelSize size;
   final bool showTagline;
 
+  /// Open-licence bottle photo; the colour card shows when null or if it
+  /// fails to load.
+  final String? photoUrl;
+
   @override
   Widget build(BuildContext context) {
-    final brand = BrandRegistry.forProduct(
-      productId: productId,
-      category: category,
+    final card = _labelCard(context);
+    if (photoUrl == null) return card;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: SizedBox(
+        width: _dims.cardWidth,
+        height: _dims.cardHeight,
+        child: Image.network(
+          photoUrl!,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => card,
+          loadingBuilder: (_, child, progress) => progress == null ? child : card,
+        ),
+      ),
     );
-    final shape = bottleShapeForCategory(category);
+  }
 
-    final dim = switch (size) {
+  _CardDims get _dims {
+    return switch (size) {
       BrandLabelSize.compact => const _CardDims(
           cardWidth: 56, cardHeight: 72, bottleSize: 36,
           fontSize: 9, taglineSize: 0, padding: 4,
@@ -56,6 +73,16 @@ class BrandLabelCard extends StatelessWidget {
           fontSize: 22, taglineSize: 12, padding: 18,
         ),
     };
+  }
+
+  Widget _labelCard(BuildContext context) {
+    final brand = BrandRegistry.forProduct(
+      productId: productId,
+      category: category,
+    );
+    final shape = bottleShapeForCategory(category);
+
+    final dim = _dims;
 
     return Container(
       width: dim.cardWidth,

@@ -11,6 +11,13 @@ import 'package:winebro/features/pairing_feedback/domain/pairing_aggregate.dart'
 /// by this cap → adds at most this many points to the match score.
 const double kFeedbackBiasCapPoints = 10;
 
+/// Share of the food fit in "what to drink with this dish"; the rest is
+/// the user's palate match.
+const double kFoodWeight = 0.7;
+
+/// Extra points for a hand-written pairing of this dish and drink.
+const double kCuratedBonus = 5;
+
 class PairingEngine {
   const PairingEngine();
 
@@ -84,8 +91,7 @@ class PairingEngine {
     final results = <FoodPairingResult>[];
 
     for (final dish in dishes) {
-      final ruleScore = _foodDrinkRuleScore(dish.foodProperties, product);
-      final score = (ruleScore * 100).clamp(kScoreFloor, kScoreCeiling);
+      final score = _foodFit(dish, product);
 
       final strategy = _determinePairingStrategy(dish.foodProperties, product);
       final curated = _curatedPairing(dish, product);
@@ -123,14 +129,16 @@ class PairingEngine {
         occasion: occasion,
       );
 
-      final foodScore = _foodDrinkRuleScore(dish.foodProperties, product);
+      final foodScore = _foodFit(dish, product);
 
       final feedbackBonus =
           _feedbackBonus(product.id, feedbackAggregates);
 
-      final blendedScore =
-          (userMatch.score * 0.6 + foodScore * 100 * 0.4 + feedbackBonus)
-              .clamp(kScoreFloor, kScoreCeiling);
+      // For "what to drink with this dish" the dish matters most.
+      final blendedScore = (foodScore * kFoodWeight +
+              userMatch.score * (1 - kFoodWeight) +
+              feedbackBonus)
+          .clamp(kScoreFloor, kScoreCeiling);
 
       results.add(PairingResult(
         product: product,
@@ -220,24 +228,20 @@ class PairingEngine {
     };
   }
 
-  double _foodDrinkRuleScore(List<FoodProperty> foodProps, Product product) {
-    var score = 0.5;
-    var ruleCount = 0;
-
-    for (final prop in foodProps) {
-      final ruleResult = _applyInteractionRule(prop, product);
-      if (ruleResult != null) {
-        score += ruleResult;
-        ruleCount++;
-      }
+  /// Food fit on the 40-99 match scale: 50 plus the points of every
+  /// matching pairing rule (minus clashes). A hand-written pairing for
+  /// this dish and drink sets a floor at its own score, plus
+  /// [kCuratedBonus].
+  double _foodFit(Dish dish, Product product) {
+    var points = 50.0;
+    for (final prop in dish.foodProperties) {
+      points += (_applyInteractionRule(prop, product) ?? 0) * 100;
     }
-
-    if (ruleCount > 0) {
-      score = score / (1 + ruleCount * 0.3);
-      score += ruleCount * 0.08;
+    final curated = _curatedPairing(dish, product);
+    if (curated != null) {
+      points = math.max(points, curated.score.toDouble()) + kCuratedBonus;
     }
-
-    return score.clamp(0.4, 0.99);
+    return points.clamp(kScoreFloor, kScoreCeiling);
   }
 
   double? _applyInteractionRule(FoodProperty foodProp, Product product) {
@@ -316,9 +320,15 @@ class PairingEngine {
 
     if (strategy == PairingStrategy.contrast) {
       if (foodProps.contains(FoodProperty.spicyHeat)) {
+        // Say what this drink actually brings; not every match is sweet.
+        final why = product.fruit >= 7 && product.tannin <= 3
+            ? 'ripe fruit softens the heat'
+            : product.acidity >= 6
+                ? 'crisp acidity and fresh fruit cool the spice'
+                : 'soft tannins keep the chilli from turning bitter';
         return 'The ${dish.name} brings serious heat, Bro. '
-            '${product.name}\'s fruity sweetness tames the spice '
-            'without killing the flavour. Classic contrast pairing.';
+            "${product.name}'s $why without killing the flavour. "
+            'Classic contrast pairing.';
       }
       if (foodProps.contains(FoodProperty.highFat)) {
         return 'Rich, creamy ${dish.name} needs a palate cleanser. '

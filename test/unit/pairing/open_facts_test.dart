@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:winebro/features/pairing/domain/dish.dart';
 import 'package:winebro/features/pairing/domain/open_facts.dart';
 
 void main() {
@@ -77,5 +78,23 @@ void main() {
       expect(f.facts.single.kind, OpenFactKind.producer);
       expect(f.facts.single.value, 'Hoegaarden Brewery · Belgium · since 1966');
     });
+  });
+
+  test('OF-07: photo credit names its real source', () {
+    final f = OpenFacts.fromOpenData(const {
+      'bottlePhoto': {'imageUrl': 'https://x/y.jpg', 'author': 'Open Food Facts contributors',
+        'licence': 'CC BY-SA 3.0', 'source': 'Open Food Facts'},
+    });
+    expect(f.photo!.credit, 'Open Food Facts contributors · CC BY-SA 3.0 · Open Food Facts');
+  });
+
+  test('OF-08: dish photo is read from openData.photo', () {
+    final d = Dish.fromMap(const {
+      'id': 'x', 'name': 'X', 'category': 'streetFood', 'foodProperties': <String>[],
+      'pairings': <Map<String, dynamic>>[],
+      'openData': {'photo': {'imageUrl': 'https://x/d.jpg', 'author': 'A', 'licence': 'CC BY 4.0'}},
+    });
+    expect(d.photo!.imageUrl, 'https://x/d.jpg');
+    expect(d.photo!.credit, 'A · CC BY 4.0 · Wikimedia Commons');
   });
 }

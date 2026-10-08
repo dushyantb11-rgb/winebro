@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:winebro/shared/widgets/load_error_view.dart';
+import 'package:winebro/core/services/firebase_providers.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_elevation.dart';
@@ -27,7 +29,7 @@ import 'package:winebro/shared/widgets/star_rating.dart';
 
 final journalEntriesProvider =
     StreamProvider<List<JournalEntry>>((ref) {
-  final uid = FirebaseAuth.instance.currentUser?.uid;
+  final uid = ref.watch(currentUidProvider);
   if (uid == null) return const Stream.empty();
 
   return FirebaseFirestore.instance
@@ -68,15 +70,17 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final l10n = context.l10n;
     final entries = ref.watch(journalEntriesProvider);
 
     return Scaffold(
       body: SafeArea(
         child: entries.when(
           loading: () => Center(child: CircularProgressIndicator(color: colors.paprika)),
-          error: (e, _) => Center(
-            child: Text(l10n.errorLoadingJournal, style: TextStyle(color: colors.error)),
+          error: (e, st) => LoadErrorView(
+            error: e,
+            stackTrace: st,
+            reason: 'journal stream',
+            onRetry: () => ref.invalidate(journalEntriesProvider),
           ),
           data: (items) {
             if (items.isEmpty) return _EmptyState();
@@ -546,6 +550,7 @@ class BroCardSheet extends ConsumerStatefulWidget {
 
   static void show(BuildContext context, {String? productName, String? category, String? region}) {
     showModalBottomSheet<void>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -840,6 +845,7 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
   Future<void> _pickPhoto(PhotoSlot slot) async {
     if (_photoUploading) return;
     final source = await showModalBottomSheet<ImageSource>(
+      useRootNavigator: true,
       context: context,
       builder: (ctx) {
         final colors = ctx.appColors;

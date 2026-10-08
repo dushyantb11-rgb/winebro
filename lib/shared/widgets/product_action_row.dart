@@ -16,7 +16,7 @@ import 'package:winebro/features/wishlist/presentation/providers/wishlist_provid
 /// and product detail sheets.
 ///
 /// Behaviour:
-///   Buy ₹X →  opens partner URL via [AffiliateUrlResolver] in browser
+///   Find to buy →  opens partner URL via [AffiliateUrlResolver] in browser
 ///   Save      toggles wishlist (Save ↔ Saved); haptic light
 ///   Remind    opens device calendar with a pre-filled event 3 days
 ///             out — "Pick up <product>"; haptic medium
@@ -47,9 +47,8 @@ class ProductActionRow extends ConsumerWidget {
     final colors = context.appColors;
     final isInWishlist = ref.watch(wishlistContainsProvider(product.id));
 
-    final buyLabel = product.hasPrice
-        ? context.l10n.actionBuy(product.price.toStringAsFixed(0))
-        : context.l10n.actionBuyNoPrice;
+    // Prices are not shown anywhere (no sourced prices).
+    final buyLabel = context.l10n.actionBuyNoPrice;
     final saveLabel = isInWishlist ? context.l10n.actionSaved : context.l10n.actionSave;
 
     final buyIcon = PhosphorIcons.shoppingBagOpen();

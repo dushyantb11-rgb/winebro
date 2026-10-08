@@ -796,7 +796,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsVersion => 'Version';
 
   @override
-  String get settingsResponsibly => 'Drink responsibly. 18+';
+  String get settingsResponsibly =>
+      'Drink responsibly. Legal drinking age only.';
 
   @override
   String get settingsChooseLanguage => 'Choose language';
@@ -840,6 +841,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wishlistRemove => 'Remove';
+
+  @override
+  String get loadErrorMessage =>
+      'We couldn\'t load this right now. Check your connection and try again.';
+
+  @override
+  String get tryAgain => 'Try again';
+
+  @override
+  String get voiceSearch => 'Search by voice';
+
+  @override
+  String get voiceUnavailable => 'Voice search isn\'t available on this phone.';
+
+  @override
+  String get pairRowBestSellers => 'INDIA\'S BEST-SELLERS';
+
+  @override
+  String get pairRowWines => 'WINES';
+
+  @override
+  String get pairRowWhisky => 'WHISKY';
+
+  @override
+  String get pairRowSpirits => 'RUM, BRANDY, GIN & VODKA';
+
+  @override
+  String get pairRowBeer => 'BEER';
+
+  @override
+  String get photoCreditsTitle => 'Photo credits';
+
+  @override
+  String get photoCreditsIntro =>
+      'Drink and dish photos come from Wikimedia Commons and Open Food Facts under open licences. Tap a row to see the original.';
 
   @override
   String get actionBuyNoPrice => 'Find to buy';
@@ -1226,7 +1262,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ageGateLeading =>
-      'I\'m 21 or older. I\'ll drink responsibly. I agree to WineBro\'s ';
+      'I\'m of legal drinking age in my state. I\'ll drink responsibly. I agree to WineBro\'s ';
 
   @override
   String get ageGatePrivacy => 'Privacy Policy';
