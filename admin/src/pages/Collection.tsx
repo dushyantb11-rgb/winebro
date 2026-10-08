@@ -22,8 +22,12 @@ export default function Collection() {
   const [importing, setImporting] = useState(false);
   const [menu, setMenu] = useState(false);
 
+  const [showArchived, setShowArchived] = useState(false);
+
   if (!spec) return <Layout title="Not found"><Empty title="Unknown collection" /></Layout>;
-  const rows = q.data ?? [];
+  const all = q.data ?? [];
+  const archivedCount = all.filter((r) => r.archived === true).length;
+  const rows = showArchived ? all : all.filter((r) => r.archived !== true);
   const shown = applyList(rows, spec, st);
 
   return (
@@ -48,9 +52,12 @@ export default function Collection() {
       <div className="small muted">{spec.description}</div>
       <div className="row between">
         <FilterBar spec={spec} st={st} setSt={setSt} options={options} rows={rows} />
+        <div className="row">
+          {archivedCount > 0 && <button className={`btn sm ${showArchived ? "" : "ghost"}`} onClick={() => setShowArchived((s) => !s)}><Icon name="archive" className="sm" />{showArchived ? "Hide" : "Show"} archived ({archivedCount})</button>}
         <div className="seg">
           <button className={view === "table" ? "active" : ""} onClick={() => setView("table")}><Icon name="table_rows" className="sm" />Table</button>
           <button className={view === "cards" ? "active" : ""} onClick={() => setView("cards")}><Icon name="grid_view" className="sm" />Cards</button>
+        </div>
         </div>
       </div>
       {q.isLoading ? <Skeleton /> : q.error ? <Empty icon="error" title="Could not load" text={String(q.error)} /> :

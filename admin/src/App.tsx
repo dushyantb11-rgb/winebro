@@ -11,6 +11,7 @@ import { UsersList, UserDetail } from "./pages/Users";
 import Rules from "./pages/Rules";
 import RuleEditor from "./pages/RuleEditor";
 import Access from "./pages/Access";
+import Releases from "./pages/Releases";
 import { Checking, Denied, Login } from "./pages/Login";
 
 export const MeCtx = createContext<{ email: string; name: string }>({ email: "", name: "" });
@@ -38,6 +39,7 @@ export default function App() {
         <Route path="/rules" element={<Rules />} />
         <Route path="/rules/:doc" element={<RuleEditor />} />
         <Route path="/access" element={<Access me={me.data.email} />} />
+        <Route path="/releases" element={<Releases />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </MeCtx.Provider>
