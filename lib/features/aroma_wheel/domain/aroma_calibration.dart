@@ -1,3 +1,4 @@
+import 'package:winebro/core/config/app_config.dart';
 import 'package:winebro/features/aroma_wheel/domain/aroma_taxonomy.dart';
 
 /// One user's response to an aroma calibration prompt.
@@ -44,8 +45,10 @@ class AromaCalibrationResponse {
 class AromaCalibrationBuilder {
   static List<({String aroma, String category})> buildSession({
     required int seed,
-    int count = 3,
+    int? count,
   }) {
+    final cfg = AppConfig.current.aromaWheel;
+    count ??= cfg.calibrationCount;
     final indianTerms = <({String aroma, String category})>[];
     final western = <({String aroma, String category})>[];
 
@@ -71,7 +74,7 @@ class AromaCalibrationBuilder {
     // 2 Indian-context + 1 western, capped at `count`.
     final result = <({String aroma, String category})>[];
     while (result.length < count) {
-      if (indianTerms.length > result.length * 2 / 3) {
+      if (indianTerms.length > result.length * cfg.indianShare) {
         result.add(indianTerms.removeLast());
       } else if (western.isNotEmpty) {
         result.add(western.removeLast());
@@ -85,38 +88,8 @@ class AromaCalibrationBuilder {
   }
 }
 
-const kKnownDesiTerms = <String>{
-  'Aam (Mango)',
-  'Jamun (Indian blackberry)',
-  'Munakka',
-  'Champa',
-  'Mogra',
-  'Gulab (Desi rose)',
-  'Mahua',
-  'Elaichi (Cardamom)',
-  'Jaggery',
-  'Ajwain',
-  'Hing (Asafoetida)',
-  'Saffron (Kesar)',
-  'Long Pepper (Pippali)',
-  'Mace (Javitri)',
-  'Kashmiri Chilli',
-  'Guntur Chilli',
-  'Curry Leaf',
-  'Coriander Leaf (Dhania)',
-  'Pudina',
-  'Bay Leaf (Tej Patta)',
-  'Kasuri Methi (Dried Fenugreek)',
-  'Tamarind (Imli)',
-  'Kokum',
-  'Amchur (Dried Mango)',
-  'Incense (Agarbatti)',
-  'Tandoor Smoke',
-  'Roasted Chana',
-  'Ghee',
-  'Nimbu (Indian lime)',
-  'Jackfruit',
-};
+/// Indian-context aroma terms, from `config/aromaWheel`.
+Set<String> get kKnownDesiTerms => AppConfig.current.aromaWheel.desiTerms;
 
 /// Tiny LCG so we don't need dart:math import at builder layer
 /// just for shuffling 30 terms.

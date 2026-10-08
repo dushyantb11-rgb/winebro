@@ -2,16 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:winebro/features/profile/domain/gamification.dart';
+import 'package:winebro/core/config/app_config.dart';
 
 /// One discrete action that can fire streak / XP / badge progress.
 /// Callers stay agnostic to the math — they just say "the user did X".
 enum GamificationAction {
-  scan(xp: 5),
-  journalEntry(xp: 10),
-  pairing(xp: 5);
+  scan,
+  journalEntry,
+  pairing;
 
-  const GamificationAction({required this.xp});
-  final int xp;
+  /// XP for this action, from `config/gamification`.
+  int get xp => AppConfig.current.gamification.xpFor(name);
 }
 
 /// Single owner of streak/XP firing. Wired into:
@@ -126,25 +127,8 @@ class GamificationService {
     );
   }
 
-  int _levelForXp(int xp) {
-    // kXpLevels keyed by level → minXp. Find highest level whose
-    // minXp <= xp.
-    var level = 0;
-    for (var l = 0; l <= 3; l++) {
-      final tier = _kXpLevels[l];
-      if (tier != null && xp >= tier) level = l;
-    }
-    return level;
-  }
-
-  // Mirror of pairing_constants kXpLevels[level].minXp — kept inline
-  // to avoid a public coupling. Update if kXpLevels changes.
-  static const _kXpLevels = <int, int>{
-    0: 0,
-    1: 250,
-    2: 1000,
-    3: 3000,
-  };
+  int _levelForXp(int xp) =>
+      AppConfig.current.gamification.levelForXp(xp);
 }
 
 final gamificationServiceProvider = Provider<GamificationService>(

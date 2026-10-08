@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:winebro/core/config/app_config.dart';
 
 abstract final class AppIcons {
 
-  static String drinkImage(String group) => switch (group) {
-    'Wine' => 'assets/images/drinks/red_wine.jpg',
-    'Whisky' => 'assets/images/drinks/whisky.jpg',
-    'Spirits' => 'assets/images/drinks/cocktails.jpg',
-    'Beer' => 'assets/images/drinks/beer.jpg',
-    _ => 'assets/images/drinks/cocktails.jpg',
-  };
+  /// Image for a drink group, from `config/categories`.
+  static String drinkImage(String group) =>
+      AppConfig.current.categories.drinkGroupImage(group) ??
+      AppConfig.current.categories.drinkGroupImage('Spirits') ??
+      'assets/images/drinks/cocktails.jpg';
 
   static const wine = Icons.wine_bar;
   static const whisky = Icons.local_bar;

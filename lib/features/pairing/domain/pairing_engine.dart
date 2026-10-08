@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:winebro/core/config/app_config.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
 import 'package:winebro/features/pairing/domain/dish.dart';
 import 'package:winebro/features/pairing/domain/palate_profile.dart';
@@ -7,19 +8,25 @@ import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/features/pairing_feedback/domain/pairing_aggregate.dart';
 
 /// Maximum +/- score nudge from community feedback (engine v1.1).
-/// At full confidence (large sample, all Yes), bias is +0.5 multiplied
-/// by this cap → adds at most this many points to the match score.
-const double kFeedbackBiasCapPoints = 10;
+double get kFeedbackBiasCapPoints =>
+    AppConfig.current.pairingRules.feedbackBiasCapPoints;
 
 /// Share of the food fit in "what to drink with this dish"; the rest is
 /// the user's palate match.
-const double kFoodWeight = 0.7;
+double get kFoodWeight => AppConfig.current.pairingRules.foodWeight;
 
 /// Extra points for a hand-written pairing of this dish and drink.
-const double kCuratedBonus = 5;
+double get kCuratedBonus => AppConfig.current.pairingRules.curatedBonus;
 
+/// Scores drinks for a palate, a dish or an occasion using the rules in
+/// `config/pairingRules`. Pass [rules] to score with a specific rule set
+/// (tests, admin preview); otherwise the live config is used.
 class PairingEngine {
-  const PairingEngine();
+  const PairingEngine({this.rules});
+
+  final PairingRulesConfig? rules;
+
+  PairingRulesConfig get _r => rules ?? AppConfig.current.pairingRules;
 
   PairingResult computeMatch({
     required PalateProfile userProfile,
@@ -28,28 +35,19 @@ class PairingEngine {
     int recommendationCount = 0,
     bool userRated5Stars = false,
   }) {
+    final r = _r;
+    final effectiveProfile =
+        occasion != null ? userProfile.withOccasion(occasion) : userProfile;
 
-    final effectiveProfile = occasion != null
-        ? userProfile.withOccasion(occasion)
-        : userProfile;
-
-    final baseScore = _weightedCosineSimilarity(
-      effectiveProfile,
-      product,
-    );
-
+    final baseScore = _weightedCosineSimilarity(effectiveProfile, product, r);
     final archetypeBonus = _archetypeBonus(userProfile.archetype, product);
-
     final occasionBonus = _occasionCategoryBonus(occasion, product);
-
-    final frequencyPenalty = _frequencyPenalty(
-      recommendationCount,
-      userRated5Stars,
-    );
+    final frequencyPenalty =
+        _frequencyPenalty(recommendationCount, userRated5Stars, r);
 
     final rawScore =
         baseScore + archetypeBonus + occasionBonus + frequencyPenalty;
-    final finalScore = rawScore.clamp(kScoreFloor, kScoreCeiling);
+    final finalScore = rawScore.clamp(r.scoreFloor, r.scoreCeiling);
 
     return PairingResult(
       product: product,
@@ -67,19 +65,15 @@ class PairingEngine {
     Occasion? occasion,
     int topN = 10,
   }) {
-    final results = <PairingResult>[];
-
-    for (var i = 0; i < products.length; i++) {
-      results.add(computeMatch(
-        userProfile: userProfile,
-        product: products[i],
-        occasion: occasion,
-        recommendationCount: 0,
-      ));
-    }
-
-    results.sort((a, b) => b.score.compareTo(a.score));
-
+    final results = [
+      for (final product in products)
+        computeMatch(
+          userProfile: userProfile,
+          product: product,
+          occasion: occasion,
+          recommendationCount: 0,
+        ),
+    ]..sort((a, b) => b.score.compareTo(a.score));
     return results.take(topN).toList();
   }
 
@@ -88,12 +82,12 @@ class PairingEngine {
     required List<Dish> dishes,
     int topN = 5,
   }) {
+    final r = _r;
     final results = <FoodPairingResult>[];
 
     for (final dish in dishes) {
-      final score = _foodFit(dish, product);
-
-      final strategy = _determinePairingStrategy(dish.foodProperties, product);
+      final score = _foodFit(dish, product, r);
+      final strategy = _determinePairingStrategy(dish.foodProperties, product, r);
       final curated = _curatedPairing(dish, product);
 
       results.add(FoodPairingResult(
@@ -102,7 +96,7 @@ class PairingEngine {
         score: score,
         strategy: curated?.strategy ?? strategy,
         explanation: curated?.broTip ??
-            _generatePairingExplanation(dish, product, strategy),
+            _generatePairingExplanation(dish, product, strategy, r),
         isCurated: curated != null,
       ));
     }
@@ -119,26 +113,23 @@ class PairingEngine {
     int topN = 5,
     Map<String, PairingAggregate>? feedbackAggregates,
   }) {
+    final r = _r;
     final results = <PairingResult>[];
 
     for (final product in products) {
-
       final userMatch = computeMatch(
         userProfile: userProfile,
         product: product,
         occasion: occasion,
       );
-
-      final foodScore = _foodFit(dish, product);
-
-      final feedbackBonus =
-          _feedbackBonus(product.id, feedbackAggregates);
+      final foodScore = _foodFit(dish, product, r);
+      final feedbackBonus = _feedbackBonus(product.id, feedbackAggregates, r);
 
       // For "what to drink with this dish" the dish matters most.
-      final blendedScore = (foodScore * kFoodWeight +
-              userMatch.score * (1 - kFoodWeight) +
+      final blendedScore = (foodScore * r.foodWeight +
+              userMatch.score * (1 - r.foodWeight) +
               feedbackBonus)
-          .clamp(kScoreFloor, kScoreCeiling);
+          .clamp(r.scoreFloor, r.scoreCeiling);
 
       results.add(PairingResult(
         product: product,
@@ -156,22 +147,36 @@ class PairingEngine {
     return results.take(topN).toList();
   }
 
+  /// Score breakdown of one dish and drink, for the admin "try a
+  /// pairing" preview and tests.
+  FoodFitBreakdown explainFoodFit(Dish dish, Product product) {
+    final r = _r;
+    final lines = <({FoodProperty property, double points})>[];
+    for (final prop in dish.foodProperties) {
+      lines.add((property: prop, points: _rulePoints(prop, product, r) ?? 0));
+    }
+    final curated = _curatedPairing(dish, product);
+    return FoodFitBreakdown(
+      base: r.foodFitBase,
+      rulePoints: lines,
+      curatedScore: curated?.score,
+      curatedBonus: curated == null ? 0 : r.curatedBonus,
+      total: _foodFit(dish, product, r),
+      strategy: curated?.strategy ??
+          _determinePairingStrategy(dish.foodProperties, product, r),
+    );
+  }
+
   /// Engine v1.1: convert a community pairing aggregate (yes/maybe/no
   /// counters) into a points-bonus added to the match score.
-  ///
-  /// Bias = signedShrunkBias ∈ [-0.5, 0.5] · 2 · cap → points ∈ [-cap, cap].
-  /// Multiplying by 2 brings the [-0.5, 0.5] range to [-1, 1] before
-  /// scaling — i.e., a fully one-sided community would shift +/- the
-  /// full cap; in practice the Bayesian shrinkage holds early picks
-  /// near zero until enough samples land.
   double _feedbackBonus(
     String productId,
     Map<String, PairingAggregate>? aggregates,
+    PairingRulesConfig r,
   ) {
-    if (aggregates == null) return 0;
-    final agg = aggregates[productId];
+    final agg = aggregates?[productId];
     if (agg == null) return 0;
-    return agg.signedShrunkBias() * 2 * kFeedbackBiasCapPoints;
+    return agg.signedShrunkBias() * 2 * r.feedbackBiasCapPoints;
   }
 
   /// Hand-written pairing for this dish and drink, if one exists in the
@@ -179,13 +184,17 @@ class PairingEngine {
   DishPairing? _curatedPairing(Dish dish, Product product) =>
       dish.pairings.where((p) => p.productId == product.id).firstOrNull;
 
-  double _weightedCosineSimilarity(PalateProfile user, Product product) {
+  double _weightedCosineSimilarity(
+    PalateProfile user,
+    Product product,
+    PairingRulesConfig r,
+  ) {
     var dotProduct = 0.0;
     var userMagnitude = 0.0;
     var productMagnitude = 0.0;
 
     for (final axis in PalateAxis.values) {
-      final w = axis.defaultWeight;
+      final w = r.axisWeights[axis] ?? 1.0;
       final u = user[axis];
       final p = product[axis];
 
@@ -194,11 +203,8 @@ class PairingEngine {
       productMagnitude += w * p * p;
     }
 
-    final denominator =
-        math.sqrt(userMagnitude) * math.sqrt(productMagnitude);
-
-    if (denominator == 0) return kScoreFloor;
-
+    final denominator = math.sqrt(userMagnitude) * math.sqrt(productMagnitude);
+    if (denominator == 0) return r.scoreFloor;
     return (dotProduct / denominator) * 100;
   }
 
@@ -210,103 +216,63 @@ class PairingEngine {
   }
 
   double _occasionCategoryBonus(Occasion? occasion, Product product) {
-    if (occasion == null) return 0;
-    final bonus = occasion.categoryBonus;
+    final bonus = occasion?.categoryBonus;
     if (bonus != null && product.category == bonus.category) {
       return bonus.bonusPercent;
     }
     return 0;
   }
 
-  double _frequencyPenalty(int count, bool userRated5Stars) {
+  double _frequencyPenalty(
+    int count,
+    bool userRated5Stars,
+    PairingRulesConfig r,
+  ) {
     if (userRated5Stars) return 0;
     return switch (count) {
       0 => 0,
-      1 => kFrequencyPenalty2nd,
-      2 => kFrequencyPenalty3rd,
-      _ => kFrequencyPenaltyCap,
+      1 => r.frequencyPenaltySecond,
+      2 => r.frequencyPenaltyThird,
+      _ => r.frequencyPenaltyCap,
     };
   }
 
-  /// Food fit on the 40-99 match scale: 50 plus the points of every
-  /// matching pairing rule (minus clashes). A hand-written pairing for
-  /// this dish and drink sets a floor at its own score, plus
-  /// [kCuratedBonus].
-  double _foodFit(Dish dish, Product product) {
-    var points = 50.0;
+  /// Food fit on the match scale: the base plus the points of every
+  /// matching rule (minus clashes). A hand-written pairing for this dish
+  /// and drink sets a floor at its own score, plus the curated bonus.
+  double _foodFit(Dish dish, Product product, PairingRulesConfig r) {
+    var points = r.foodFitBase;
     for (final prop in dish.foodProperties) {
-      points += (_applyInteractionRule(prop, product) ?? 0) * 100;
+      points += _rulePoints(prop, product, r) ?? 0;
     }
     final curated = _curatedPairing(dish, product);
     if (curated != null) {
-      points = math.max(points, curated.score.toDouble()) + kCuratedBonus;
+      points = math.max(points, curated.score.toDouble()) + r.curatedBonus;
     }
-    return points.clamp(kScoreFloor, kScoreCeiling);
+    return points.clamp(r.scoreFloor, r.scoreCeiling);
   }
 
-  double? _applyInteractionRule(FoodProperty foodProp, Product product) {
-    return switch (foodProp) {
-
-      FoodProperty.highFat =>
-        product.acidity >= 6 ? 0.15 : (product.acidity <= 3 ? -0.1 : null),
-
-      FoodProperty.spicyHeat =>
-        product.fruit >= 6 && product.tannin <= 4
-            ? 0.2
-            : (product.tannin >= 7 ? -0.15 : null),
-
-      FoodProperty.highProtein =>
-        product.tannin >= 6 ? 0.15 : null,
-
-      FoodProperty.lightDelicate =>
-        product.body <= 4 ? 0.15 : (product.body >= 7 ? -0.15 : null),
-
-      FoodProperty.sweetDessert =>
-        product.fruit >= 7 ? 0.15 : (product.tannin >= 6 ? -0.2 : null),
-
-      FoodProperty.umamiRich =>
-        product.fruit >= 6 && product.tannin <= 4 ? 0.15 : null,
-
-      FoodProperty.acidic =>
-        product.acidity >= 6 ? 0.12 : (product.acidity <= 3 ? -0.1 : null),
-
-      FoodProperty.smokyCharred =>
-        product.complexity >= 6 && product.body >= 5 ? 0.15 : null,
-
-      FoodProperty.creamy =>
-        product.acidity >= 5 ? 0.1 : null,
-
-      FoodProperty.tangy =>
-        product.acidity >= 5 && product.freshness >= 5 ? 0.12 : null,
-
-      FoodProperty.aromatic =>
-        product.complexity >= 5 ? 0.1 : null,
-    };
+  /// Points of the first rule for [prop] whose conditions the drink
+  /// meets; null when none applies.
+  double? _rulePoints(FoodProperty prop, Product product, PairingRulesConfig r) {
+    for (final rule in r.foodFitRules[prop] ?? const <PointsRule>[]) {
+      if (allHold(rule.when, (a) => product[a])) return rule.points;
+    }
+    return null;
   }
 
   PairingStrategy _determinePairingStrategy(
     List<FoodProperty> foodProps,
     Product product,
+    PairingRulesConfig r,
   ) {
+    int count(List<StrategyIndicator> indicators) => indicators
+        .where((i) =>
+            foodProps.contains(i.property) &&
+            allHold(i.when, (a) => product[a]))
+        .length;
 
-    final contrastIndicators = [
-      foodProps.contains(FoodProperty.highFat) && product.acidity >= 6,
-      foodProps.contains(FoodProperty.spicyHeat) && product.fruit >= 6,
-      foodProps.contains(FoodProperty.umamiRich) && product.fruit >= 6,
-    ];
-
-    final complementIndicators = [
-      foodProps.contains(FoodProperty.highProtein) && product.tannin >= 6,
-      foodProps.contains(FoodProperty.lightDelicate) && product.body <= 4,
-      foodProps.contains(FoodProperty.sweetDessert) && product.fruit >= 7,
-      foodProps.contains(FoodProperty.smokyCharred) && product.complexity >= 6,
-      foodProps.contains(FoodProperty.acidic) && product.acidity >= 6,
-    ];
-
-    final contrastScore = contrastIndicators.where((b) => b).length;
-    final complementScore = complementIndicators.where((b) => b).length;
-
-    return contrastScore > complementScore
+    return count(r.contrastIndicators) > count(r.complementIndicators)
         ? PairingStrategy.contrast
         : PairingStrategy.complement;
   }
@@ -315,55 +281,47 @@ class PairingEngine {
     Dish dish,
     Product product,
     PairingStrategy strategy,
+    PairingRulesConfig r,
   ) {
-    final foodProps = dish.foodProperties;
+    String fill(String text, {String why = ''}) => text
+        .replaceAll('{dish}', dish.name)
+        .replaceAll('{drink}', product.name)
+        .replaceAll('{strategy}', strategy.displayName.toLowerCase())
+        .replaceAll('{why}', why);
 
-    if (strategy == PairingStrategy.contrast) {
-      if (foodProps.contains(FoodProperty.spicyHeat)) {
-        // Say what this drink actually brings; not every match is sweet.
-        final why = product.fruit >= 7 && product.tannin <= 3
-            ? 'ripe fruit softens the heat'
-            : product.acidity >= 6
-                ? 'crisp acidity and fresh fruit cool the spice'
-                : 'soft tannins keep the chilli from turning bitter';
-        return 'The ${dish.name} brings serious heat, Bro. '
-            "${product.name}'s $why without killing the flavour. "
-            'Classic contrast pairing.';
+    for (final t in r.explanations) {
+      if (t.strategy != strategy || !dish.foodProperties.contains(t.property)) {
+        continue;
       }
-      if (foodProps.contains(FoodProperty.highFat)) {
-        return 'Rich, creamy ${dish.name} needs a palate cleanser. '
-            '${product.name}\'s bright acidity cuts through the '
-            'richness like a charm. Your mouth stays fresh.';
+      var why = '';
+      for (final v in t.why) {
+        if (allHold(v.when, (a) => product[a])) {
+          why = v.text;
+          break;
+        }
       }
-      if (foodProps.contains(FoodProperty.umamiRich)) {
-        return '${dish.name} is packed with umami depth. '
-            '${product.name}\'s fruit-forward character provides '
-            'the contrast your palate craves. Beautiful balance.';
-      }
+      return fill(t.text, why: why);
     }
-
-    if (strategy == PairingStrategy.complement) {
-      if (foodProps.contains(FoodProperty.smokyCharred)) {
-        return 'Smoke meets smoke, Bro. ${dish.name}\'s charred notes '
-            'find a soulmate in ${product.name}\'s complex, '
-            'oak-aged character. They amplify each other.';
-      }
-      if (foodProps.contains(FoodProperty.highProtein)) {
-        return '${dish.name}\'s protein is the perfect dance partner '
-            'for ${product.name}\'s tannins. The tannin binds to '
-            'protein and softens — making the wine taste smoother.';
-      }
-      if (foodProps.contains(FoodProperty.lightDelicate)) {
-        return 'Delicate ${dish.name} needs a gentle companion. '
-            '${product.name}\'s light body won\'t overpower the '
-            'subtle flavours. Weight-matching at its finest.';
-      }
-    }
-
-    return '${product.name} and ${dish.name} are a solid match. '
-        'The ${strategy.displayName.toLowerCase()} pairing brings '
-        'out the best in both — trust your Bro on this one.';
+    return fill(r.explanationDefault);
   }
+}
+
+class FoodFitBreakdown {
+  const FoodFitBreakdown({
+    required this.base,
+    required this.rulePoints,
+    required this.curatedScore,
+    required this.curatedBonus,
+    required this.total,
+    required this.strategy,
+  });
+
+  final double base;
+  final List<({FoodProperty property, double points})> rulePoints;
+  final double? curatedScore;
+  final double curatedBonus;
+  final double total;
+  final PairingStrategy strategy;
 }
 
 class PairingResult {
@@ -385,13 +343,10 @@ class PairingResult {
   final double occasionBonus;
   final double frequencyPenalty;
 
-  /// Points added to the score from engine v1.1's community
-  /// feedback aggregate (Bayesian-shrunk yes-rate). Zero when no
-  /// community signal exists for this (product, dish) pair.
+  /// Community feedback nudge (engine v1.1), 0 when no data.
   final double feedbackBonus;
 
-  /// Hand-written Bro Tip when the dish catalogue has a curated pairing
-  /// for this dish and drink. Null otherwise.
+  /// Hand-written tip for this dish and drink, when one exists.
   final String? broTip;
 
   int get matchPercent => score.round();
@@ -413,10 +368,8 @@ class FoodPairingResult {
   final PairingStrategy strategy;
   final String explanation;
 
-  /// True when [explanation] is a hand-written Bro Tip rather than the
-  /// generic template sentence.
+  /// True when the tip and strategy come from the dish catalogue.
   final bool isCurated;
 
   int get matchPercent => score.round();
 }
-

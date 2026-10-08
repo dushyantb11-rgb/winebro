@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:winebro/core/config/app_config.dart';
+
+// Codes below are stable identifiers. Everything about them — names,
+// descriptions, icons, weights, bonuses, modifiers — comes from
+// Firestore `config/*` (see AppConfig) and is edited in the admin app.
 
 enum PalateAxis {
   fruit,
@@ -8,212 +13,108 @@ enum PalateAxis {
   freshness,
   complexity;
 
-  double get defaultWeight => switch (this) {
-    PalateAxis.fruit => 1.0,
-    PalateAxis.acidity => 1.2,
-    PalateAxis.body => 1.1,
-    PalateAxis.tannin => 0.9,
-    PalateAxis.freshness => 0.8,
-    PalateAxis.complexity => 1.0,
-  };
+  double get defaultWeight =>
+      AppConfig.current.pairingRules.axisWeights[this] ?? 1.0;
 
-  String get displayName => switch (this) {
-    PalateAxis.fruit => 'Fruit',
-    PalateAxis.acidity => 'Acidity',
-    PalateAxis.body => 'Body',
-    PalateAxis.tannin => 'Tannin',
-    PalateAxis.freshness => 'Freshness',
-    PalateAxis.complexity => 'Complexity',
-  };
+  String get displayName => AppConfig.current.categories.palateAxes[this] ?? name;
 }
 
 enum PalateArchetype {
-  boldExplorer(
-    displayName: 'Bold Explorer',
-    description: 'You crave intensity. Full-bodied reds, aged whisky, '
-        'barrel-aged stouts — the bolder, the better.',
-    icon: Icons.explore,
-    bonusPercent: 15,
-  ),
-  crispPurist(
-    displayName: 'Crisp Purist',
-    description: 'Clean lines and sharp edges. Sauvignon Blanc, dry Riesling, '
-        'pilsner, gin & tonic — you love precision.',
-    icon: Icons.diamond,
-    bonusPercent: 12,
-  ),
-  fruitForward(
-    displayName: 'Fruit Forward',
-    description: 'Ripe, juicy, and expressive. New World reds, fruit beers, '
-        'rum cocktails — if it bursts with fruit, you\'re in.',
-    icon: Icons.park,
-    bonusPercent: 10,
-  ),
-  balancedSipper(
-    displayName: 'Balanced Sipper',
-    description: 'Harmony in every sip. Medium-bodied wines, wheat beers, '
-        'blended whiskies — you appreciate equilibrium.',
-    icon: Icons.balance,
-    bonusPercent: 5,
-  ),
-  sweetTooth(
-    displayName: 'Sweet Tooth',
-    description: 'Life\'s too short for bitter. Moscato, dessert wines, '
-        'sweet cocktails, ciders — you know what you love.',
-    icon: Icons.cake,
-    bonusPercent: 12,
-  );
+  boldExplorer,
+  crispPurist,
+  fruitForward,
+  balancedSipper,
+  sweetTooth;
 
-  const PalateArchetype({
-    required this.displayName,
-    required this.description,
-    required this.icon,
-    required this.bonusPercent,
-  });
+  ArchetypeInfo? get _info => AppConfig.current.archetypes.items[this];
 
-  final String displayName;
-  final String description;
-  final IconData icon;
-  final int bonusPercent;
+  String get displayName => _info?.displayName ?? name;
+  String get description => _info?.description ?? '';
+  IconData get icon => _info?.icon ?? Icons.wine_bar;
+  int get bonusPercent => _info?.bonusPercent ?? 0;
 }
 
 enum DrinkCategory {
-  redWine('Red Wine'),
-  whiteWine('White Wine'),
-  roseWine('Rosé Wine'),
-  sparklingWine('Sparkling Wine'),
-  dessertWine('Dessert Wine'),
-  whisky('Whisky'),
-  brandy('Brandy'),
-  gin('Gin'),
-  rum('Rum'),
-  vodka('Vodka'),
-  tequila('Tequila'),
-  beer('Beer'),
-  craftBeer('Craft Beer');
+  redWine,
+  whiteWine,
+  roseWine,
+  sparklingWine,
+  dessertWine,
+  whisky,
+  brandy,
+  gin,
+  rum,
+  vodka,
+  tequila,
+  beer,
+  craftBeer;
 
-  const DrinkCategory(this.displayName);
-  final String displayName;
+  DrinkCategoryInfo? get _info => AppConfig.current.categories.drinks[this];
 
-  String get group => switch (this) {
-    DrinkCategory.redWine ||
-    DrinkCategory.whiteWine ||
-    DrinkCategory.roseWine ||
-    DrinkCategory.sparklingWine ||
-    DrinkCategory.dessertWine => 'Wine',
-    DrinkCategory.whisky => 'Whisky',
-    DrinkCategory.brandy ||
-    DrinkCategory.gin ||
-    DrinkCategory.rum ||
-    DrinkCategory.vodka ||
-    DrinkCategory.tequila => 'Spirits',
-    DrinkCategory.beer ||
-    DrinkCategory.craftBeer => 'Beer',
-  };
+  String get displayName => _info?.displayName ?? name;
+  String get group => _info?.group ?? 'Spirits';
 }
 
 enum FoodCategory {
-  northIndianRich('North Indian Rich'),
-  southIndianSpiced('South Indian Spiced'),
-  coastalSeafood('Coastal Seafood'),
-  streetFood('Street Food'),
-  tandooriGrilled('Tandoori / Grilled'),
-  vegetarianPaneer('Vegetarian / Paneer'),
-  riceDishes('Rice Dishes'),
-  desserts('Desserts');
+  northIndianRich,
+  southIndianSpiced,
+  coastalSeafood,
+  streetFood,
+  tandooriGrilled,
+  vegetarianPaneer,
+  riceDishes,
+  desserts;
 
-  const FoodCategory(this.displayName);
-  final String displayName;
+  CuisineInfo? get _info => AppConfig.current.categories.cuisines[this];
 
-  IconData get icon => switch (this) {
-    FoodCategory.northIndianRich => Icons.restaurant,
-    FoodCategory.southIndianSpiced => Icons.breakfast_dining,
-    FoodCategory.coastalSeafood => Icons.set_meal,
-    FoodCategory.streetFood => Icons.fastfood,
-    FoodCategory.tandooriGrilled => Icons.kebab_dining,
-    FoodCategory.vegetarianPaneer => Icons.eco,
-    FoodCategory.riceDishes => Icons.rice_bowl,
-    FoodCategory.desserts => Icons.cake,
-  };
+  String get displayName => _info?.displayName ?? name;
+  IconData get icon => _info?.icon ?? Icons.restaurant;
 }
 
 enum PairingStrategy {
-  complement('Complement', 'Like reinforces like — similar profiles enhance each other'),
-  contrast('Contrast', 'Opposites balance — opposing elements counteract each other');
+  complement,
+  contrast;
 
-  const PairingStrategy(this.displayName, this.description);
-  final String displayName;
-  final String description;
+  StrategyInfo? get _info =>
+      AppConfig.current.categories.pairingStrategies[this];
+
+  String get displayName => _info?.displayName ?? name;
+  String get description => _info?.description ?? '';
 }
 
 enum Occasion {
-  dateNight('Date Night', Icons.nightlife),
-  bbqCookout('BBQ / Cookout', Icons.outdoor_grill),
-  casualFriday('Casual Friday', Icons.weekend),
-  celebration('Celebration', Icons.celebration),
-  businessDinner('Business Dinner', Icons.business_center),
-  beachPool('Beach / Pool', Icons.beach_access);
+  dateNight,
+  bbqCookout,
+  casualFriday,
+  celebration,
+  businessDinner,
+  beachPool;
 
-  const Occasion(this.displayName, this.icon);
-  final String displayName;
-  final IconData icon;
+  OccasionInfo? get _info => AppConfig.current.occasions.items[this];
 
-  Map<PalateAxis, double> get axisModifiers => switch (this) {
-    Occasion.dateNight => {
-      PalateAxis.complexity: 1.5,
-      PalateAxis.body: 1.0,
-      PalateAxis.freshness: -0.5,
-    },
-    Occasion.bbqCookout => {
-      PalateAxis.body: 1.5,
-      PalateAxis.tannin: 1.0,
-      PalateAxis.complexity: -0.5,
-    },
-    Occasion.casualFriday => {
-      PalateAxis.freshness: 1.0,
-      PalateAxis.fruit: 0.5,
-      PalateAxis.body: -0.5,
-    },
-    Occasion.celebration => {
-      PalateAxis.complexity: 1.5,
-      PalateAxis.acidity: 1.0,
-    },
-    Occasion.businessDinner => {
-      PalateAxis.complexity: 1.0,
-    },
-    Occasion.beachPool => {
-      PalateAxis.freshness: 1.5,
-      PalateAxis.acidity: 1.0,
-      PalateAxis.body: -1.0,
-    },
-  };
-
+  String get displayName => _info?.displayName ?? name;
+  IconData get icon => _info?.icon ?? Icons.celebration;
+  Map<PalateAxis, double> get axisModifiers => _info?.axisModifiers ?? const {};
   ({DrinkCategory category, double bonusPercent})? get categoryBonus =>
-      switch (this) {
-        Occasion.celebration => (
-          category: DrinkCategory.sparklingWine,
-          bonusPercent: 10,
-        ),
-        _ => null,
-      };
+      _info?.categoryBonus;
 }
 
-const double kScoreFloor = 40.0;
-const double kScoreCeiling = 99.0;
-const double kAxisMin = 0.0;
-const double kAxisMax = 10.0;
+// Scoring bounds and blend weights, from config.
+double get kScoreFloor => AppConfig.current.pairingRules.scoreFloor;
+double get kScoreCeiling => AppConfig.current.pairingRules.scoreCeiling;
+double get kAxisMin => AppConfig.current.quiz.axisMin;
+double get kAxisMax => AppConfig.current.quiz.axisMax;
+double get kQuizBlendWeight => AppConfig.current.quiz.quizBlendWeight;
+double get kSliderBlendWeight => AppConfig.current.quiz.sliderBlendWeight;
+double get kFrequencyPenalty2nd =>
+    AppConfig.current.pairingRules.frequencyPenaltySecond;
+double get kFrequencyPenalty3rd =>
+    AppConfig.current.pairingRules.frequencyPenaltyThird;
+double get kFrequencyPenaltyCap =>
+    AppConfig.current.pairingRules.frequencyPenaltyCap;
 
-const double kQuizBlendWeight = 0.4;
-const double kSliderBlendWeight = 0.6;
-
-const double kFrequencyPenalty2nd = -3.0;
-const double kFrequencyPenalty3rd = -8.0;
-const double kFrequencyPenaltyCap = -15.0;
-
-const Map<int, ({String name, int minXp, IconData icon})> kXpLevels = {
-  0: (name: 'Curious Sibling', minXp: 0, icon: Icons.eco),
-  1: (name: 'Aspiring Taster', minXp: 500, icon: Icons.spa),
-  2: (name: 'Confident Pairer', minXp: 1500, icon: Icons.local_florist),
-  3: (name: 'Wise Elder', minXp: 5000, icon: Icons.diamond),
-};
-
+/// XP levels keyed by level number, from config.
+Map<int, ({String name, int minXp, IconData icon})> get kXpLevels => {
+      for (final l in AppConfig.current.gamification.levels)
+        l.level: (name: l.name, minXp: l.minXp, icon: l.icon),
+    };

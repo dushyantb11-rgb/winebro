@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:winebro/core/config/app_config.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
 import 'package:winebro/features/pairing/domain/open_facts.dart';
 
@@ -87,20 +88,21 @@ class DishPairing {
 }
 
 enum FoodProperty {
-  highFat('High Fat'),
-  spicyHeat('Spicy Heat'),
-  highProtein('High Protein'),
-  lightDelicate('Light & Delicate'),
-  sweetDessert('Sweet Dessert'),
-  umamiRich('Umami-Rich'),
-  acidic('Acidic'),
-  smokyCharred('Smoky / Charred'),
-  creamy('Creamy'),
-  tangy('Tangy'),
-  aromatic('Aromatic');
+  highFat,
+  spicyHeat,
+  highProtein,
+  lightDelicate,
+  sweetDessert,
+  umamiRich,
+  acidic,
+  smokyCharred,
+  creamy,
+  tangy,
+  aromatic;
 
-  const FoodProperty(this.displayName);
-  final String displayName;
+  /// Display name from `config/categories`.
+  String get displayName =>
+      AppConfig.current.categories.foodProperties[this] ?? name;
 }
 
 OpenPhoto? _photoFrom(Object? openData) {

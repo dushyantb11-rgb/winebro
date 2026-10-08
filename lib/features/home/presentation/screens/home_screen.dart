@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:winebro/core/config/app_config.dart';
 import 'package:winebro/core/utils/formatters.dart';
 import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
@@ -164,32 +165,20 @@ class HomeScreen extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
                 child: Row(
                   children: [
-                    Expanded(
-                      child: EmotionTile(
-                        label: context.l10n.homeEmotionCooking,
-                        icon: Icons.outdoor_grill,
-                        gradient: [colors.paprika, colors.paprikaDeep],
-                        onTap: () => context.go('/pair'),
+                    for (final (i, tile)
+                        in AppConfig.current.home.emotionTiles.indexed) ...[
+                      if (i > 0) const SizedBox(width: 12),
+                      Expanded(
+                        child: EmotionTile(
+                          label: _emotionLabel(context, tile),
+                          icon: tile.icon,
+                          gradient: [
+                            for (final t in tile.gradient) _paletteToken(colors, t),
+                          ],
+                          onTap: () => context.go(tile.route),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: EmotionTile(
-                        label: context.l10n.homeEmotionHosting,
-                        icon: Icons.celebration_outlined,
-                        gradient: [colors.thunder, colors.paprikaDark],
-                        onTap: () => context.go('/pair'),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: EmotionTile(
-                        label: context.l10n.homeEmotionJustSipping,
-                        icon: Icons.nightlight_round,
-                        gradient: [colors.paprikaDark, colors.thunderLight],
-                        onTap: () => context.go('/pair'),
-                      ),
-                    ),
+                    ],
                   ],
                 ),
               ),
@@ -1012,3 +1001,23 @@ class _AvatarButton extends StatelessWidget {
     );
   }
 }
+
+String _emotionLabel(BuildContext context, EmotionTileConfig tile) =>
+    switch (tile.labelKey) {
+      'homeEmotionCooking' => context.l10n.homeEmotionCooking,
+      'homeEmotionHosting' => context.l10n.homeEmotionHosting,
+      'homeEmotionJustSipping' => context.l10n.homeEmotionJustSipping,
+      _ => tile.labelKey,
+    };
+
+Color _paletteToken(AppColors c, String token) => switch (token) {
+      'paprika' => c.paprika,
+      'paprikaLight' => c.paprikaLight,
+      'paprikaDark' => c.paprikaDark,
+      'paprikaDeep' => c.paprikaDeep,
+      'thunder' => c.thunder,
+      'thunderLight' => c.thunderLight,
+      'salem' => c.salem,
+      'salemLight' => c.salemLight,
+      _ => c.paprika,
+    };

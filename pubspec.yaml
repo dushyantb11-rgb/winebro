@@ -95,7 +95,6 @@ flutter:
     - assets/svg/
     - assets/products/
     - assets/dishes/
-    - assets/config/
 
   fonts:
     - family: PlayfairDisplay
