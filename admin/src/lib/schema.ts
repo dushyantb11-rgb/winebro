@@ -90,6 +90,7 @@ export const dishes: CollectionSpec = {
   editable: true,
   deletable: true,
   description: "Indian dishes, their food properties and hand-written pairings with drinks.",
+  imageKey: "imageUrl",
   imageFallback: (d) => get(d, "openData.photo.imageUrl"),
   subtitle: (d) => String(d.category ?? ""),
   fields: [
@@ -101,6 +102,7 @@ export const dishes: CollectionSpec = {
     { key: "verified", label: "Verified by a person", type: "boolean", section: "Basics", table: true },
     { key: "sortOrder", label: "Sort order", type: "number", step: 1, section: "Basics" },
     { key: "pairings", label: "Hand-written pairings", type: "pairings", section: "Pairings", span: true, export: false },
+    { key: "imageUrl", label: "Photo", type: "image", section: "Photo", span: true },
     { key: "source", label: "Source", type: "text", section: "Provenance" },
     { key: "provenance", label: "Provenance", type: "text", section: "Provenance" },
     { key: "openData", label: "Open data (Indian Food 101, photo)", type: "json", section: "Open data", span: true, export: false },

@@ -47,7 +47,10 @@ class Dish {
         .map((p) => DishPairing.fromMap(p as Map<String, dynamic>))
         .toList(),
     description: map['description'] as String?,
-    photo: _photoFrom(map['openData']),
+    photo: map['imageUrl'] is String && (map['imageUrl'] as String).isNotEmpty
+        // Our own photo (uploaded in the admin console) wins over open data.
+        ? OpenPhoto(imageUrl: map['imageUrl'] as String, credit: 'WineBro')
+        : _photoFrom(map['openData']),
   );
 }
 
