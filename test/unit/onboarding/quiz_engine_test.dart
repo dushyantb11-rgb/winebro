@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
 import 'package:winebro/features/onboarding/domain/quiz_engine.dart';
+import 'package:winebro/features/pairing/data/seed_products.dart';
 
 void main() {
   const engine = QuizEngine();
@@ -206,6 +207,54 @@ void main() {
         PalateAxis.complexity: 4,
       });
       expect(archetype, equals(PalateArchetype.balancedSipper));
+    });
+  });
+
+  group('QE-17 to QE-19: Untouched sliders and tried bottles', () {
+    QuizAnswer food(String id) => kQuizStep1Foods.firstWhere((a) => a.id == id);
+    QuizAnswer drink(String id) =>
+        kQuizStep3Drinks.firstWhere((a) => a.id == id);
+
+    test('QE-17: Rich-food lover with untouched sliders is a Bold Explorer',
+        () {
+      final profile = engine.generateProfile(
+        foodAnswers: [food('butter-chicken'), food('dal-makhani')],
+        drinkAnswer: drink('masala-chai'),
+        sliderOverrides: const {},
+      );
+      expect(profile.body, equals(10.0));
+      expect(profile.complexity, equals(7.0));
+      expect(profile.archetype, equals(PalateArchetype.boldExplorer));
+    });
+
+    test('QE-18: Axes without a touched slider keep their full quiz score',
+        () {
+      final profile = engine.generateProfile(
+        foodAnswers: [food('pani-puri'), food('masala-dosa')],
+        chaatAnswer: kQuizStep2Chaat.firstWhere((a) => a.id == 'bhel-puri'),
+        drinkAnswer: drink('jaljeera'),
+        sliderOverrides: const {PalateAxis.body: 2},
+      );
+      // Freshness is the top raw axis here and has no slider.
+      expect(profile.freshness, equals(10.0));
+    });
+
+    test('QE-19: Tried bottles shift the profile towards those bottles', () {
+      final base = engine.generateProfile(
+        foodAnswers: [food('masala-dosa')],
+        drinkAnswer: drink('jaljeera'),
+      );
+      final tried = kSeedProducts
+          .where((p) => p.id == 'krsma-cabernet-sauvignon')
+          .toList();
+      expect(tried, hasLength(1));
+      final withTried = engine.generateProfile(
+        foodAnswers: [food('masala-dosa')],
+        drinkAnswer: drink('jaljeera'),
+        triedProducts: tried,
+      );
+      expect(withTried.body, greaterThan(base.body));
+      expect(withTried.freshness, lessThanOrEqualTo(base.freshness));
     });
   });
 }

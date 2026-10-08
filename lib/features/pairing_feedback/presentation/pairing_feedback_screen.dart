@@ -31,7 +31,7 @@ class _PairingFeedbackScreenState extends State<PairingFeedbackScreen> {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return Scaffold(
-      backgroundColor: colors.charcoal,
+      backgroundColor: colors.background,
       body: const SizedBox.expand(),
     );
   }

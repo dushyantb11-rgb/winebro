@@ -404,7 +404,7 @@ class _HeroBlock extends StatelessWidget {
                     value: value,
                     strokeWidth: 6,
                     backgroundColor: colors.surface3,
-                    valueColor: AlwaysStoppedAnimation<Color>(colors.gold),
+                    valueColor: AlwaysStoppedAnimation<Color>(colors.highlight),
                     strokeCap: StrokeCap.round,
                   ),
                 ),
@@ -545,7 +545,7 @@ class _StatTile extends StatelessWidget {
 
     return Column(
       children: [
-        Icon(tile.icon, color: colors.gold, size: 18),
+        Icon(tile.icon, color: colors.highlight, size: 18),
         const SizedBox(height: 6),
         TweenAnimationBuilder<double>(
           tween: Tween(begin: 0, end: tile.value.toDouble()),
@@ -650,7 +650,7 @@ class _PalateSection extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(profile.archetype.icon, size: 14, color: colors.gold),
+                          Icon(profile.archetype.icon, size: 14, color: colors.highlight),
                           const SizedBox(width: 6),
                           Text(
                             profile.archetype.displayName.toUpperCase(),
@@ -658,7 +658,7 @@ class _PalateSection extends StatelessWidget {
                               fontFamily: 'Montserrat',
                               fontSize: 12,
                               fontWeight: FontWeight.w800,
-                              color: colors.gold,
+                              color: colors.highlight,
                               letterSpacing: 1.5,
                             ),
                           ),
@@ -850,11 +850,11 @@ class _AchievementsSection extends StatelessWidget {
                     return Container(
                       decoration: BoxDecoration(
                         color: earned
-                            ? colors.gold.withValues(alpha: 0.1)
+                            ? colors.highlight.withValues(alpha: 0.1)
                             : colors.surface1,
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                          color: earned ? colors.gold : colors.borderSubtle,
+                          color: earned ? colors.highlight : colors.borderSubtle,
                         ),
                       ),
                       child: Padding(
@@ -867,7 +867,7 @@ class _AchievementsSection extends StatelessWidget {
                               child: Icon(
                                 badge.icon,
                                 size: 24,
-                                color: earned ? colors.gold : colors.textTertiary,
+                                color: earned ? colors.highlight : colors.textTertiary,
                               ),
                             ),
                             const SizedBox(height: 6),
@@ -931,11 +931,11 @@ class _BadgeProgressCard extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: colors.gold.withValues(alpha: 0.15),
+              color: colors.highlight.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: colors.gold.withValues(alpha: 0.3)),
+              border: Border.all(color: colors.highlight.withValues(alpha: 0.3)),
             ),
-            child: Icon(badge.icon, color: colors.gold, size: 22),
+            child: Icon(badge.icon, color: colors.highlight, size: 22),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -981,7 +981,7 @@ class _BadgeProgressCard extends StatelessWidget {
                         child: Container(
                           height: 6,
                           decoration: BoxDecoration(
-                            color: colors.gold,
+                            color: colors.highlight,
                             borderRadius: BorderRadius.circular(3),
                           ),
                         ),
@@ -1010,7 +1010,7 @@ class _BadgeProgressCard extends StatelessWidget {
                   fontFamily: 'PlayfairDisplay',
                   fontSize: 18,
                   fontWeight: FontWeight.w900,
-                  color: colors.gold,
+                  color: colors.highlight,
                 ),
               ),
             ],
@@ -1032,11 +1032,11 @@ class _EarnedBadgeChip extends StatelessWidget {
       width: 56,
       height: 56,
       decoration: BoxDecoration(
-        color: colors.gold.withValues(alpha: 0.15),
+        color: colors.highlight.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: colors.gold.withValues(alpha: 0.4)),
+        border: Border.all(color: colors.highlight.withValues(alpha: 0.4)),
       ),
-      child: Icon(badge.icon, color: colors.gold, size: 24),
+      child: Icon(badge.icon, color: colors.highlight, size: 24),
     );
   }
 }

@@ -1020,11 +1020,83 @@ abstract class AppLocalizations {
   /// **'BRO CIRCLE'**
   String get homeBroCircleEyebrow;
 
-  /// Social proof one-liner on product detail
+  /// Real Bro Circle count on product detail, from community_signals
   ///
   /// In en, this message translates to:
-  /// **'{percent}% of bros pair this with Indian food'**
-  String homeBroCircleSocialProof(int percent);
+  /// **'{count, plural, =1{1 bro tasted this in the last 7 days} other{{count} bros tasted this in the last 7 days}}'**
+  String productBroCircleTasters(int count);
+
+  /// Most common food logged with this drink by the community
+  ///
+  /// In en, this message translates to:
+  /// **'Most often with {dish} ({percent}%)'**
+  String productBroCircleTopPairing(String dish, int percent);
+
+  /// Eyebrow over open-data facts on product detail
+  ///
+  /// In en, this message translates to:
+  /// **'FACTS FROM OPEN SOURCES'**
+  String get productOpenFactsTitle;
+
+  /// Open fact label
+  ///
+  /// In en, this message translates to:
+  /// **'Alcohol'**
+  String get productOpenFactAlcohol;
+
+  /// Open fact label
+  ///
+  /// In en, this message translates to:
+  /// **'Producer'**
+  String get productOpenFactProducer;
+
+  /// Open fact label
+  ///
+  /// In en, this message translates to:
+  /// **'Brand'**
+  String get productOpenFactBrand;
+
+  /// Open fact label
+  ///
+  /// In en, this message translates to:
+  /// **'Beer style'**
+  String get productOpenFactBeerStyle;
+
+  /// Open fact label for food types
+  ///
+  /// In en, this message translates to:
+  /// **'Often paired with'**
+  String get productOpenFactPairsWith;
+
+  /// Tag when open data agrees with ours
+  ///
+  /// In en, this message translates to:
+  /// **'MATCHES OURS'**
+  String get productOpenFactMatches;
+
+  /// Tag when open data disagrees with ours
+  ///
+  /// In en, this message translates to:
+  /// **'SOURCES DIFFER'**
+  String get productOpenFactDiffers;
+
+  /// Bold lead-in of the own-content note
+  ///
+  /// In en, this message translates to:
+  /// **'Taste profile and notes:'**
+  String get productOwnContentLabel;
+
+  /// Honest note on hand-authored product content
+  ///
+  /// In en, this message translates to:
+  /// **'written by WineBro, not yet checked by a sommelier.'**
+  String get productOwnContentNote;
+
+  /// Attribution line required by the photo licence
+  ///
+  /// In en, this message translates to:
+  /// **'Photo: {credit}'**
+  String productPhotoCredit(String credit);
 
   /// Bro Tip card eyebrow
   ///

@@ -1021,7 +1021,7 @@ class _BrosPickPairingCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: colors.goldWarm,
+              color: colors.inkOnHero,
               borderRadius: BorderRadius.circular(999),
             ),
             child: Row(
@@ -1112,7 +1112,7 @@ class _BrosPickFoodCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: colors.goldWarm,
+              color: colors.inkOnHero,
               borderRadius: BorderRadius.circular(999),
             ),
             child: Text(

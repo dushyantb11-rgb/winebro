@@ -362,7 +362,7 @@ class _ThemeSwitch extends StatelessWidget {
                 child: Icon(
                   value ? Icons.dark_mode : Icons.light_mode,
                   size: 16,
-                  color: value ? colors.paprika : colors.gold,
+                  color: value ? colors.paprika : colors.highlight,
                 ),
               ),
             ),

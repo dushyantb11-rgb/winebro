@@ -124,7 +124,7 @@ class _VoiceCaptureSheetState extends ConsumerState<VoiceCaptureSheet>
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: colors.charcoal,
+          color: colors.background,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         ),
         padding: const EdgeInsets.fromLTRB(24, 8, 24, 28),

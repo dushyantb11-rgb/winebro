@@ -24,7 +24,7 @@ import 'package:winebro/features/scanner/domain/label_matcher.dart';
 ///   scanning    Indeterminate sweep + "Looking…"
 ///   matched     Bottle name + match% + actions (sheet at 60% height)
 ///
-/// Top bar has only an X close + a flashlight placeholder. No tabs,
+/// Top bar has only an X close. No tabs,
 /// no bottom nav (it's a push route above the shell).
 class ScannerScreen extends ConsumerStatefulWidget {
   const ScannerScreen({super.key});
@@ -141,7 +141,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
     final colors = context.appColors;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF050505),
+      backgroundColor: colors.cameraCanvas,
       body: Stack(
         children: [
           // ====== Camera canvas ======
@@ -168,7 +168,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
                 child: Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                      icon: Icon(Icons.close, color: colors.inkOnHero, size: 28),
                       tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
                       onPressed: () => Navigator.of(context).pop(),
                     ),
@@ -212,18 +212,19 @@ class _CameraCanvas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: RadialGradient(
           center: Alignment.center,
           radius: 1.4,
-          colors: [Color(0xFF1A0408), Color(0xFF050505)],
+          colors: [colors.cameraGlow, colors.cameraCanvas],
         ),
       ),
-      child: const Center(
+      child: Center(
         child: Icon(
           Icons.center_focus_weak,
-          color: Color(0xFF1F1A1B),
+          color: colors.cameraGhost,
           size: 220,
         ),
       ),
@@ -242,7 +243,7 @@ class _GoldFinder extends StatelessWidget {
         width: 280,
         height: 380,
         child: CustomPaint(
-          painter: _CornerBracketPainter(color: colors.goldWarm),
+          painter: _CornerBracketPainter(color: colors.inkOnHero),
         ),
       ),
     );
@@ -298,7 +299,7 @@ class _SweepLine extends StatelessWidget {
           builder: (_, __) {
             final t = controller.value;
             return CustomPaint(
-              painter: _SweepPainter(progress: t, color: colors.goldWarm),
+              painter: _SweepPainter(progress: t, color: colors.inkOnHero),
             );
           },
         ),
@@ -394,7 +395,7 @@ class BackdropContainer extends StatelessWidget {
     final colors = context.appColors;
     return Container(
       decoration: BoxDecoration(
-        color: colors.charcoal,
+        color: colors.background,
         borderRadius:
             const BorderRadius.vertical(top: Radius.circular(28)),
       ),
@@ -515,7 +516,7 @@ class _ScanningSheet extends StatelessWidget {
               height: 18,
               child: CircularProgressIndicator(
                 strokeWidth: 2.5,
-                color: colors.goldWarm,
+                color: colors.inkOnHero,
               ),
             ),
             const SizedBox(width: 12),

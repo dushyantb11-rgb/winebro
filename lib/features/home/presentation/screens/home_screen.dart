@@ -15,6 +15,7 @@ import 'package:winebro/features/home/presentation/providers/home_providers.dart
 import 'package:winebro/features/journal/domain/journal_entry.dart';
 import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
+import 'package:winebro/shared/widgets/open_facts_section.dart';
 import 'package:winebro/shared/widgets/brand_label_card.dart';
 import 'package:winebro/shared/widgets/emotion_tile.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
@@ -67,7 +68,7 @@ class HomeScreen extends ConsumerWidget {
             // ====== Sticky header — official logo asset ======
             SliverAppBar(
               floating: true,
-              backgroundColor: colors.charcoal,
+              backgroundColor: colors.background,
               elevation: 0,
               centerTitle: true,
               title: Image.asset(
@@ -306,6 +307,7 @@ class HomeScreen extends ConsumerWidget {
 
   void _showProductDetail(BuildContext context, Product product) {
     final colors = context.appColors;
+    final openFacts = product.openFacts;
 
     showModalBottomSheet<void>(
       context: context,
@@ -319,7 +321,7 @@ class HomeScreen extends ConsumerWidget {
         builder: (_, controller) => Container(
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
           decoration: BoxDecoration(
-            color: colors.charcoal,
+            color: colors.background,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
           ),
           child: ListView(
@@ -336,6 +338,10 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+              if (openFacts.photo != null) ...[
+                OpenPhotoHeader(photo: openFacts.photo!),
+                const SizedBox(height: 16),
+              ],
               Text(
                 product.name,
                 style: TextStyle(
@@ -393,38 +399,14 @@ class HomeScreen extends ConsumerWidget {
                         ))
                     .toList(),
               ),
-              const SizedBox(height: 28),
-              // Bro Circle social proof one-liner
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                decoration: BoxDecoration(
-                  color: colors.surface1,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border(
-                    left: BorderSide(color: context.salemOnSurface, width: 3),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.people_outline,
-                        size: 18, color: context.salemOnSurface),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        context.l10n.homeBroCircleSocialProof(82),
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: colors.textSecondary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              const SizedBox(height: 24),
+              if (openFacts.facts.isNotEmpty) ...[
+                OpenFactsSection(facts: openFacts.facts),
+                const SizedBox(height: 12),
+              ],
+              const OwnContentNote(),
               const SizedBox(height: 20),
+              ProductBroCircleLine(product: product),
               ProductActionRow(
                 product: product,
                 source: AffiliateSource.detail,
@@ -498,7 +480,7 @@ class _TonightsPourCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: colors.goldWarm,
+              color: colors.inkOnHero,
               borderRadius: BorderRadius.circular(999),
             ),
             child: Row(
@@ -619,7 +601,7 @@ class _ContinueStoryCard extends StatelessWidget {
           children: [
             Text(
               context.l10n.homeContinueStoryEyebrow,
-              style: context.eyebrow.copyWith(color: colors.gold),
+              style: context.eyebrow.copyWith(color: colors.highlight),
             ),
             const SizedBox(height: 12),
             Text.rich(
@@ -923,7 +905,7 @@ class _BroTipCard extends StatelessWidget {
             Row(
               children: [
                 Icon(Icons.lightbulb_outline,
-                    size: 16, color: colors.goldWarm),
+                    size: 16, color: colors.inkOnHero),
                 const SizedBox(width: 8),
                 Text(
                   context.l10n.homeBroTipHeader,
@@ -931,7 +913,7 @@ class _BroTipCard extends StatelessWidget {
                     fontFamily: 'Montserrat',
                     fontSize: 11,
                     fontWeight: FontWeight.w800,
-                    color: colors.goldWarm,
+                    color: colors.inkOnHero,
                     letterSpacing: 1.5,
                   ),
                 ),
