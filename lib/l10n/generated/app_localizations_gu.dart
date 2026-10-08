@@ -547,6 +547,23 @@ class AppLocalizationsGu extends AppLocalizations {
       'written by WineBro, not yet checked by a sommelier.';
 
   @override
+  String productEstimateNote(String confidence) {
+    return 'estimated from published facts, $confidence confidence. Not yet checked by a sommelier.';
+  }
+
+  @override
+  String get productVerifiedNote => 'checked by our sommelier.';
+
+  @override
+  String get confidenceHigh => 'high';
+
+  @override
+  String get confidenceMedium => 'medium';
+
+  @override
+  String get confidenceLow => 'low';
+
+  @override
   String productPhotoCredit(String credit) {
     return 'Photo: $credit';
   }
@@ -822,6 +839,9 @@ class AppLocalizationsGu extends AppLocalizations {
 
   @override
   String get wishlistRemove => 'Remove';
+
+  @override
+  String get actionBuyNoPrice => 'Find to buy';
 
   @override
   String actionBuy(String price) {

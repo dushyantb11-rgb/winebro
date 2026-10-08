@@ -461,7 +461,7 @@ class _SearchField extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              '${p.subcategory} · ${p.region}',
+                              p.subtitle,
                               style: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontSize: 11,

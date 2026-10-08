@@ -604,7 +604,7 @@ class _MatchedSheet extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          '${product.subcategory} · ${product.region}',
+          product.subtitle,
           style: TextStyle(
             fontFamily: 'Montserrat',
             fontSize: 13,

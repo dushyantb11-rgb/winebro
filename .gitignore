@@ -82,3 +82,4 @@ fonts/*.zip
 /tool/pilot/estimates_angle*.json
 /tool/pilot/estimates_review.json
 /tool/pilot/round2.json
+/tool/pilot/publish.json

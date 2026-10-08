@@ -92,7 +92,24 @@ class QuizEngine {
     };
   }
 
+  /// Every archetype whose rule a profile meets, best match first. Used to
+  /// tag drinks (a drink can suit several archetypes); [classifyArchetype]
+  /// picks the single best one for a person.
+  List<PalateArchetype> qualifyingArchetypes(Map<PalateAxis, double> scores) {
+    final ranked = _candidates(scores)..sort((a, b) => b.$2.compareTo(a.$2));
+    return ranked.map((c) => c.$1).toList();
+  }
+
   PalateArchetype classifyArchetype(Map<PalateAxis, double> scores) {
+    final candidates = _candidates(scores);
+    if (candidates.isEmpty) {
+      return PalateArchetype.balancedSipper;
+    }
+    candidates.sort((a, b) => b.$2.compareTo(a.$2));
+    return candidates.first.$1;
+  }
+
+  List<(PalateArchetype, double)> _candidates(Map<PalateAxis, double> scores) {
     final body = scores[PalateAxis.body]!;
     final complexity = scores[PalateAxis.complexity]!;
     final acidity = scores[PalateAxis.acidity]!;
@@ -129,12 +146,7 @@ class QuizEngine {
       candidates.add((PalateArchetype.balancedSipper, 20 - variance));
     }
 
-    if (candidates.isEmpty) {
-      return PalateArchetype.balancedSipper;
-    }
-
-    candidates.sort((a, b) => b.$2.compareTo(a.$2));
-    return candidates.first.$1;
+    return candidates;
   }
 }
 

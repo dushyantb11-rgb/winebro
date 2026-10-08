@@ -96,7 +96,7 @@ Notes:
 | 3 | Link open data | Claude | `openData` (X-Wines, Open Food Facts, Wikidata, Commons, BJCP) | ✅ `--matches tool/pilot/open_data_matches.json --collection pilot_candidates` |
 | 4 | AI estimate | Claude | `aiEstimate`: notes, aromas, six scores, confidence, inputs and all rounds | ✅ 111 estimated (2026-10-05) |
 | 5 | Sommelier review | Sommelier | approve / edit / reject per drink | 111 reviewed |
-| 6 | Publish | Claude | approved rows copied to `products` with `verified: true` | app shows them |
+| 6 | Publish | Claude | estimates published to `products` with label and confidence; `verified: true` only after stage 5 | ✅ 111 published 2026-10-05 (56 new, 55 updated) |
 
 ## Data shape (Firestore `pilot_candidates/{id}`)
 

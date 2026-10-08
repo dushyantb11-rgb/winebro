@@ -495,7 +495,7 @@ class _LiveSearchResults extends ConsumerWidget {
             return _SearchRow(
               icon: Icons.wine_bar,
               label: t.$1.name,
-              subtitle: '${t.$1.subcategory} · ${t.$1.region}',
+              subtitle: t.$1.subtitle,
               onTap: () => onPickProduct(t.$1),
             );
           }).toList(),
@@ -1065,7 +1065,9 @@ class _BrosPickPairingCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '${p.subcategory} · ${p.region} · ₹${p.price.toStringAsFixed(0)}',
+            [p.subtitle, if (p.hasPrice) '₹${p.price.toStringAsFixed(0)}']
+                .where((s) => s.isNotEmpty)
+                .join(' · '),
             style: TextStyle(
               fontFamily: 'Montserrat',
               fontSize: 12,
@@ -1215,7 +1217,9 @@ class _AlternateCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      '${p.subcategory} · ₹${p.price.toStringAsFixed(0)}',
+                      [p.subcategory, if (p.hasPrice) '₹${p.price.toStringAsFixed(0)}']
+                          .where((s) => s.isNotEmpty)
+                          .join(' · '),
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 12,

@@ -47,7 +47,9 @@ class ProductActionRow extends ConsumerWidget {
     final colors = context.appColors;
     final isInWishlist = ref.watch(wishlistContainsProvider(product.id));
 
-    final buyLabel = context.l10n.actionBuy(product.price.toStringAsFixed(0));
+    final buyLabel = product.hasPrice
+        ? context.l10n.actionBuy(product.price.toStringAsFixed(0))
+        : context.l10n.actionBuyNoPrice;
     final saveLabel = isInWishlist ? context.l10n.actionSaved : context.l10n.actionSave;
 
     final buyIcon = PhosphorIcons.shoppingBagOpen();

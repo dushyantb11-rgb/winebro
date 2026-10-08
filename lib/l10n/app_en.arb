@@ -535,6 +535,19 @@
   "@productOwnContentLabel": {"description": "Bold lead-in of the own-content note"},
   "productOwnContentNote": "written by WineBro, not yet checked by a sommelier.",
   "@productOwnContentNote": {"description": "Honest note on hand-authored product content"},
+  "productEstimateNote": "estimated from published facts, {confidence} confidence. Not yet checked by a sommelier.",
+  "@productEstimateNote": {
+    "description": "Label on AI-estimated taste profile and notes",
+    "placeholders": {"confidence": {"type": "String"}}
+  },
+  "productVerifiedNote": "checked by our sommelier.",
+  "@productVerifiedNote": {"description": "Label once a sommelier approved the taste profile"},
+  "confidenceHigh": "high",
+  "@confidenceHigh": {"description": "Estimate confidence level"},
+  "confidenceMedium": "medium",
+  "@confidenceMedium": {"description": "Estimate confidence level"},
+  "confidenceLow": "low",
+  "@confidenceLow": {"description": "Estimate confidence level"},
   "productPhotoCredit": "Photo: {credit}",
   "@productPhotoCredit": {
     "description": "Attribution line required by the photo licence",
@@ -802,6 +815,8 @@
   "wishlistRemove": "Remove",
   "@wishlistRemove": {"description": "Remove from wishlist button"},
 
+  "actionBuyNoPrice": "Find to buy",
+  "@actionBuyNoPrice": {"description": "Buy button when we have no sourced price"},
   "actionBuy": "Buy ₹{price}",
   "@actionBuy": {
     "description": "Buy button on Pair results / detail",

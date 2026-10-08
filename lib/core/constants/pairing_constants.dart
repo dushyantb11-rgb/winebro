@@ -84,6 +84,7 @@ enum DrinkCategory {
   sparklingWine('Sparkling Wine'),
   dessertWine('Dessert Wine'),
   whisky('Whisky'),
+  brandy('Brandy'),
   gin('Gin'),
   rum('Rum'),
   vodka('Vodka'),
@@ -101,6 +102,7 @@ enum DrinkCategory {
     DrinkCategory.sparklingWine ||
     DrinkCategory.dessertWine => 'Wine',
     DrinkCategory.whisky => 'Whisky',
+    DrinkCategory.brandy ||
     DrinkCategory.gin ||
     DrinkCategory.rum ||
     DrinkCategory.vodka ||

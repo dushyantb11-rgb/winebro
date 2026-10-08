@@ -333,24 +333,39 @@ class _AgreementTag extends StatelessWidget {
   }
 }
 
-/// Honest label on our own hand-authored content.
+/// Honest label on where the taste profile and notes come from:
+/// sommelier-checked, an estimate from published facts (with its
+/// confidence), or our own hand-authored text.
 class OwnContentNote extends StatelessWidget {
-  const OwnContentNote({super.key});
+  const OwnContentNote({required this.product, super.key});
+  final Product product;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final l10n = context.l10n;
+    final confidence = switch (product.estimateConfidence) {
+      'high' => l10n.confidenceHigh,
+      'medium' => l10n.confidenceMedium,
+      'low' => l10n.confidenceLow,
+      _ => null,
+    };
+    final note = product.verified
+        ? l10n.productVerifiedNote
+        : confidence != null
+            ? l10n.productEstimateNote(confidence)
+            : l10n.productOwnContentNote;
     return Text.rich(
       TextSpan(
         children: [
           TextSpan(
-            text: '${context.l10n.productOwnContentLabel} ',
+            text: '${l10n.productOwnContentLabel} ',
             style: TextStyle(
               fontWeight: FontWeight.w700,
               color: colors.textSecondary,
             ),
           ),
-          TextSpan(text: context.l10n.productOwnContentNote),
+          TextSpan(text: note),
         ],
       ),
       style: TextStyle(fontSize: 11.5, color: colors.textTertiary),

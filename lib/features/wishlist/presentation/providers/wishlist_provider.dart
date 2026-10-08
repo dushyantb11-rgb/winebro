@@ -47,7 +47,7 @@ class WishlistRepository {
       category: product.category.group,
       region: product.region,
       savedAt: DateTime.now(),
-      priceInr: product.price,
+      priceInr: product.hasPrice ? product.price : null,
     );
     return _col.doc(product.id).set(entry.toMap());
   }

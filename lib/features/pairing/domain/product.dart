@@ -23,6 +23,8 @@ class Product {
     this.abv,
     this.grapeVariety,
     this.openData,
+    this.estimateConfidence,
+    this.verified = false,
   })  : assert(fruit >= 0 && fruit <= 10),
         assert(acidity >= 0 && acidity <= 10),
         assert(body >= 0 && body <= 10),
@@ -55,6 +57,20 @@ class Product {
   final Map<String, dynamic>? openData;
 
   OpenFacts get openFacts => OpenFacts.fromOpenData(openData, ourAbv: abv);
+
+  /// Confidence of the published taste estimate ("high" / "medium" /
+  /// "low"), or null when the taste profile is hand-authored.
+  final String? estimateConfidence;
+
+  /// True once a sommelier has approved the taste profile and notes.
+  final bool verified;
+
+  /// Pricing is not sourced for every drink yet; 0 means "no price".
+  bool get hasPrice => price > 0;
+
+  /// "Chenin Blanc · Nashik", skipping parts we have no data for.
+  String get subtitle =>
+      [subcategory, region].where((s) => s.trim().isNotEmpty).join(' · ');
 
   double operator [](PalateAxis axis) => switch (axis) {
     PalateAxis.fruit => fruit,
@@ -110,6 +126,8 @@ class Product {
       abv: abv ?? this.abv,
       grapeVariety: grapeVariety ?? this.grapeVariety,
       openData: openData,
+      estimateConfidence: estimateConfidence,
+      verified: verified,
     );
   }
 
@@ -171,6 +189,10 @@ class Product {
       openData: map['openData'] is Map
           ? Map<String, dynamic>.from(map['openData'] as Map)
           : null,
+      estimateConfidence: map['estimate'] is Map
+          ? (map['estimate'] as Map)['confidence'] as String?
+          : null,
+      verified: map['verified'] == true,
     );
   }
 
