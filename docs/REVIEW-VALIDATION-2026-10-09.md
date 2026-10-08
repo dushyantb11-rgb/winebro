@@ -47,6 +47,24 @@ project `winebro` on 9 Oct 2026. Verdict per item: **Confirmed**, **Partly**, **
 4. **Category adapters are the next engine step, not more rules.** Six wine-shaped axes for whisky and beer is a known limit; the config now allows new food properties and rules without a release, so adding `sweetness`, `bitterness`, `carbonation`, `oak/peat` as drink attributes is a data-model change we should plan, not improvise.
 5. **2,000 items is not the gate; city coverage is.** With 111 drinks the scanner will miss most shelves. The practical gate is: the top ~300 SKUs in two launch cities, each with a photo, ABV, category and at least 3 curated pairings, plus "not found — add this bottle".
 
+## 4b. Recheck against the updated review (Home sections, data sources) — 9 Oct, late
+
+The review grew by four sections (Home assessment, Home 2.0 verification, Home correction, data-source
+acquisition). Rechecked against the P0 work in PR #58 and the Home work in progress in the working tree
+(`home_screen.dart`, `home_providers.dart`, `product_action_row.dart`, not mine, not committed by me):
+
+| Topic | Interaction with PR #58 | Status |
+|---|---|---|
+| Home gating of Tonight's Pour / Bro Circle / Bro Tip; "Type a dish"; retail disabled | None of those files are touched by #58. Combined tree compiles: 0 errors; the only warnings are in the Home files (unused `_BroTipCard`, dead code in `product_action_row.dart`) and belong to that work. | No conflict |
+| Catalogue no longer falls back to seed (#58 U7) | Home's Tonight's Pour, quick-start chips and Bro Circle read `allProductsProvider` / `allDishesProvider`; during a load error they now get an empty list instead of seed rows. Pair shows the `CatalogStateBanner`; **Home does not yet** (left for the Home owner to add one line: `const SliverToBoxAdapter(child: CatalogStateBanner())`). | Follow-up for Home |
+| "Continue Story 78% is hard-coded" | Not changed by #58. | Open (Home) |
+| "Bounded by 55 product records" (Home 2.0 verification) | Out of date: 111 live. | — |
+| Data sources: Open Food Facts images are CC BY-SA and "do not store a third-party page image by hotlink" | The app hotlinks 27 Open Food Facts and 10 Commons photo URLs with per-photo author/licence credits (Photo credits screen). Commons per-file licences are stored; OFF image reuse should be confirmed against the OFF terms, or replaced by uploads through the console. | Decision needed |
+| "Generative-AI output must not be a factual product profile" | All 111 drinks carry `provenance: ai-estimate` taste scores, shown as "Estimated from published facts" with confidence; facts (ABV, producer, style) come from open data. This matches the review's `candidate` status; sommelier review (pilot stage 5) upgrades them to `reviewed`. | Consistent, review pending |
+| Live proof of #58 (`functions/scripts/verify-p0.js`, throwaway user) | scan → 55 XP + Eagle Eye; journal+pairing → 170 XP + The Pen + Matchmaker; feedback yes → aggregate 1/0/0; change to no → 0/0/1; user-doc delete → journal, gamification, events, feedback rows gone. | Passed on the deployed functions |
+
+Deployed 9 Oct: rules; `gamificationEvents`, `pairingFeedbackAggregate`, `registerPhoneIndex`, `lookupContacts`, `deleteAccount`, `userDocCleanup` (asia-south1); old `gamificationValidator` and us-central1 deletion functions removed. Build 12 on testers' phones still writes `gamification/*`, `pairing_aggregates` and `phone_index` directly, which the new rules deny — build 13 from PR #58 should follow.
+
 ## 5. Upgrade programme (code) — done in PR after #57
 
 | # | Item | Change |
