@@ -2519,6 +2519,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Learn the smells behind every sip, with Indian names too.'**
   String get profileAromaWheelSub;
+
+  /// No-match: open Pair in drink mode
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name'**
+  String get scanSearchByName;
+
+  /// No-match: open Quick Log with a typed name
+  ///
+  /// In en, this message translates to:
+  /// **'Log it anyway'**
+  String get scanLogAnyway;
 }
 
 class _AppLocalizationsDelegate

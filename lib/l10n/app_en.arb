@@ -1218,5 +1218,9 @@
   "profileAromaWheel": "Explore the aroma wheel",
   "@profileAromaWheel": {"description": "Profile row to the Aroma Wheel"},
   "profileAromaWheelSub": "Learn the smells behind every sip, with Indian names too.",
-  "@profileAromaWheelSub": {"description": "Profile row to the Aroma Wheel"}
+  "@profileAromaWheelSub": {"description": "Profile row to the Aroma Wheel"},
+  "scanSearchByName": "Search by name",
+  "@scanSearchByName": {"description": "No-match: open Pair in drink mode"},
+  "scanLogAnyway": "Log it anyway",
+  "@scanLogAnyway": {"description": "No-match: open Quick Log with a typed name"}
 }

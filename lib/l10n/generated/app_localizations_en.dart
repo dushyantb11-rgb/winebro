@@ -1350,4 +1350,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get profileAromaWheelSub =>
       'Learn the smells behind every sip, with Indian names too.';
+
+  @override
+  String get scanSearchByName => 'Search by name';
+
+  @override
+  String get scanLogAnyway => 'Log it anyway';
 }
