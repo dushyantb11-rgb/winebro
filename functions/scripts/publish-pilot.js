@@ -29,6 +29,12 @@ const rows = JSON.parse(
       continue;
     }
     const data = { ...row, id, updatedAt: admin.firestore.FieldValue.serverTimestamp() };
+    // New drinks: bring their open data (Wikidata, X-Wines, Open Food
+    // Facts, Commons) over from the pilot so the product sheet shows it.
+    if (!snap.exists || snap.get("source") === "winebro-pilot") {
+      const pilot = await db.collection("pilot_candidates").doc(id).get();
+      if (pilot.exists && pilot.get("openData")) data.openData = pilot.get("openData");
+    }
     if (snap.exists && previousHandAuthored && !snap.get("previousHandAuthored")) {
       data.previousHandAuthored = previousHandAuthored;
     }
