@@ -59,6 +59,22 @@ service cloud.firestore {
                         );
       }
 
+      // ─── WISHLIST (Save for later) ─────────────────────
+      match /wishlist/{productId} {
+        allow read, delete: if request.auth != null && request.auth.uid == uid;
+        allow create, update: if request.auth != null && request.auth.uid == uid
+                      && request.resource.data.productId == productId
+                      && request.resource.data.productName is string;
+      }
+
+      // ─── FCM TOKEN (personal push: streak, restock, feedback) ──
+      // Written by the device; read by Cloud Functions (admin).
+      match /fcm_token/{docId} {
+        allow read, delete: if request.auth != null && request.auth.uid == uid;
+        allow create, update: if request.auth != null && request.auth.uid == uid
+                              && request.resource.data.token is string;
+      }
+
       // ─── GAMIFICATION STATE ───────────────────────────
       match /gamification/{docId} {
         allow read: if request.auth != null && request.auth.uid == uid;
