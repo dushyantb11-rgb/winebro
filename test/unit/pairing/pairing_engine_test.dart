@@ -5,7 +5,6 @@ import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/dish.dart';
 import 'package:winebro/features/pairing/domain/palate_profile.dart';
 import 'package:winebro/features/pairing/domain/pairing_engine.dart';
-import 'package:winebro/features/pairing/domain/product.dart';
 
 void main() {
   const engine = PairingEngine();
