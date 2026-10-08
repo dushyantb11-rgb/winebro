@@ -2,6 +2,10 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
     function optStr(d, k, max) { return !(k in d) || d[k] == null || (d[k] is string && d[k].size() <= max); }
     function optBool(d, k) { return !(k in d) || d[k] == null || d[k] is bool; }
     function optInt(d, k, lo, hi) { return !(k in d) || d[k] == null || (d[k] is int && d[k] >= lo && d[k] <= hi); }
@@ -26,8 +30,8 @@ service cloud.firestore {
                     && request.resource.data.keys().hasAll(['displayName', 'isAgeVerified'])
                     && request.resource.data.isAgeVerified == true;
       allow update: if request.auth != null && request.auth.uid == uid
-                    // Prevent changing auth-related fields
-                    && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['id', 'createdAt']);
+                    // Prevent changing auth-related or server-owned fields
+                    && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['id', 'createdAt', 'isAdmin', 'phoneIndexed']);
 
       // ─── JOURNAL ENTRIES ──────────────────────────────
       match /journal/{entryId} {
@@ -177,6 +181,15 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false;
     }
+
+    // ─── CONSOLE DRAFTS & RELEASES (admin preview only) ────
+    // Written by the admin API; readable in the app by admins who switch
+    // on "Preview console drafts". Never by ordinary users.
+    match /drafts_products/{id} { allow read: if isAdmin(); allow write: if false; }
+    match /drafts_dishes/{id} { allow read: if isAdmin(); allow write: if false; }
+    match /drafts_config/{id} { allow read: if isAdmin(); allow write: if false; }
+    match /releases/{id} { allow read: if isAdmin(); allow write: if false; }
+    match /catalogue_history/{id}/{document=**} { allow read, write: if false; }
 
     // ─── DENY ALL OTHER PATHS ────────────────────────────
     match /{document=**} {

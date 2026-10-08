@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
@@ -28,8 +29,10 @@ class _LoadErrorViewState extends State<LoadErrorView> {
   void initState() {
     super.initState();
     try {
+      if (!kIsWeb) {
       FirebaseCrashlytics.instance
           .recordError(widget.error, widget.stackTrace, reason: widget.reason);
+      }
     } on Object catch (_) {
       // Crashlytics unavailable (e.g. tests); the message still shows.
     }

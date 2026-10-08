@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
+import 'package:winebro/core/preview/preview_overrides.dart';
 import 'package:winebro/core/services/firebase_providers.dart';
 import 'package:winebro/features/pairing/domain/dish.dart';
 import 'package:winebro/features/pairing/domain/palate_profile.dart';
@@ -13,6 +14,9 @@ import 'package:winebro/features/pairing_feedback/domain/pairing_aggregate.dart'
 final pairingEngineProvider = Provider((_) => const PairingEngine());
 
 final userPalateProvider = FutureProvider<PalateProfile?>((ref) async {
+  // Console preview can force a test palate ("try as Crisp Purist").
+  final forced = ref.watch(previewPalateProvider);
+  if (forced != null) return forced;
   final docRef = ref.watch(userDocRefProvider);
   if (docRef == null) return null;
 
@@ -27,19 +31,26 @@ final userPalateProvider = FutureProvider<PalateProfile?>((ref) async {
 /// empty the whole list.
 Stream<List<T>> _catalogStream<T>(
   String collection,
-  T Function(Map<String, dynamic>) fromMap,
-) {
+  T Function(Map<String, dynamic>) fromMap, {
+  PreviewOverrides overrides = PreviewOverrides.none,
+}) {
   return FirebaseFirestore.instance
       .collection(collection)
       .orderBy('sortOrder')
       .snapshots()
       .map((snap) {
+    final raw = overrides.applyTo(
+      collection,
+      [for (final d in snap.docs) {...d.data(), 'id': d.id}],
+    );
     final items = <T>[];
-    for (final doc in snap.docs) {
+    for (final data in raw) {
+      // Archived rows stay in Firestore for history but never reach the app.
+      if (data['archived'] == true) continue;
       try {
-        items.add(fromMap(doc.data()));
+        items.add(fromMap(data));
       } on Object catch (e) {
-        debugPrint('Skipping $collection/${doc.id}: $e');
+        debugPrint('Skipping $collection/${data['id']}: $e');
       }
     }
     return items;
@@ -47,11 +58,13 @@ Stream<List<T>> _catalogStream<T>(
 }
 
 final _remoteProductsProvider = StreamProvider<List<Product>>(
-  (ref) => _catalogStream('products', Product.fromMap),
+  (ref) => _catalogStream('products', Product.fromMap,
+      overrides: ref.watch(previewOverridesProvider)),
 );
 
 final _remoteDishesProvider = StreamProvider<List<Dish>>(
-  (ref) => _catalogStream('dishes', Dish.fromMap),
+  (ref) => _catalogStream('dishes', Dish.fromMap,
+      overrides: ref.watch(previewOverridesProvider)),
 );
 
 /// Where the catalogue stands. Screens show a [CatalogStateBanner] for

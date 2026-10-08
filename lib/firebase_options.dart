@@ -1,9 +1,10 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
-    show defaultTargetPlatform, TargetPlatform;
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
+    if (kIsWeb) return web;
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
@@ -16,6 +17,16 @@ class DefaultFirebaseOptions {
         );
     }
   }
+
+  /// Web app registered for the console's mobile preview (public client config).
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAxtMi2c1KVRu1YtgVZwLM44zWLG6IFVDU',
+    appId: '1:708385389571:web:9173c7679a7e951d78a236',
+    messagingSenderId: '708385389571',
+    projectId: 'winebro',
+    authDomain: 'winebro.firebaseapp.com',
+    storageBucket: 'winebro.firebasestorage.app',
+  );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAoQGXyMdW7E0SWYpp0N2mfHQiWy_pm0J4',
