@@ -71,6 +71,7 @@ class _ScanFab extends StatelessWidget {
         onPressed: onPressed,
         backgroundColor: colors.paprika,
         elevation: 0,
+        shape: const CircleBorder(),
         child: Icon(Icons.qr_code_scanner, size: 28, color: colors.onPrimary),
       ),
     );

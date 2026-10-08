@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:winebro/core/services/firebase_providers.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/features/wishlist/domain/wishlist_entry.dart';
 
 /// Stream of the active user's wishlist, newest first.
 final wishlistProvider = StreamProvider<List<WishlistEntry>>((ref) {
-  final uid = FirebaseAuth.instance.currentUser?.uid;
+  final uid = ref.watch(currentUidProvider);
   if (uid == null) return const Stream.empty();
 
   return FirebaseFirestore.instance
@@ -22,7 +23,7 @@ final wishlistProvider = StreamProvider<List<WishlistEntry>>((ref) {
 /// `productId -> isInWishlist` lookup derived from [wishlistProvider].
 /// Used by Buy/Save/Remind buttons to render Save vs Saved state.
 final wishlistContainsProvider = Provider.family<bool, String>((ref, productId) {
-  final list = ref.watch(wishlistProvider).value ?? const [];
+  final list = ref.watch(wishlistProvider).valueOrNull ?? const [];
   return list.any((e) => e.productId == productId);
 });
 
@@ -47,7 +48,6 @@ class WishlistRepository {
       category: product.category.group,
       region: product.region,
       savedAt: DateTime.now(),
-      priceInr: product.hasPrice ? product.price : null,
     );
     return _col.doc(product.id).set(entry.toMap());
   }

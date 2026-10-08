@@ -1,5 +1,8 @@
 import 'package:intl/intl.dart';
 
+/// "46%" for 46.0, "12.5%" for 12.5.
+String formatAbv(double abv) => '${abv % 1 == 0 ? abv.toInt() : abv}%';
+
 class Formatters {
   Formatters._();
 

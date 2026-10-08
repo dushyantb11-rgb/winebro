@@ -283,7 +283,6 @@ class AppTheme {
         backgroundColor: colors.paprika,
         foregroundColor: colors.onPrimary,
         elevation: 8,
-        shape: const CircleBorder(),
       ),
       extensions: [colors],
     );

@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart' hide Badge;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:winebro/shared/widgets/load_error_view.dart';
+import 'package:winebro/core/services/firebase_providers.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_elevation.dart';
@@ -23,7 +24,7 @@ import 'package:winebro/shared/widgets/palate_radar_chart.dart';
 /// the survey CTA on Profile.
 final crossCategorySurveyNeededProvider =
     StreamProvider<bool>((ref) {
-  final uid = FirebaseAuth.instance.currentUser?.uid;
+  final uid = ref.watch(currentUidProvider);
   if (uid == null) return Stream.value(false);
 
   return FirebaseFirestore.instance
@@ -36,7 +37,7 @@ final crossCategorySurveyNeededProvider =
 });
 
 final gamificationProvider = StreamProvider<GamificationState>((ref) {
-  final uid = FirebaseAuth.instance.currentUser?.uid;
+  final uid = ref.watch(currentUidProvider);
   if (uid == null) return const Stream.empty();
 
   return FirebaseFirestore.instance
@@ -92,8 +93,11 @@ class ProfileScreen extends ConsumerWidget {
       ),
       body: gamification.when(
         loading: () => Center(child: CircularProgressIndicator(color: colors.paprika)),
-        error: (_, __) => Center(
-          child: Text('Something went wrong', style: TextStyle(color: colors.textTertiary)),
+        error: (e, st) => LoadErrorView(
+          error: e,
+          stackTrace: st,
+          reason: 'gamification stream',
+          onRetry: () => ref.invalidate(gamificationProvider),
         ),
         data: (state) => SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 120),
@@ -130,7 +134,7 @@ class _WishlistTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.appColors;
-    final wishlist = ref.watch(wishlistProvider).value ?? const [];
+    final wishlist = ref.watch(wishlistProvider).valueOrNull ?? const [];
     if (wishlist.isEmpty) return const SizedBox.shrink();
 
     return InkWell(
@@ -250,7 +254,7 @@ class _FriendsTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.appColors;
-    final friends = ref.watch(friendsStreamProvider).value ?? const [];
+    final friends = ref.watch(friendsStreamProvider).valueOrNull ?? const [];
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -314,7 +318,7 @@ class _CrossCategoryTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.appColors;
     final needed =
-        ref.watch(crossCategorySurveyNeededProvider).value ?? false;
+        ref.watch(crossCategorySurveyNeededProvider).valueOrNull ?? false;
     if (!needed) return const SizedBox.shrink();
 
     return Padding(
@@ -815,6 +819,7 @@ class _AchievementsSection extends StatelessWidget {
   void _showAllBadges(BuildContext context, GamificationState state) {
     final colors = context.appColors;
     showModalBottomSheet<void>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       builder: (_) => DraggableScrollableSheet(

@@ -770,7 +770,7 @@
   "settingsVersion": "Version",
   "@settingsVersion": {"description": "Version label"},
 
-  "settingsResponsibly": "Drink responsibly. 18+",
+  "settingsResponsibly": "Drink responsibly. Legal drinking age only.",
   "@settingsResponsibly": {"description": "Settings footer"},
 
   "settingsChooseLanguage": "Choose language",
@@ -815,6 +815,10 @@
   "wishlistRemove": "Remove",
   "@wishlistRemove": {"description": "Remove from wishlist button"},
 
+  "loadErrorMessage": "We couldn't load this right now. Check your connection and try again.",
+  "@loadErrorMessage": {"description": "Friendly load error"},
+  "tryAgain": "Try again",
+  "@tryAgain": {"description": "Retry button"},
   "actionBuyNoPrice": "Find to buy",
   "@actionBuyNoPrice": {"description": "Buy button when we have no sourced price"},
   "actionBuy": "Buy ₹{price}",
@@ -1143,7 +1147,7 @@
   "wrapUpEmptyCta": "Open journal",
   "@wrapUpEmptyCta": {"description": "Empty CTA"},
 
-  "ageGateLeading": "I'm 21 or older. I'll drink responsibly. I agree to WineBro's ",
+  "ageGateLeading": "I'm of legal drinking age in my state. I'll drink responsibly. I agree to WineBro's ",
   "@ageGateLeading": {"description": "Age gate leading text"},
   "ageGatePrivacy": "Privacy Policy",
   "@ageGatePrivacy": {"description": "Privacy link in age gate"},

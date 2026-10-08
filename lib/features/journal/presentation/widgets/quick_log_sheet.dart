@@ -58,6 +58,7 @@ class QuickLogSheet extends ConsumerStatefulWidget {
     String? prefillProductId,
   }) {
     return showModalBottomSheet<bool>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

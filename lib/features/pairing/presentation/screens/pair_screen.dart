@@ -1065,9 +1065,7 @@ class _BrosPickPairingCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            [p.subtitle, if (p.hasPrice) '₹${p.price.toStringAsFixed(0)}']
-                .where((s) => s.isNotEmpty)
-                .join(' · '),
+            p.subtitle,
             style: TextStyle(
               fontFamily: 'Montserrat',
               fontSize: 12,
@@ -1217,9 +1215,7 @@ class _AlternateCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      [p.subcategory, if (p.hasPrice) '₹${p.price.toStringAsFixed(0)}']
-                          .where((s) => s.isNotEmpty)
-                          .join(' · '),
+                      p.subcategory,
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 12,

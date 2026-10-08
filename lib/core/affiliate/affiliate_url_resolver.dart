@@ -15,7 +15,7 @@ class AffiliateUrlResolver {
   /// search endpoint when ready.
   static const _basePartnerUrl = 'https://www.living-liquidz.com/search';
 
-  /// Build the URL the user opens when they tap "Buy ₹X".
+  /// Build the URL the user opens when they tap "Find to buy".
   ///
   /// Includes:
   ///   - product name as a search query

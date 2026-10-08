@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:winebro/core/services/firebase_providers.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/features/journal/domain/journal_entry.dart';
@@ -13,7 +13,7 @@ import 'package:winebro/features/wrap_up/domain/yearly_wrap_up.dart';
 /// returns the derived YearlyWrapUp. Recomputed each visit — no
 /// caching since the 5-card pageview is rare-use.
 final yearlyWrapUpProvider = FutureProvider<YearlyWrapUp>((ref) async {
-  final uid = FirebaseAuth.instance.currentUser?.uid;
+  final uid = ref.watch(currentUidProvider);
   if (uid == null) {
     return YearlyWrapUp.fromEntries(const [], DateTime.now().year);
   }

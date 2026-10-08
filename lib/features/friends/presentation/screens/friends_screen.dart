@@ -45,7 +45,7 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final friends = ref.watch(friendsStreamProvider).value ?? const [];
+    final friends = ref.watch(friendsStreamProvider).valueOrNull ?? const [];
 
     return Scaffold(
       appBar: AppBar(

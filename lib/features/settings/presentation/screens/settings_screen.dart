@@ -167,6 +167,7 @@ class SettingsScreen extends ConsumerWidget {
     final colors = context.appColors;
     final current = ref.read(localeProvider);
     showModalBottomSheet<void>(
+      useRootNavigator: true,
       context: context,
       builder: (_) => SafeArea(
         child: Column(
@@ -388,7 +389,7 @@ class _PrivacyVisibilityTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final visibility =
-        ref.watch(profileVisibilityProvider).value ?? ProfileVisibility.friendsOnly;
+        ref.watch(profileVisibilityProvider).valueOrNull ?? ProfileVisibility.friendsOnly;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       child: Column(

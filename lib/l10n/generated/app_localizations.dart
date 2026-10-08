@@ -1533,7 +1533,7 @@ abstract class AppLocalizations {
   /// Settings footer
   ///
   /// In en, this message translates to:
-  /// **'Drink responsibly. 18+'**
+  /// **'Drink responsibly. Legal drinking age only.'**
   String get settingsResponsibly;
 
   /// Language picker sheet title
@@ -1619,6 +1619,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove'**
   String get wishlistRemove;
+
+  /// Friendly load error
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load this right now. Check your connection and try again.'**
+  String get loadErrorMessage;
+
+  /// Retry button
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tryAgain;
 
   /// Buy button when we have no sourced price
   ///
@@ -2295,7 +2307,7 @@ abstract class AppLocalizations {
   /// Age gate leading text
   ///
   /// In en, this message translates to:
-  /// **'I\'m 21 or older. I\'ll drink responsibly. I agree to WineBro\'s '**
+  /// **'I\'m of legal drinking age in my state. I\'ll drink responsibly. I agree to WineBro\'s '**
   String get ageGateLeading;
 
   /// Privacy link in age gate

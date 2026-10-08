@@ -30,6 +30,7 @@ class PairingFeedbackSheet extends ConsumerStatefulWidget {
 
   static Future<void> show(BuildContext context, String entryId) {
     return showModalBottomSheet<void>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
