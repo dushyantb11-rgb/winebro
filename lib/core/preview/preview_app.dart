@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -67,6 +68,7 @@ class _PreviewAppState extends ConsumerState<PreviewApp> {
       ],
     );
     _authSub = FirebaseAuth.instance.authStateChanges().listen((u) {
+      debugPrint('[preview] auth user=${u?.email}');
       setState(() => _user = u);
       if (u != null) postToParent({'type': 'wb-preview-ready', 'email': u.email});
     });

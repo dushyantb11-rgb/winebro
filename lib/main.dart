@@ -35,6 +35,16 @@ void main() {
           FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
           return true;
         };
+      } else {
+        // Web (console preview): Crashlytics is unavailable; keep errors
+        // visible in the browser console instead of swallowing them.
+        FlutterError.onError = (details) {
+          debugPrint('FlutterError: ${details.exceptionAsString()}\n${details.stack}');
+        };
+        PlatformDispatcher.instance.onError = (error, stack) {
+          debugPrint('Uncaught: $error\n$stack');
+          return true;
+        };
       }
 
       // The console's mobile preview is the same app, rendered in a browser
@@ -44,7 +54,9 @@ void main() {
       ));
     },
     (error, stack) {
-      if (!kDebugMode && !kIsWeb) {
+      if (kIsWeb) {
+        debugPrint('Uncaught (zone): $error\n$stack');
+      } else if (!kDebugMode) {
         FirebaseCrashlytics.instance.recordError(error, stack);
       }
     },
