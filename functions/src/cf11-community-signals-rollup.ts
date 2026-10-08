@@ -51,12 +51,33 @@ export const communitySignalsRollup = onSchedule(
       .where("createdAt", ">=", fourteenDaysAgo)
       .get();
 
+    // Resolve every entry to a catalogue product. Older full-BroCard
+    // entries stored the entry id as productId; match those by name.
+    // Free-text drinks outside the catalogue are skipped: the app can
+    // only show signals for catalogue products.
+    const catalog = await firestore.collection("products").get();
+    const catalogIds = new Set(catalog.docs.map((d) => d.id));
+    const idByName = new Map(
+      catalog.docs.map((d) => [
+        String(d.get("name") ?? "").trim().toLowerCase(),
+        d.id,
+      ])
+    );
+    let unmatched = 0;
+
     const buckets = new Map<string, ProductBucket>();
 
     for (const doc of snap.docs) {
       const data = doc.data();
-      const productId = data.productId as string | undefined;
-      if (!productId) continue;
+      const rawId = data.productId as string | undefined;
+      const productId =
+        rawId && catalogIds.has(rawId)
+          ? rawId
+          : idByName.get(String(data.productName ?? "").trim().toLowerCase());
+      if (!productId) {
+        unmatched++;
+        continue;
+      }
       const uid = doc.ref.parent.parent?.id;
       if (!uid) continue;
       const createdAt = data.createdAt as string | undefined;
@@ -150,9 +171,21 @@ export const communitySignalsRollup = onSchedule(
       written++;
     }
 
+    // Remove signals for products with no entries in the window, so the
+    // app never shows last month's count as "this week".
+    const existing = await firestore.collection("community_signals").get();
+    let removed = 0;
+    for (const doc of existing.docs) {
+      if (!buckets.has(doc.id)) {
+        writer.delete(doc.ref);
+        removed++;
+      }
+    }
+
     await writer.close();
     console.log(
-      `communitySignalsRollup: products=${buckets.size} written=${written}`
+      `communitySignalsRollup: products=${buckets.size} written=${written} ` +
+        `removed=${removed} unmatchedEntries=${unmatched}`
     );
   }
 );

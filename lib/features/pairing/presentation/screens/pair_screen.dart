@@ -1073,6 +1073,16 @@ class _BrosPickPairingCard extends StatelessWidget {
               color: colors.inkOnHero.withValues(alpha: 0.78),
             ),
           ),
+          if (result.broTip != null) ...[
+            const SizedBox(height: 12),
+            Text(
+              result.broTip!,
+              style: context.serifQuote.copyWith(
+                color: colors.inkOnHero.withValues(alpha: 0.9),
+                fontSize: 14,
+              ),
+            ),
+          ],
           const SizedBox(height: 14),
           ProductActionRow(
             product: p,
@@ -1234,6 +1244,18 @@ class _AlternateCard extends StatelessWidget {
               ),
             ],
           ),
+          if (result.broTip != null) ...[
+            const SizedBox(height: 10),
+            Text(
+              result.broTip!,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: context.serifQuote.copyWith(
+                color: colors.textSecondary,
+                fontSize: 13,
+              ),
+            ),
+          ],
           const SizedBox(height: 12),
           ProductActionRow(product: p, source: AffiliateSource.pair),
         ],
