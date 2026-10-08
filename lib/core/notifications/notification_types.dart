@@ -9,6 +9,10 @@
 ///
 /// The Cloud Functions in Sprint 2 emit these. The on-device handler
 /// in [NotificationHandler] resolves them to the correct deep-link.
+library;
+
+import 'package:winebro/core/config/app_config.dart';
+
 enum WineBroNotificationType {
   /// Daily Bro Tip push (8 PM IST). Deep-links to Home.
   ///   data.tipId       — id of the Bro Tip rendered

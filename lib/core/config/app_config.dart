@@ -723,7 +723,7 @@ class OccasionsConfig {
                       if (a.value is num) axis: (a.value as num).toDouble(),
                 },
                 categoryBonus: switch (e['categoryBonus']) {
-                  final Map b when b['category'] is String => (
+                  final Map<dynamic, dynamic> b when b['category'] is String => (
                       category: DrinkCategory(b['category'] as String),
                       bonusPercent: ((b['bonusPercent'] as num?) ?? 0).toDouble(),
                     ),
