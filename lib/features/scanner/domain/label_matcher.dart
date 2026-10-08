@@ -31,7 +31,7 @@ class LabelMatcher {
   final double minScore;
   final double fuzzyThreshold;
 
-  static const _generic = {
+  static const genericWords = {
     'the', 'and', 'of', 'de', 'di', 'la', 'le', 'du', 'des', 'by',
     'vineyards', 'vineyard', 'winery', 'wines', 'wine', 'estate', 'estates',
     'cellars', 'distillery', 'brewery', 'year', 'years', 'old', 'yo',
@@ -59,7 +59,7 @@ class LabelMatcher {
     var bestFound = 0;
     for (final product in catalog) {
       final nameWords =
-          words(product.name).where((w) => !_generic.contains(w)).toList();
+          words(product.name).where((w) => !genericWords.contains(w)).toList();
       if (nameWords.isEmpty) continue;
 
       var found = 0;

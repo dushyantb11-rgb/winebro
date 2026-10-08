@@ -56,7 +56,7 @@ class AromaCalibrationBuilder {
           // South-Asian-only term.
           final isIndianContext =
               aroma.contains('(') ||
-                  _kKnownDesiTerms.contains(aroma);
+                  kKnownDesiTerms.contains(aroma);
           (isIndianContext ? indianTerms : western)
               .add((aroma: aroma, category: cat.name));
         }
@@ -85,7 +85,7 @@ class AromaCalibrationBuilder {
   }
 }
 
-const _kKnownDesiTerms = <String>{
+const kKnownDesiTerms = <String>{
   'Aam (Mango)',
   'Jamun (Indian blackberry)',
   'Munakka',

@@ -1,0 +1,47 @@
+# WineBro Admin — data inventory (2026-10-08)
+
+What the mobile app shows, where it lives, and what the admin web app must control.
+Firebase project: `winebro`. Counts are live as of 8-Oct-2026.
+
+## A. Catalogue data (shown to every user) — admin owns this
+
+| Collection | Docs | Shown where in app | Fields the admin edits |
+|---|---|---|---|
+| `products` | 111 | Pair results, Tonight's pour, Scan match, product sheet, Wishlist, Journal picker, Best-sellers row | `id`, `name`, `category` (13 kinds), `subcategory`, `region`, `origin`, `abv`, `grapeVariety`, `tastingNotes`, `aromas[]`, `archetypeTags[]`, six taste scores 0–1 (`fruit`, `acidity`, `body`, `tannin`, `freshness`, `complexity`), `imageUrl`, `verified`, `sortOrder`, `estimate{label, confidence, method, date}`, `bestSeller{note, source, url}`, `openData{xwines, openFoodFacts, wikidata, bjcpStyle, bottlePhoto}` (photo + licence + credit), `source`, `provenance`. `price` is kept at 0 (pricing removed). |
+| `dishes` | 66 | Pair (food → drink), cuisine rows, dish sheet | `id`, `name`, `category` (8 cuisines), `description`, `foodProperties[]`, `pairings[] {productId, strategy, broTip, score}`, `sortOrder`, `verified`, `openData{indianFood101, photo}` (photo + licence + credit) |
+| `pilot_candidates` | 111 | Not shown; working copy behind `products` | facts, open-data matches, AI estimate rounds, status |
+| `community_signals` | 1 | Home → Bro Circle ("climbing this week") | Written by Cloud Function roll-up every week; admin only views/exports (editing would fake community data) |
+| `pairing_aggregates` | 0 | Pair result confidence (future) | Roll-up of yes/maybe/no per dish × drink; view/export only |
+
+Images: product and dish photos today are open-licence URLs inside `openData`. The admin must let us **upload our own photo** (Firebase Storage `catalogue/{products|dishes}/{id}.jpg`, public read) which then sets `imageUrl` and overrides the open photo. Photo credit lines come from `openData.*.licence/author/source`.
+
+## B. User data (per person) — admin views, exports, deletes; does not edit
+
+| Collection | Docs | Shown where | Fields |
+|---|---|---|---|
+| `users/{uid}` | 5 | Profile, Settings | `uid`, `displayName`, `email`, `phoneNumber`, `hasCompletedQuiz`, `isAgeVerified`, `createdAt`, `lastActiveDate` |
+| `users/{uid}/journal` | — | BroCards, Journal, Wrap-up, Home "continue your story" | `productId/Name`, `category`, `region`, `rating`, `createdAt`, appearance, nose, palate, finish, `notes`, `foodPaired`, `pairingRating`, `occasion`, `isFavorite`, `buyAgain`, photo/audio URLs (private Storage) |
+| `users/{uid}/gamification` | — | Profile level, badges, streak | `xp`, `level`, `streak`, `totalScans`, `totalPairings`, `totalJournalEntries`, `totalChallenges`, `earnedBadgeIds[]`, `exploredCategories[]`, `aromaCategories[]` |
+| `users/{uid}/wishlist` | — | Wishlist | `productId`, `productName`, added time |
+| `users/{uid}/friends` | — | Bro Circle friends | `followedAt`, `displayName`, `visibility` |
+| `users/{uid}/fcm_token` | — | push delivery | `token` |
+| `users/{uid}/pre_quiz_seed`, `cross_category`, `aroma_calibration` | — | quiz / aroma wheel | answers and axes |
+| `phone_index/{hash}` | 1 | friend lookup | `uid` |
+| `pairing_feedback` | 0 | "Did it pair well?" prompt | `userId`, `entryId`, `productId`, `foodPaired`, `response`, `respondedAt` |
+
+## C. Still inside the app code (not in Firestore) — admin cannot edit yet
+
+Palate archetypes (6), quiz questions, badges list, aroma wheel categories, drink categories, cuisine categories, occasions, home category tiles (`assets/images/drinks|food`, 13 local images), text in 4 languages. Moving these to Firestore is a later step if needed.
+
+## D. What the admin app must do
+
+- Dashboard KPIs: drinks, dishes, verified %, photos present %, users, BroCards, wishlist adds, signals.
+- Each collection: list (table with search/filter/sort) + card view; open → edit form; create; delete (with confirm).
+- Images: upload to Storage, preview, remove; show licence/credit of open photos.
+- Export: CSV and Excel per collection (current filter); download blank Excel templates; import filled Excel (validate → preview → write).
+- Responsive: phone, tablet, laptop. Same palette as the app (Paprika `#93003C`, Salem `#0F8044`, Thunder `#252122`, cream `#FAF6EE`; dark mode mirrors app dark theme).
+- No sign-in for now (see risk below).
+
+## E. Risk to accept: no sign-in
+
+Anyone who has the admin URL can change the catalogue. To keep the mobile app's Firestore rules locked, all writes go through one Cloud Function (`adminApi`) using the Admin SDK — the mobile rules do not change. The function itself is open. Adding Google sign-in with an allow-list of two emails later is a small change.
