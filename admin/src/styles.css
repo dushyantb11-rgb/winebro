@@ -297,3 +297,6 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
 .credit { font-size: 11px; color: var(--ink-3); }
 .imglist { display: flex; flex-wrap: wrap; gap: 10px; }
 .imglist img { width: 72px; height: 72px; object-fit: cover; border-radius: 10px; }
+
+/* Phone: two-column cards (placed last so it wins over the desktop rule) */
+@media (max-width: 600px) { .grid.cards { grid-template-columns: repeat(2, 1fr); gap: 10px; } .thumb.lg { aspect-ratio: 1; } }

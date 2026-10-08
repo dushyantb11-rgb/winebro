@@ -61,6 +61,13 @@ Still local: 13 tile images under `assets/images` (paths are in `config/categori
 - Responsive: phone, tablet, laptop. Same palette as the app (Paprika `#93003C`, Salem `#0F8044`, Thunder `#252122`, cream `#FAF6EE`; dark mode mirrors app dark theme).
 - No sign-in for now (see risk below).
 
-## E. Risk to accept: no sign-in
+## E. The admin app — WineBro Console (live 2026-10-08)
 
-Anyone who has the admin URL can change the catalogue. To keep the mobile app's Firestore rules locked, all writes go through one Cloud Function (`adminApi`) using the Admin SDK — the mobile rules do not change. The function itself is open. Adding Google sign-in with an allow-list of two emails later is a small change.
+- URL: **https://winebro-console.web.app** (Firebase Hosting site `winebro-console`, project `winebro`, not indexed by search engines).
+- Code: `app/admin` (React + TypeScript + Vite). Build `npm run build`; deploy `firebase deploy --only hosting:admin`.
+- API: Cloud Function `adminApi` (asia-south1, `functions/src/admin/api.ts`), reached as `/api/**` on the same site. It uses the Admin SDK, so the mobile app's Firestore rules stay locked. Deploy `firebase deploy --only functions:adminApi`.
+- Photos upload to Storage `catalogue/{products|dishes}/{id}/…` with a download token; the URL is written to `imageUrl` and overrides the open-licence photo.
+- Rules: every `config/*` save becomes a new version; the previous one is archived under `history/` and can be restored. "Try a pairing" previews food-fit scores with the edited (unsaved) rules.
+- Import: CSV/Excel → parsed in the browser → dry-run validation on the server → preview → write (merge or replace).
+
+**Risk accepted for now: no sign-in.** Anyone with the URL can change the catalogue and rules. Add Google sign-in with an allow-list before sharing the link more widely.
