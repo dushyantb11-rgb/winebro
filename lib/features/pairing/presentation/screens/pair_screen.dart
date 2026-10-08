@@ -38,6 +38,7 @@ class PairScreen extends ConsumerStatefulWidget {
     this.initialProductId,
     this.initialDishId,
     this.initialQuery,
+    this.initialMode,
     super.key,
   });
 
@@ -51,6 +52,9 @@ class PairScreen extends ConsumerStatefulWidget {
   /// Prefills food search for a user-entered meal/menu. Search remains
   /// intentionally editable because it is not a confirmed dish identity.
   final String? initialQuery;
+
+  /// Starting mode from Home: `food`, `drink` or `occasion`.
+  final String? initialMode;
 
   @override
   ConsumerState<PairScreen> createState() => _PairScreenState();
@@ -114,6 +118,7 @@ class _PairScreenState extends ConsumerState<PairScreen> {
   @override
   void initState() {
     super.initState();
+    _applyInitialMode();
     _applyInitialProduct();
     _applyInitialDishAndQuery();
     _placeholderTimer = Timer.periodic(const Duration(seconds: 4), (_) {
@@ -134,6 +139,25 @@ class _PairScreenState extends ConsumerState<PairScreen> {
         widget.initialQuery != oldWidget.initialQuery) {
       _applyInitialDishAndQuery();
     }
+    if (widget.initialMode != oldWidget.initialMode) {
+      _applyInitialMode();
+    }
+  }
+
+  void _applyInitialMode() {
+    final mode = switch (widget.initialMode) {
+      'food' => PairMode.foodToDrink,
+      'drink' => PairMode.drinkToFood,
+      'occasion' => PairMode.occasion,
+      _ => null,
+    };
+    if (mode == null || mode == _mode) return;
+    _mode = mode;
+    _selectedDish = null;
+    _selectedProduct = null;
+    _selectedOccasion = null;
+    _searchController.clear();
+    _query = '';
   }
 
   void _applyInitialProduct() {

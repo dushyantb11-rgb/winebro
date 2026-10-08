@@ -112,6 +112,8 @@ class ProfileScreen extends ConsumerWidget {
               if (state.totalJournalEntries >= 5) const _WrapUpTile(),
               const _FriendsTile(),
               const _WishlistTile(),
+            const SizedBox(height: 12),
+            const _AromaWheelTile(),
               const SizedBox(height: 24),
               _PalateSection(state: state, palate: palate),
               const SizedBox(height: 32),
@@ -127,6 +129,53 @@ class ProfileScreen extends ConsumerWidget {
 // ============================================================
 // Wishlist tile — entry to saved-for-later list
 // ============================================================
+
+/// Entry point to the Aroma Wheel (route `/aroma`), which had no link.
+class _AromaWheelTile extends StatelessWidget {
+  const _AromaWheelTile();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return InkWell(
+      onTap: () => context.push('/aroma'),
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        decoration: BoxDecoration(
+          color: colors.surface1,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colors.borderSubtle),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.air, color: colors.salem, size: 22),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.l10n.profileAromaWheel,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                  Text(
+                    context.l10n.profileAromaWheelSub,
+                    style: TextStyle(fontSize: 12, color: colors.textSecondary),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right, color: colors.textTertiary),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class _WishlistTile extends ConsumerWidget {
   const _WishlistTile();

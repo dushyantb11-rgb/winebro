@@ -19,6 +19,7 @@ import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.da
 import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/shared/widgets/open_facts_section.dart';
 import 'package:winebro/shared/widgets/brand_label_card.dart';
+import 'package:winebro/shared/widgets/catalog_state_banner.dart';
 import 'package:winebro/shared/widgets/emotion_tile.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
 import 'package:winebro/shared/widgets/product_action_row.dart';
@@ -51,6 +52,8 @@ class HomeScreen extends ConsumerWidget {
     final continueStory = ref.watch(continueStoryProvider);
     final restock = ref.watch(restockProvider);
     final circle = ref.watch(broCircleProvider);
+    final hasHistory = continueStory.valueOrNull != null ||
+        restock.valueOrNull != null;
     final hour = DateTime.now().hour;
 
     return Scaffold(
@@ -89,8 +92,29 @@ class HomeScreen extends ConsumerWidget {
               ],
             ),
 
-            // ====== Greeting ======
+            // ====== Home's primary job: start a real decision ======
             SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+                child: _DecisionLauncher(
+                  onScanBottle: () => context.push('/scan'),
+                  onChooseMeal: () => context.go('/pair'),
+                  onTypeMenu: () => _showMenuPrompt(context),
+                  onDish: (dishId) => context.go(
+                    Uri(
+                      path: '/pair',
+                      queryParameters: {'dish': dishId},
+                    ).toString(),
+                  ),
+                ),
+              ),
+            ),
+
+            const SliverToBoxAdapter(child: CatalogStateBanner()),
+
+            // ====== Greeting ======
+            if (hasHistory)
+              SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
                 child: Column(
@@ -131,7 +155,8 @@ class HomeScreen extends ConsumerWidget {
             ),
 
             // ====== Tonight's Pour — hero card ======
-            SliverToBoxAdapter(
+            if (hasHistory)
+              SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
                 child: tonight.when(
@@ -149,7 +174,8 @@ class HomeScreen extends ConsumerWidget {
             ),
 
             // ====== Section eyebrow ======
-            SliverToBoxAdapter(
+            if (hasHistory)
+              SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
                 child: Text(
@@ -160,7 +186,8 @@ class HomeScreen extends ConsumerWidget {
             ),
 
             // ====== Three emotion tiles ======
-            SliverToBoxAdapter(
+            if (hasHistory)
+              SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
                 child: Row(
@@ -223,7 +250,8 @@ class HomeScreen extends ConsumerWidget {
             ),
 
             // ====== Bro Circle — community signals ======
-            SliverToBoxAdapter(
+            if (hasHistory && circle.isNotEmpty)
+              SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
                 child: Text(
@@ -232,7 +260,8 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            SliverToBoxAdapter(
+            if (hasHistory && circle.isNotEmpty)
+              SliverToBoxAdapter(
               child: SizedBox(
                 height: 140,
                 child: ListView.builder(
@@ -253,11 +282,6 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 28)),
-
-            // ====== Bro Tip ======
-            const SliverToBoxAdapter(child: _BroTipCard()),
-
             const SliverToBoxAdapter(child: SizedBox(height: 120)),
           ],
         ),
@@ -277,6 +301,56 @@ class HomeScreen extends ConsumerWidget {
     if (hour < 17) return context.l10n.homeGreetingAfternoon;
     if (hour < 22) return context.l10n.homeGreetingEvening;
     return context.l10n.homeGreetingLate;
+  }
+
+  Future<void> _showMenuPrompt(BuildContext context) async {
+    final controller = TextEditingController();
+    final value = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      builder: (sheetContext) => Padding(
+        padding: EdgeInsets.fromLTRB(
+          20,
+          20,
+          20,
+          MediaQuery.viewInsetsOf(sheetContext).bottom + 20,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              context.l10n.homeTypeDishTitle,
+              style: Theme.of(sheetContext).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 8),
+            Text(context.l10n.homeTypeDishHint),
+            const SizedBox(height: 16),
+            TextField(
+              controller: controller,
+              autofocus: true,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (text) => Navigator.pop(sheetContext, text),
+              decoration: InputDecoration(
+                hintText: context.l10n.homeTypeDishExample,
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(sheetContext, controller.text),
+                child: Text(context.l10n.homeFindPairing),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    controller.dispose();
+    final query = value?.trim();
+    if (query == null || query.isEmpty || !context.mounted) return;
+    context.go(Uri(path: '/pair', queryParameters: {'query': query}).toString());
   }
 
   void _showRestockProduct(BuildContext context, JournalEntry entry) {
@@ -438,6 +512,160 @@ class HomeScreen extends ConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// Home decision launcher
+// ============================================================
+
+class _DecisionLauncher extends ConsumerWidget {
+  const _DecisionLauncher({
+    required this.onScanBottle,
+    required this.onChooseMeal,
+    required this.onTypeMenu,
+    required this.onDish,
+  });
+
+  final VoidCallback onScanBottle;
+  final VoidCallback onChooseMeal;
+  final VoidCallback onTypeMenu;
+  final ValueChanged<String> onDish;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.appColors;
+    // Quick-start dishes come from config/home and are shown only when
+    // the dish exists in the loaded catalogue, so a chip never dead-ends.
+    final dishes = ref.watch(allDishesProvider);
+    final shortcuts = [
+      for (final id in AppConfig.current.home.quickStartDishIds)
+        if (dishes.where((d) => d.id == id).firstOrNull case final dish?) dish,
+    ];
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [colors.paprika, colors.paprikaDeep],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: AppElevation.eHero(dark: isDark),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.l10n.homeLauncherEyebrow,
+            style: TextStyle(
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w800,
+              color: colors.inkOnHero.withValues(alpha: 0.78),
+              fontSize: 11,
+              letterSpacing: 1.4,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            context.l10n.homeLauncherTitle,
+            style: TextStyle(
+              fontFamily: 'PlayfairDisplay',
+              fontWeight: FontWeight.w800,
+              color: colors.inkOnHero,
+              fontSize: 25,
+              height: 1.1,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            context.l10n.homeLauncherSubtitle,
+            style: TextStyle(
+              color: colors.inkOnHero.withValues(alpha: 0.82),
+              fontSize: 14,
+              height: 1.35,
+            ),
+          ),
+          const SizedBox(height: 18),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: onScanBottle,
+              icon: const Icon(Icons.document_scanner_outlined),
+              label: Text(context.l10n.homeScanBottle),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors.inkOnHero,
+                foregroundColor: colors.paprika,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: onChooseMeal,
+                  icon: const Icon(Icons.restaurant_menu_outlined),
+                  label: Text(context.l10n.homeChooseMeal),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: colors.inkOnHero,
+                    side: BorderSide(
+                      color: colors.inkOnHero.withValues(alpha: 0.55),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: onTypeMenu,
+                  icon: const Icon(Icons.edit_note_outlined),
+                  label: Text(context.l10n.homeTypeDish),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: colors.inkOnHero,
+                    side: BorderSide(
+                      color: colors.inkOnHero.withValues(alpha: 0.55),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (shortcuts.isNotEmpty) ...[
+          const SizedBox(height: 20),
+          Text(
+            context.l10n.homeQuickStart,
+            style: TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 10,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 1.2,
+              color: colors.inkOnHero.withValues(alpha: 0.72),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final dish in shortcuts)
+                ActionChip(
+                  avatar: Icon(dish.category.icon, size: 16, color: colors.paprika),
+                  label: Text(dish.name),
+                  onPressed: () => onDish(dish.id),
+                  backgroundColor: colors.inkOnHero,
+                  labelStyle: TextStyle(
+                    color: colors.paprika,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+            ],
+          ),
+          ],
+        ],
       ),
     );
   }
@@ -858,81 +1086,6 @@ class _BroCircleCard extends StatelessWidget {
                 Icon(Icons.arrow_forward,
                     size: 16, color: colors.textTertiary),
               ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ============================================================
-// Bro Tip — full-bleed paprika card with serif quote
-// ============================================================
-
-class _BroTipCard extends StatelessWidget {
-  const _BroTipCard();
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [colors.paprika, colors.paprikaDeep],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: AppElevation.e2(dark: isDark),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.lightbulb_outline,
-                    size: 16, color: colors.inkOnHero),
-                const SizedBox(width: 8),
-                Text(
-                  context.l10n.homeBroTipHeader,
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 11,
-                    fontWeight: FontWeight.w800,
-                    color: colors.inkOnHero,
-                    letterSpacing: 1.5,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              '"When pairing with spicy Indian food, reach for an off-dry Riesling or fruity Rosé. The residual sugar tames the heat while the acidity keeps your palate refreshed."',
-              style: TextStyle(
-                fontFamily: 'PlayfairDisplay',
-                fontStyle: FontStyle.italic,
-                fontSize: 18,
-                height: 1.4,
-                color: colors.inkOnHero,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            const SizedBox(height: 14),
-            Text(
-              '— High-tannin reds amplify the burn. Avoid them.',
-              style: TextStyle(
-                fontFamily: 'Montserrat',
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: colors.inkOnHero.withValues(alpha: 0.7),
-                letterSpacing: 0.3,
-              ),
             ),
           ],
         ),

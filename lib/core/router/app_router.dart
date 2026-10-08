@@ -110,6 +110,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 initialProductId: state.uri.queryParameters['product'],
                 initialDishId: state.uri.queryParameters['dish'],
                 initialQuery: state.uri.queryParameters['query'],
+                initialMode: state.uri.queryParameters['mode'],
               ),
             ),
           ]),

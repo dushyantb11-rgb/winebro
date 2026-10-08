@@ -512,6 +512,13 @@ function HomeForm({ value, onChange }: Props) {
             </div>
           )} />
       </Section>
+      <Section title="Quick start" hint="Dish ids shown as chips under the Home decision launcher. Only dishes that exist in the catalogue are shown in the app.">
+        <Field label="Dish ids (in order)"><Tags value={arr<string>(value.quickStart)} onChange={(v) => set("quickStart", v.map((x) => x.trim().toLowerCase()))} placeholder="e.g. butter-chicken" /></Field>
+      </Section>
+      <Section title="Actions" hint="Keep these off until a retail partner and a real reminder scheduler exist; the app shows the buttons as 'coming soon' meanwhile.">
+        <Toggle checked={value.retailEnabled === true} onChange={(b) => set("retailEnabled", b)} label="Retail hand-off (Find to buy) enabled" />
+        <Toggle checked={value.remindersEnabled === true} onChange={(b) => set("remindersEnabled", b)} label="Pick-up reminders enabled" />
+      </Section>
       <Section title="Logo"><Field label="Asset path or URL"><TextInput value={str(value.logo)} onChange={(e) => set("logo", e.target.value)} /></Field></Section>
     </div>
   );

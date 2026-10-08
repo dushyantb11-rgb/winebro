@@ -1303,4 +1303,52 @@ class AppLocalizationsHi extends AppLocalizations {
   String settingsDeleteFailed(String reason) {
     return 'Could not delete the account: $reason';
   }
+
+  @override
+  String get homeLauncherEyebrow => 'WHAT ARE YOU HAVING TONIGHT?';
+
+  @override
+  String get homeLauncherTitle => 'Tell us the meal or show us the bottle.';
+
+  @override
+  String get homeLauncherSubtitle =>
+      'We explain the pairing and remember what worked.';
+
+  @override
+  String get homeScanBottle => 'Scan a bottle';
+
+  @override
+  String get homeChooseMeal => 'Choose a meal';
+
+  @override
+  String get homeTypeDish => 'Type a dish';
+
+  @override
+  String get homeQuickStart => 'QUICK START';
+
+  @override
+  String get homeTypeDishTitle => 'What dish are you having?';
+
+  @override
+  String get homeTypeDishHint =>
+      'Type a dish; you will pick the closest match next.';
+
+  @override
+  String get homeTypeDishExample => 'For example: spicy paneer tikka';
+
+  @override
+  String get homeFindPairing => 'Find a pairing';
+
+  @override
+  String get actionRetailSoon => 'Retail availability soon';
+
+  @override
+  String get actionRemindSoon => 'Reminders coming soon';
+
+  @override
+  String get profileAromaWheel => 'Explore the aroma wheel';
+
+  @override
+  String get profileAromaWheelSub =>
+      'Learn the smells behind every sip, with Indian names too.';
 }

@@ -2429,6 +2429,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not delete the account: {reason}'**
   String settingsDeleteFailed(String reason);
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'WHAT ARE YOU HAVING TONIGHT?'**
+  String get homeLauncherEyebrow;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us the meal or show us the bottle.'**
+  String get homeLauncherTitle;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'We explain the pairing and remember what worked.'**
+  String get homeLauncherSubtitle;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Scan a bottle'**
+  String get homeScanBottle;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a meal'**
+  String get homeChooseMeal;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Type a dish'**
+  String get homeTypeDish;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'QUICK START'**
+  String get homeQuickStart;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'What dish are you having?'**
+  String get homeTypeDishTitle;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Type a dish; you will pick the closest match next.'**
+  String get homeTypeDishHint;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'For example: spicy paneer tikka'**
+  String get homeTypeDishExample;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Find a pairing'**
+  String get homeFindPairing;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Retail availability soon'**
+  String get actionRetailSoon;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders coming soon'**
+  String get actionRemindSoon;
+
+  /// Profile row to the Aroma Wheel
+  ///
+  /// In en, this message translates to:
+  /// **'Explore the aroma wheel'**
+  String get profileAromaWheel;
+
+  /// Profile row to the Aroma Wheel
+  ///
+  /// In en, this message translates to:
+  /// **'Learn the smells behind every sip, with Indian names too.'**
+  String get profileAromaWheelSub;
 }
 
 class _AppLocalizationsDelegate

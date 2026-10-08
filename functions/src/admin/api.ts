@@ -292,6 +292,24 @@ async function writeDoc(ctx: Ctx, name: string, id: string, create: boolean) {
     updatedBy: ctx.caller.email,
   };
   if (create) data.createdAt = FieldValue.serverTimestamp();
+  if (name === "products") {
+    // Taste scores started as AI estimates. The moment a person changes
+    // any of them, or marks the drink verified, record who and when, so
+    // the app can tell an estimate from a reviewed profile.
+    const scoresChanged = SCORE_AXES.some((a) => existing.exists && existing.get(a) !== body[a]);
+    if (scoresChanged || (create && !isRecord(body.estimate))) {
+      const estimate = isRecord(body.estimate) ? { ...body.estimate } : {};
+      estimate.reviewedBy = ctx.caller.email;
+      estimate.reviewedAt = new Date().toISOString();
+      if (!estimate.label) estimate.label = "Reviewed by WineBro";
+      data.estimate = estimate;
+      data.provenance = "admin-reviewed";
+    }
+    if (body.verified === true && existing.get("verified") !== true) {
+      data.verifiedBy = ctx.caller.email;
+      data.verifiedAt = FieldValue.serverTimestamp();
+    }
+  }
   await ref.set(data);
   return getDoc(ctx, name, id);
 }

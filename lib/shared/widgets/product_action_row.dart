@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:winebro/core/affiliate/affiliate_url_resolver.dart';
+import 'package:winebro/core/config/app_config.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
@@ -47,8 +48,13 @@ class ProductActionRow extends ConsumerWidget {
     final colors = context.appColors;
     final isInWishlist = ref.watch(wishlistContainsProvider(product.id));
 
-    // Prices are not shown anywhere (no sourced prices).
-    final buyLabel = context.l10n.actionBuyNoPrice;
+    // Retail hand-off and reminders stay visible but disabled until the
+    // admin switches them on in config/home (a retail partner, a real
+    // scheduler). We never send a user to an unverified retailer.
+    final retailEnabled = AppConfig.current.home.retailEnabled;
+    final reminderEnabled = AppConfig.current.home.remindersEnabled;
+    final buyLabel = retailEnabled ? context.l10n.actionBuyNoPrice : context.l10n.actionRetailSoon;
+    final remindLabel = reminderEnabled ? context.l10n.actionRemind : context.l10n.actionRemindSoon;
     final saveLabel = isInWishlist ? context.l10n.actionSaved : context.l10n.actionSave;
 
     final buyIcon = PhosphorIcons.shoppingBagOpen();
@@ -63,7 +69,7 @@ class ProductActionRow extends ConsumerWidget {
             child: _HeroButton(
               icon: buyIcon,
               label: buyLabel,
-              onTap: () => _onBuy(context),
+              onTap: retailEnabled ? () => _onBuy(context) : null,
               filled: true,
               colors: colors,
             ),
@@ -79,8 +85,8 @@ class ProductActionRow extends ConsumerWidget {
           const SizedBox(width: 8),
           _HeroButton(
             icon: remindIcon,
-            label: context.l10n.actionRemind,
-            onTap: () => _onRemind(context),
+            label: remindLabel,
+            onTap: reminderEnabled ? () => _onRemind(context) : null,
             filled: false,
             colors: colors,
             iconOnly: true,
@@ -96,7 +102,7 @@ class ProductActionRow extends ConsumerWidget {
           child: ElevatedButton.icon(
             icon: Icon(buyIcon, size: 16),
             label: Text(buyLabel),
-            onPressed: () => _onBuy(context),
+            onPressed: retailEnabled ? () => _onBuy(context) : null,
           ),
         ),
         const SizedBox(width: 8),
@@ -111,8 +117,8 @@ class ProductActionRow extends ConsumerWidget {
         const SizedBox(width: 8),
         IconButton.outlined(
           icon: Icon(remindIcon, color: colors.textSecondary),
-          tooltip: context.l10n.actionRemind,
-          onPressed: () => _onRemind(context),
+          tooltip: remindLabel,
+          onPressed: reminderEnabled ? () => _onRemind(context) : null,
         ),
       ],
     );
@@ -182,7 +188,7 @@ class _HeroButton extends StatelessWidget {
 
   final IconData icon;
   final String label;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final bool filled;
   final AppColors colors;
   final bool iconOnly;
@@ -190,9 +196,16 @@ class _HeroButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ink = colors.inkOnHero;
-    final bg = filled ? ink : ink.withValues(alpha: 0.18);
-    final border = filled ? Colors.transparent : ink.withValues(alpha: 0.4);
-    final fg = filled ? colors.paprika : ink;
+    final disabled = onTap == null;
+    final bg = filled
+        ? ink.withValues(alpha: disabled ? 0.45 : 1)
+        : ink.withValues(alpha: disabled ? 0.08 : 0.18);
+    final border = filled
+        ? Colors.transparent
+        : ink.withValues(alpha: disabled ? 0.18 : 0.4);
+    final fg = filled
+        ? colors.paprika.withValues(alpha: disabled ? 0.55 : 1)
+        : ink.withValues(alpha: disabled ? 0.55 : 1);
 
     return Material(
       color: Colors.transparent,
