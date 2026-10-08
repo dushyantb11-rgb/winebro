@@ -850,6 +850,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tryAgain => 'Try again';
 
   @override
+  String get voiceSearch => 'Search by voice';
+
+  @override
+  String get voiceUnavailable => 'Voice search isn\'t available on this phone.';
+
+  @override
+  String get pairRowBestSellers => 'INDIA\'S BEST-SELLERS';
+
+  @override
+  String get pairRowWines => 'WINES';
+
+  @override
+  String get pairRowWhisky => 'WHISKY';
+
+  @override
+  String get pairRowSpirits => 'RUM, BRANDY, GIN & VODKA';
+
+  @override
+  String get pairRowBeer => 'BEER';
+
+  @override
   String get actionBuyNoPrice => 'Find to buy';
 
   @override

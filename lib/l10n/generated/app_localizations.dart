@@ -1632,6 +1632,48 @@ abstract class AppLocalizations {
   /// **'Try again'**
   String get tryAgain;
 
+  /// Mic button tooltip on Pair
+  ///
+  /// In en, this message translates to:
+  /// **'Search by voice'**
+  String get voiceSearch;
+
+  /// Speech recognition could not start
+  ///
+  /// In en, this message translates to:
+  /// **'Voice search isn\'t available on this phone.'**
+  String get voiceUnavailable;
+
+  /// Pair row: drinks in a published sales ranking
+  ///
+  /// In en, this message translates to:
+  /// **'INDIA\'S BEST-SELLERS'**
+  String get pairRowBestSellers;
+
+  /// Pair row
+  ///
+  /// In en, this message translates to:
+  /// **'WINES'**
+  String get pairRowWines;
+
+  /// Pair row
+  ///
+  /// In en, this message translates to:
+  /// **'WHISKY'**
+  String get pairRowWhisky;
+
+  /// Pair row
+  ///
+  /// In en, this message translates to:
+  /// **'RUM, BRANDY, GIN & VODKA'**
+  String get pairRowSpirits;
+
+  /// Pair row
+  ///
+  /// In en, this message translates to:
+  /// **'BEER'**
+  String get pairRowBeer;
+
   /// Buy button when we have no sourced price
   ///
   /// In en, this message translates to:
