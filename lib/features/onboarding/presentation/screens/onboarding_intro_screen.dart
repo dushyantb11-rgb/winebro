@@ -126,7 +126,7 @@ class _OnboardingIntroScreenState extends State<OnboardingIntroScreen> {
                           margin: const EdgeInsets.symmetric(horizontal: 4),
                           decoration: BoxDecoration(
                             color: active
-                                ? colors.goldWarm
+                                ? colors.inkOnHero
                                 : colors.inkOnHero.withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(4),
                           ),
@@ -139,7 +139,7 @@ class _OnboardingIntroScreenState extends State<OnboardingIntroScreen> {
                       child: ElevatedButton(
                         onPressed: _next,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: colors.goldWarm,
+                          backgroundColor: colors.inkOnHero,
                           foregroundColor: colors.thunder,
                           padding: const EdgeInsets.symmetric(vertical: 18),
                         ),
@@ -223,19 +223,19 @@ class _SlideView extends StatelessWidget {
                   width: 88,
                   height: 88,
                   decoration: BoxDecoration(
-                    color: colors.goldWarm.withValues(alpha: 0.18),
+                    color: colors.inkOnHero.withValues(alpha: 0.18),
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: colors.goldWarm.withValues(alpha: 0.5),
+                      color: colors.inkOnHero.withValues(alpha: 0.5),
                       width: 1.5,
                     ),
                   ),
-                  child: Icon(slide.icon, color: colors.goldWarm, size: 40),
+                  child: Icon(slide.icon, color: colors.inkOnHero, size: 40),
                 ),
                 const SizedBox(height: 32),
                 Text(
                   slide.eyebrow,
-                  style: context.eyebrow.copyWith(color: colors.goldWarm),
+                  style: context.eyebrow.copyWith(color: colors.inkOnHero),
                 ),
                 const SizedBox(height: 12),
                 Text(
