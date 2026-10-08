@@ -80,7 +80,10 @@ class _PreQuizSeedScreenState extends State<PreQuizSeedScreen> {
     }
 
     if (!mounted) return;
-    context.go('/quiz');
+    context.go(
+      '/quiz',
+      extra: persist ? _selected.toList() : const <String>[],
+    );
   }
 
   @override
@@ -89,9 +92,9 @@ class _PreQuizSeedScreenState extends State<PreQuizSeedScreen> {
     final l10n = context.l10n;
 
     return Scaffold(
-      backgroundColor: colors.charcoal,
+      backgroundColor: colors.background,
       appBar: AppBar(
-        backgroundColor: colors.charcoal,
+        backgroundColor: colors.background,
         elevation: 0,
         leading: const SizedBox(),
         actions: [

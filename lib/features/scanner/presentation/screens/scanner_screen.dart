@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:string_similarity/string_similarity.dart';
 import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
@@ -15,6 +14,7 @@ import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/features/profile/data/gamification_service.dart';
+import 'package:winebro/features/scanner/domain/label_matcher.dart';
 
 /// Redesigned 2026 Scan modal.
 ///
@@ -24,7 +24,7 @@ import 'package:winebro/features/profile/data/gamification_service.dart';
 ///   scanning    Indeterminate sweep + "Looking…"
 ///   matched     Bottle name + match% + actions (sheet at 60% height)
 ///
-/// Top bar has only an X close + a flashlight placeholder. No tabs,
+/// Top bar has only an X close. No tabs,
 /// no bottom nav (it's a push route above the shell).
 class ScannerScreen extends ConsumerStatefulWidget {
   const ScannerScreen({super.key});
@@ -43,6 +43,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
 
   _ScanPhase _phase = _ScanPhase.idle;
   Product? _matched;
+  int? _matchPercent;
   String? _errorMessage;
 
   @override
@@ -67,6 +68,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
       _phase = _ScanPhase.scanning;
       _errorMessage = null;
       _matched = null;
+      _matchPercent = null;
     });
     _sweepController.repeat();
 
@@ -102,20 +104,22 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
       }
 
       final allText = recognized.blocks.map((b) => b.text).join(' ');
-      final match = _matchProduct(allText);
+      final match = const LabelMatcher()
+          .match(allText, ref.read(allProductsProvider));
 
       if (match != null) {
         HapticFeedback.heavyImpact();
         setState(() {
           _phase = _ScanPhase.matched;
-          _matched = match;
+          _matched = match.product;
+          _matchPercent = match.percent;
         });
         // Streak / XP / badge fire on a successful scan match. Decoupled
         // (no await) so the recognizer UI never waits on Firestore.
         // ignore: discarded_futures
         ref.read(gamificationServiceProvider).recordAction(
               GamificationAction.scan,
-              category: match.category.group,
+              category: match.product.category.group,
             );
       } else {
         setState(() {
@@ -132,31 +136,12 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
     }
   }
 
-  Product? _matchProduct(String ocrText) {
-    final normalized = ocrText.toLowerCase();
-    Product? best;
-    var bestScore = 0.0;
-
-    for (final p in ref.read(allProductsProvider)) {
-      final nameScore =
-          StringSimilarity.compareTwoStrings(p.name.toLowerCase(), normalized);
-      final containsName =
-          normalized.contains(p.name.toLowerCase()) ? 0.8 : 0.0;
-      final score = nameScore > containsName ? nameScore : containsName;
-      if (score > bestScore) {
-        bestScore = score;
-        best = p;
-      }
-    }
-    return bestScore >= 0.25 ? best : null;
-  }
-
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF050505),
+      backgroundColor: colors.cameraCanvas,
       body: Stack(
         children: [
           // ====== Camera canvas ======
@@ -183,20 +168,9 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
                 child: Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                      icon: Icon(Icons.close, color: colors.inkOnHero, size: 28),
                       tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
                       onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(Icons.flash_off, color: Colors.white70, size: 24),
-                      tooltip: 'Flashlight',
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text(context.l10n.flashlightComingSoon)),
-                        );
-                      },
                     ),
                   ],
                 ),
@@ -215,6 +189,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
                 key: ValueKey(_phase),
                 phase: _phase,
                 matched: _matched,
+                matchPercent: _matchPercent,
                 errorMessage: _errorMessage,
                 onScan: _scan,
                 onRetry: _scan,
@@ -237,18 +212,19 @@ class _CameraCanvas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: RadialGradient(
           center: Alignment.center,
           radius: 1.4,
-          colors: [Color(0xFF1A0408), Color(0xFF050505)],
+          colors: [colors.cameraGlow, colors.cameraCanvas],
         ),
       ),
-      child: const Center(
+      child: Center(
         child: Icon(
           Icons.center_focus_weak,
-          color: Color(0xFF1F1A1B),
+          color: colors.cameraGhost,
           size: 220,
         ),
       ),
@@ -267,7 +243,7 @@ class _GoldFinder extends StatelessWidget {
         width: 280,
         height: 380,
         child: CustomPaint(
-          painter: _CornerBracketPainter(color: colors.goldWarm),
+          painter: _CornerBracketPainter(color: colors.inkOnHero),
         ),
       ),
     );
@@ -323,7 +299,7 @@ class _SweepLine extends StatelessWidget {
           builder: (_, __) {
             final t = controller.value;
             return CustomPaint(
-              painter: _SweepPainter(progress: t, color: colors.goldWarm),
+              painter: _SweepPainter(progress: t, color: colors.inkOnHero),
             );
           },
         ),
@@ -363,6 +339,7 @@ class _MagneticSheet extends StatelessWidget {
     super.key,
     required this.phase,
     required this.matched,
+    required this.matchPercent,
     required this.errorMessage,
     required this.onScan,
     required this.onRetry,
@@ -371,6 +348,7 @@ class _MagneticSheet extends StatelessWidget {
 
   final _ScanPhase phase;
   final Product? matched;
+  final int? matchPercent;
   final String? errorMessage;
   final VoidCallback onScan;
   final VoidCallback onRetry;
@@ -394,7 +372,11 @@ class _MagneticSheet extends StatelessWidget {
       case _ScanPhase.scanning:
         child = _ScanningSheet(colors: colors);
       case _ScanPhase.matched:
-        child = _MatchedSheet(product: matched!, colors: colors);
+        child = _MatchedSheet(
+          product: matched!,
+          matchPercent: matchPercent,
+          colors: colors,
+        );
     }
 
     return ClipRRect(
@@ -413,7 +395,7 @@ class BackdropContainer extends StatelessWidget {
     final colors = context.appColors;
     return Container(
       decoration: BoxDecoration(
-        color: colors.charcoal,
+        color: colors.background,
         borderRadius:
             const BorderRadius.vertical(top: Radius.circular(28)),
       ),
@@ -534,7 +516,7 @@ class _ScanningSheet extends StatelessWidget {
               height: 18,
               child: CircularProgressIndicator(
                 strokeWidth: 2.5,
-                color: colors.goldWarm,
+                color: colors.inkOnHero,
               ),
             ),
             const SizedBox(width: 12),
@@ -561,8 +543,13 @@ class _ScanningSheet extends StatelessWidget {
 }
 
 class _MatchedSheet extends StatelessWidget {
-  const _MatchedSheet({required this.product, required this.colors});
+  const _MatchedSheet({
+    required this.product,
+    required this.matchPercent,
+    required this.colors,
+  });
   final Product product;
+  final int? matchPercent;
   final AppColors colors;
 
   @override
@@ -587,7 +574,9 @@ class _MatchedSheet extends StatelessWidget {
                       size: 14, color: context.salemOnSurface),
                   const SizedBox(width: 6),
                   Text(
-                    context.l10n.scanMatched,
+                    matchPercent == null
+                        ? context.l10n.scanMatched
+                        : '${context.l10n.scanMatched} · $matchPercent%',
                     style: TextStyle(
                       fontFamily: 'Montserrat',
                       fontSize: 10,
@@ -654,7 +643,10 @@ class _MatchedSheet extends StatelessWidget {
               child: OutlinedButton.icon(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  context.go('/pair');
+                  context.go(Uri(
+                    path: '/pair',
+                    queryParameters: {'product': product.id},
+                  ).toString());
                 },
                 icon: const Icon(Icons.restaurant_menu_outlined, size: 18),
                 label: Text(context.l10n.actionPair),

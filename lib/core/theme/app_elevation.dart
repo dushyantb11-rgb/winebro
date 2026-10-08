@@ -58,7 +58,7 @@ abstract final class AppElevation {
               offset: Offset(0, 32),
             ),
             BoxShadow(
-              color: Color(0x33930044),
+              color: Color(0x3393003C),
               blurRadius: 40,
               spreadRadius: -8,
               offset: Offset(0, 16),

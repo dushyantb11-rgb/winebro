@@ -68,7 +68,7 @@ class HomeScreen extends ConsumerWidget {
             // ====== Sticky header — official logo asset ======
             SliverAppBar(
               floating: true,
-              backgroundColor: colors.charcoal,
+              backgroundColor: colors.background,
               elevation: 0,
               centerTitle: true,
               title: Image.asset(
@@ -321,7 +321,7 @@ class HomeScreen extends ConsumerWidget {
         builder: (_, controller) => Container(
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
           decoration: BoxDecoration(
-            color: colors.charcoal,
+            color: colors.background,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
           ),
           child: ListView(
@@ -483,7 +483,7 @@ class _TonightsPourCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: colors.goldWarm,
+              color: colors.inkOnHero,
               borderRadius: BorderRadius.circular(999),
             ),
             child: Row(
@@ -604,7 +604,7 @@ class _ContinueStoryCard extends StatelessWidget {
           children: [
             Text(
               context.l10n.homeContinueStoryEyebrow,
-              style: context.eyebrow.copyWith(color: colors.gold),
+              style: context.eyebrow.copyWith(color: colors.highlight),
             ),
             const SizedBox(height: 12),
             Text.rich(
@@ -908,7 +908,7 @@ class _BroTipCard extends StatelessWidget {
             Row(
               children: [
                 Icon(Icons.lightbulb_outline,
-                    size: 16, color: colors.goldWarm),
+                    size: 16, color: colors.inkOnHero),
                 const SizedBox(width: 8),
                 Text(
                   context.l10n.homeBroTipHeader,
@@ -916,7 +916,7 @@ class _BroTipCard extends StatelessWidget {
                     fontFamily: 'Montserrat',
                     fontSize: 11,
                     fontWeight: FontWeight.w800,
-                    color: colors.goldWarm,
+                    color: colors.inkOnHero,
                     letterSpacing: 1.5,
                   ),
                 ),

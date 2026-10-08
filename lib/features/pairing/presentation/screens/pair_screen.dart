@@ -32,7 +32,11 @@ import 'package:winebro/shared/widgets/product_action_row.dart';
 ///   Drink → Food     pick a drink, get food suggestions
 ///   Occasion         pick an occasion, get drink suggestions
 class PairScreen extends ConsumerStatefulWidget {
-  const PairScreen({super.key});
+  const PairScreen({this.initialProductId, super.key});
+
+  /// Opens Pair in drink-to-food mode with this product selected, e.g.
+  /// after a label scan.
+  final String? initialProductId;
 
   @override
   ConsumerState<PairScreen> createState() => _PairScreenState();
@@ -64,12 +68,33 @@ class _PairScreenState extends ConsumerState<PairScreen> {
   @override
   void initState() {
     super.initState();
+    _applyInitialProduct();
     _placeholderTimer = Timer.periodic(const Duration(seconds: 4), (_) {
       if (mounted && _query.isEmpty) {
         setState(() => _placeholderIndex =
             (_placeholderIndex + 1) % _placeholders.length);
       }
     });
+  }
+
+  @override
+  void didUpdateWidget(PairScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialProductId != oldWidget.initialProductId) {
+      _applyInitialProduct();
+    }
+  }
+
+  void _applyInitialProduct() {
+    final id = widget.initialProductId;
+    if (id == null) return;
+    final product =
+        ref.read(allProductsProvider).where((p) => p.id == id).firstOrNull;
+    if (product == null) return;
+    _mode = PairMode.drinkToFood;
+    _selectedDish = null;
+    _selectedOccasion = null;
+    _selectedProduct = product;
   }
 
   @override
@@ -996,7 +1021,7 @@ class _BrosPickPairingCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: colors.goldWarm,
+              color: colors.inkOnHero,
               borderRadius: BorderRadius.circular(999),
             ),
             child: Row(
@@ -1050,6 +1075,16 @@ class _BrosPickPairingCard extends StatelessWidget {
               color: colors.inkOnHero.withValues(alpha: 0.78),
             ),
           ),
+          if (result.broTip != null) ...[
+            const SizedBox(height: 12),
+            Text(
+              result.broTip!,
+              style: context.serifQuote.copyWith(
+                color: colors.inkOnHero.withValues(alpha: 0.9),
+                fontSize: 14,
+              ),
+            ),
+          ],
           const SizedBox(height: 14),
           ProductActionRow(
             product: p,
@@ -1089,7 +1124,7 @@ class _BrosPickFoodCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: colors.goldWarm,
+              color: colors.inkOnHero,
               borderRadius: BorderRadius.circular(999),
             ),
             child: Text(
@@ -1213,6 +1248,18 @@ class _AlternateCard extends StatelessWidget {
               ),
             ],
           ),
+          if (result.broTip != null) ...[
+            const SizedBox(height: 10),
+            Text(
+              result.broTip!,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: context.serifQuote.copyWith(
+                color: colors.textSecondary,
+                fontSize: 13,
+              ),
+            ),
+          ],
           const SizedBox(height: 12),
           ProductActionRow(product: p, source: AffiliateSource.pair),
         ],

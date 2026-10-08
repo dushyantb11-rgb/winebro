@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
-import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/features/pairing_feedback/domain/pairing_feedback.dart';
 
 /// "Did Bro get it right?" — collected 24h after a journal entry's
@@ -199,7 +198,7 @@ class _PairingFeedbackSheetState extends ConsumerState<PairingFeedbackSheet> {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: colors.charcoal,
+          color: colors.background,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         ),
         padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),

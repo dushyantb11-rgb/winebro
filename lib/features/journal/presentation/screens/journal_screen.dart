@@ -19,6 +19,7 @@ import 'package:winebro/features/journal/domain/journal_entry.dart';
 import 'package:winebro/features/journal/presentation/widgets/occasion_chips.dart';
 import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
 import 'package:winebro/features/journal/presentation/widgets/voice_capture_sheet.dart';
+import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/features/profile/data/gamification_service.dart';
 import 'package:winebro/shared/widgets/hero_photo_card.dart';
 import 'package:winebro/shared/widgets/segmented_chip_selector.dart';
@@ -199,9 +200,9 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
             QuickLogSheet.show(context);
           },
           backgroundColor: colors.paprika,
-          icon: const Icon(Icons.add, color: Colors.white),
+          icon: Icon(Icons.add, color: colors.onPrimary),
           label: Text(context.l10n.journalNewBroCard,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+              style: TextStyle(color: colors.onPrimary, fontWeight: FontWeight.w700)),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -411,7 +412,7 @@ class _BroCardTimelineRow extends StatelessWidget {
                   fontFamily: 'PlayfairDisplay',
                   fontSize: 32,
                   fontWeight: FontWeight.w900,
-                  color: colors.gold,
+                  color: colors.highlight,
                   height: 1,
                   letterSpacing: -1,
                 ),
@@ -466,7 +467,7 @@ class _EmptyState extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: colors.goldWarm,
+                      color: colors.inkOnHero,
                       borderRadius: BorderRadius.circular(999),
                     ),
                     child: Text(
@@ -620,11 +621,19 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
             localPath: _notesAudioPath!,
           );
     }
+    // Link the entry to the catalogue product when the name matches, so
+    // community counts (CF-11) and restock can find it. Free-text drinks
+    // keep the entry id.
+    final typedName = _nameController.text.trim();
+    final catalogProduct = ref
+        .read(allProductsProvider)
+        .where((p) => p.name.toLowerCase() == typedName.toLowerCase())
+        .firstOrNull;
     final entry = JournalEntry(
       id: id,
       userId: uid,
-      productId: id,
-      productName: _nameController.text.trim(),
+      productId: catalogProduct?.id ?? id,
+      productName: typedName,
       category: _category,
       region: _regionController.text.trim(),
       rating: _rating,
@@ -675,7 +684,7 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
     return Container(
       height: MediaQuery.of(context).size.height * 0.88,
       decoration: BoxDecoration(
-        color: colors.charcoal,
+        color: colors.background,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
       ),
       child: Column(
@@ -836,7 +845,7 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
         final colors = ctx.appColors;
         return SafeArea(
           child: Container(
-            color: colors.charcoal,
+            color: colors.background,
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -1108,13 +1117,13 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
               colors: [colors.thunder, colors.paprikaDark.withValues(alpha: 0.5)],
             ),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: colors.gold.withValues(alpha: 0.3)),
+            border: Border.all(color: colors.highlight.withValues(alpha: 0.3)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(_nameController.text, style: const TextStyle(fontFamily: 'PlayfairDisplay', fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white)),
-              Text('$_category · ${_regionController.text}', style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 12)),
+              Text(_nameController.text, style: TextStyle(fontFamily: 'PlayfairDisplay', fontSize: 20, fontWeight: FontWeight.w700, color: colors.inkOnHero)),
+              Text('$_category · ${_regionController.text}', style: TextStyle(color: colors.inkOnHero.withValues(alpha: 0.7), fontSize: 12)),
               const SizedBox(height: 12),
               _summaryRow(l10n.appearanceTitle, '$_colour, $_clarity, $_intensity'),
               _summaryRow(l10n.noseTitle, '$_noseIntensity — ${_selectedAromas.take(3).join(', ')}'),
@@ -1147,9 +1156,9 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
         children: [
           SizedBox(
             width: 80,
-            child: Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 11, fontWeight: FontWeight.w600)),
+            child: Text(label, style: TextStyle(color: context.appColors.inkOnHero.withValues(alpha: 0.5), fontSize: 11, fontWeight: FontWeight.w600)),
           ),
-          Expanded(child: Text(value, style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 12))),
+          Expanded(child: Text(value, style: TextStyle(color: context.appColors.inkOnHero.withValues(alpha: 0.7), fontSize: 12))),
         ],
       ),
     );

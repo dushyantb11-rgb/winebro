@@ -196,7 +196,7 @@ class _MatchBadge extends StatelessWidget {
     final color = percent >= 80
         ? colors.salem
         : percent >= 60
-            ? colors.gold
+            ? colors.highlight
             : colors.paprika;
 
     return Container(

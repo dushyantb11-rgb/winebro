@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _kThemeKey = 'app_theme_mode';
+// Light is the default. The key was renamed in 1.0.0+3 so every user
+// starts this release in light once; a later dark choice is remembered.
+const _kThemeKey = 'app_theme_mode_v2';
 
 final themeProvider =
     StateNotifierProvider<ThemeNotifier, ThemeMode>((ref) => ThemeNotifier());
@@ -27,4 +29,5 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
     await prefs.setString(_kThemeKey, next == ThemeMode.dark ? 'dark' : 'light');
   }
 }
+
 

@@ -85,7 +85,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/pre-quiz-seed',
         builder: (_, __) => const PreQuizSeedScreen(),
       ),
-      GoRoute(path: '/quiz', builder: (_, __) => const QuizScreen()),
+      GoRoute(
+        path: '/quiz',
+        builder: (_, state) => QuizScreen(
+          triedProductIds:
+              (state.extra as List<String>?) ?? const <String>[],
+        ),
+      ),
 
       // 4-tab shell. Scan and Settings are full-screen push routes,
       // not branches. Community removed in the 2026 redesign — its
@@ -98,7 +104,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             GoRoute(path: '/', builder: (_, __) => const HomeScreen()),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/pair', builder: (_, __) => const PairScreen()),
+            GoRoute(
+              path: '/pair',
+              builder: (_, state) => PairScreen(
+                initialProductId: state.uri.queryParameters['product'],
+              ),
+            ),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(

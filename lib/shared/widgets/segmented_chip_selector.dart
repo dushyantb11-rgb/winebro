@@ -37,7 +37,7 @@ class SegmentedChipSelector extends StatelessWidget {
             child: Text(
               opt,
               style: TextStyle(
-                color: isActive ? Colors.white : colors.textSecondary,
+                color: isActive ? colors.onPrimary : colors.textSecondary,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),

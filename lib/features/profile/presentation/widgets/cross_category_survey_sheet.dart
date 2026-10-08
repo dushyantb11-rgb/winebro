@@ -87,7 +87,7 @@ class _CrossCategorySurveySheetState
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: colors.charcoal,
+          color: colors.background,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         ),
         padding: const EdgeInsets.fromLTRB(24, 8, 24, 28),
@@ -173,11 +173,11 @@ class _CrossCategorySurveySheetState
                   ),
                 ),
                 child: _saving
-                    ? const SizedBox(
+                    ? SizedBox(
                         width: 18,
                         height: 18,
                         child: CircularProgressIndicator(
-                            strokeWidth: 2, color: Colors.white),
+                            strokeWidth: 2, color: colors.onPrimary),
                       )
                     : Text(
                         l10n.crossCategorySubmit,

@@ -23,7 +23,7 @@ class StarRating extends StatelessWidget {
       children: List.generate(5, (i) {
         final icon = Icon(
           i < rating ? Icons.star : Icons.star_border,
-          color: colors.gold,
+          color: colors.highlight,
           size: size,
         );
 
