@@ -2531,6 +2531,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Log it anyway'**
   String get scanLogAnyway;
+
+  /// Admin drafts preview
+  ///
+  /// In en, this message translates to:
+  /// **'Console'**
+  String get settingsConsole;
+
+  /// Admin drafts preview
+  ///
+  /// In en, this message translates to:
+  /// **'Preview console drafts'**
+  String get settingsPreviewDrafts;
+
+  /// Admin drafts preview
+  ///
+  /// In en, this message translates to:
+  /// **'Show unpublished console drafts on this phone only.'**
+  String get settingsPreviewDraftsSub;
+
+  /// Admin drafts preview
+  ///
+  /// In en, this message translates to:
+  /// **'PREVIEW · showing console drafts on this phone'**
+  String get previewDraftsBanner;
 }
 
 class _AppLocalizationsDelegate

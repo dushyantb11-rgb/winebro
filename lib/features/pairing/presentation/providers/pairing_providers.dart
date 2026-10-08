@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
+import 'package:winebro/core/preview/drafts_preview.dart';
 import 'package:winebro/core/preview/preview_overrides.dart';
 import 'package:winebro/core/services/firebase_providers.dart';
 import 'package:winebro/features/pairing/domain/dish.dart';
@@ -59,12 +60,12 @@ Stream<List<T>> _catalogStream<T>(
 
 final _remoteProductsProvider = StreamProvider<List<Product>>(
   (ref) => _catalogStream('products', Product.fromMap,
-      overrides: ref.watch(previewOverridesProvider)),
+      overrides: ref.watch(effectiveOverridesProvider)),
 );
 
 final _remoteDishesProvider = StreamProvider<List<Dish>>(
   (ref) => _catalogStream('dishes', Dish.fromMap,
-      overrides: ref.watch(previewOverridesProvider)),
+      overrides: ref.watch(effectiveOverridesProvider)),
 );
 
 /// Where the catalogue stands. Screens show a [CatalogStateBanner] for

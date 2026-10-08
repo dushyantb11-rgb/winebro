@@ -3,7 +3,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:winebro/core/config/app_config.dart';
-import 'package:winebro/core/preview/preview_overrides.dart';
+import 'package:winebro/core/preview/drafts_preview.dart';
 
 /// Streams Firestore `config/*` as an [AppConfig], falling back to the
 /// bundled defaults per document, and keeps [AppConfig.current] in step.
@@ -52,6 +52,6 @@ final configRepositoryProvider = Provider<ConfigRepository>(
 /// Firestore (cache first, then server).
 final appConfigProvider = StreamProvider<AppConfig>(
   (ref) => ref.watch(configRepositoryProvider).watch(
-        overrides: ref.watch(previewOverridesProvider).config,
+        overrides: ref.watch(effectiveOverridesProvider).config,
       ),
 );

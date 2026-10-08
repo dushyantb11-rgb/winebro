@@ -1222,5 +1222,13 @@
   "scanSearchByName": "Search by name",
   "@scanSearchByName": {"description": "No-match: open Pair in drink mode"},
   "scanLogAnyway": "Log it anyway",
-  "@scanLogAnyway": {"description": "No-match: open Quick Log with a typed name"}
+  "@scanLogAnyway": {"description": "No-match: open Quick Log with a typed name"},
+  "settingsConsole": "Console",
+  "@settingsConsole": {"description": "Admin drafts preview"},
+  "settingsPreviewDrafts": "Preview console drafts",
+  "@settingsPreviewDrafts": {"description": "Admin drafts preview"},
+  "settingsPreviewDraftsSub": "Show unpublished console drafts on this phone only.",
+  "@settingsPreviewDraftsSub": {"description": "Admin drafts preview"},
+  "previewDraftsBanner": "PREVIEW \u00b7 showing console drafts on this phone",
+  "@previewDraftsBanner": {"description": "Admin drafts preview"}
 }

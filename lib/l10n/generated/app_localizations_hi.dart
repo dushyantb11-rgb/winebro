@@ -1357,4 +1357,18 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get scanLogAnyway => 'Log it anyway';
+
+  @override
+  String get settingsConsole => 'Console';
+
+  @override
+  String get settingsPreviewDrafts => 'Preview console drafts';
+
+  @override
+  String get settingsPreviewDraftsSub =>
+      'Show unpublished console drafts on this phone only.';
+
+  @override
+  String get previewDraftsBanner =>
+      'PREVIEW · showing console drafts on this phone';
 }
