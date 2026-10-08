@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/providers/locale_provider.dart';
@@ -19,6 +20,13 @@ import 'package:winebro/features/friends/domain/friend.dart';
 ///   About              privacy policy, terms, version
 ///
 /// No nav tab — pushed from a "Settings" row at the bottom of Profile.
+/// Installed app version, e.g. "1.0.0 (10)", read from the platform so it
+/// always matches the build.
+final _appVersionProvider = FutureProvider<String>((ref) async {
+  final info = await PackageInfo.fromPlatform();
+  return '${info.version} (${info.buildNumber})';
+});
+
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -128,7 +136,7 @@ class SettingsScreen extends ConsumerWidget {
           _SettingsTile(
             icon: Icons.info_outline,
             title: context.l10n.settingsVersion,
-            subtitle: '0.1.0',
+            subtitle: ref.watch(_appVersionProvider).valueOrNull ?? '',
             colors: colors,
           ),
           const SizedBox(height: 40),
