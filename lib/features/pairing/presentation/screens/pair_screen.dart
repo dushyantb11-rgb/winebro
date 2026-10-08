@@ -817,6 +817,7 @@ class _TrendingDishCard extends StatelessWidget {
       child: HeroPhotoCard(
         aspectRatio: 7 / 9,
         borderRadius: 18,
+        imageUrl: dish.photo?.imageUrl,
         gradientColors: [colors.paprikaDeep, colors.paprika, colors.paprikaDark],
         onTap: () {
           HapticFeedback.selectionClick();
@@ -861,7 +862,7 @@ class _TrendingDrinkCard extends StatelessWidget {
       child: HeroPhotoCard(
         aspectRatio: 8 / 9,
         borderRadius: 18,
-        imageUrl: product.imageUrl,
+        imageUrl: product.displayImageUrl,
         gradientColors: [colors.thunder, colors.paprikaDeep],
         onTap: () {
           HapticFeedback.selectionClick();
@@ -1053,7 +1054,7 @@ class _BrosPickPairingCard extends StatelessWidget {
     final p = result.product;
 
     return HeroPhotoCard(
-      imageUrl: p.imageUrl,
+      imageUrl: p.displayImageUrl,
       gradientColors: [colors.paprika, colors.paprikaDeep, colors.thunder],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1238,6 +1239,7 @@ class _AlternateCard extends StatelessWidget {
                 productName: p.name,
                 category: p.category.group,
                 size: BrandLabelSize.compact,
+                photoUrl: p.displayImageUrl,
               ),
               const SizedBox(width: 14),
               Expanded(

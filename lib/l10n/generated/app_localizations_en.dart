@@ -871,6 +871,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pairRowBeer => 'BEER';
 
   @override
+  String get photoCreditsTitle => 'Photo credits';
+
+  @override
+  String get photoCreditsIntro =>
+      'Drink and dish photos come from Wikimedia Commons and Open Food Facts under open licences. Tap a row to see the original.';
+
+  @override
   String get actionBuyNoPrice => 'Find to buy';
 
   @override

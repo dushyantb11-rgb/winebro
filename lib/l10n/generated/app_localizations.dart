@@ -1674,6 +1674,18 @@ abstract class AppLocalizations {
   /// **'BEER'**
   String get pairRowBeer;
 
+  /// Settings item and screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Photo credits'**
+  String get photoCreditsTitle;
+
+  /// Intro on the photo credits screen
+  ///
+  /// In en, this message translates to:
+  /// **'Drink and dish photos come from Wikimedia Commons and Open Food Facts under open licences. Tap a row to see the original.'**
+  String get photoCreditsIntro;
+
   /// Buy button when we have no sourced price
   ///
   /// In en, this message translates to:

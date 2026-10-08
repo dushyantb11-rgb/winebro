@@ -468,7 +468,7 @@ class _TonightsPourCard extends StatelessWidget {
     final colors = context.appColors;
 
     return HeroPhotoCard(
-      imageUrl: product.imageUrl,
+      imageUrl: product.displayImageUrl,
       onTap: onTap,
       gradientColors: [
         colors.paprikaDeep,
@@ -635,6 +635,7 @@ class _ContinueStoryCard extends StatelessWidget {
                   productName: next.name,
                   category: next.category.group,
                   size: BrandLabelSize.compact,
+                  photoUrl: next.displayImageUrl,
                 ),
                 const SizedBox(width: 14),
                 Expanded(

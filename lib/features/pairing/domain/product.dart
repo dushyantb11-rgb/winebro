@@ -59,6 +59,10 @@ class Product {
 
   OpenFacts get openFacts => OpenFacts.fromOpenData(openData, ourAbv: abv);
 
+  /// Image for cards: our own image, else the open-licence photo (its
+  /// credit is on the product sheet and the Photo credits page).
+  String? get displayImageUrl => imageUrl ?? openFacts.photo?.imageUrl;
+
   /// Confidence of the published taste estimate ("high" / "medium" /
   /// "low"), or null when the taste profile is hand-authored.
   final String? estimateConfidence;

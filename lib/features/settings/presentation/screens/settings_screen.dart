@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:winebro/features/settings/presentation/screens/photo_credits_screen.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/providers/locale_provider.dart';
 import 'package:winebro/core/providers/theme_provider.dart';
@@ -132,6 +133,14 @@ class SettingsScreen extends ConsumerWidget {
             title: context.l10n.settingsTerms,
             colors: colors,
             onTap: () => _open(Uri.parse('https://winebro.web.app/terms.html')),
+          ),
+          _SettingsTile(
+            icon: Icons.photo_library_outlined,
+            title: context.l10n.photoCreditsTitle,
+            colors: colors,
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const PhotoCreditsScreen()),
+            ),
           ),
           _SettingsTile(
             icon: Icons.info_outline,
