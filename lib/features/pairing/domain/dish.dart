@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
+
+export 'package:winebro/core/constants/pairing_constants.dart' show FoodProperty;
 import 'package:winebro/features/pairing/domain/open_facts.dart';
 
 class Dish {
@@ -37,21 +39,18 @@ class Dish {
   factory Dish.fromMap(Map<String, dynamic> map) => Dish(
     id: map['id'] as String,
     name: map['name'] as String,
-    category: FoodCategory.values.firstWhere(
-      (c) => c.name == map['category'],
-      orElse: () => FoodCategory.northIndianRich,
-    ),
-    foodProperties: (map['foodProperties'] as List)
-        .map((p) => FoodProperty.values.firstWhere(
-              (fp) => fp.name == p,
-              orElse: () => FoodProperty.aromatic,
-            ))
-        .toList(),
+    category: FoodCategory(map['category'] as String),
+    foodProperties: [
+      for (final p in map['foodProperties'] as List) FoodProperty(p.toString()),
+    ],
     pairings: (map['pairings'] as List)
         .map((p) => DishPairing.fromMap(p as Map<String, dynamic>))
         .toList(),
     description: map['description'] as String?,
-    photo: _photoFrom(map['openData']),
+    photo: map['imageUrl'] is String && (map['imageUrl'] as String).isNotEmpty
+        // Our own photo (uploaded in the admin console) wins over open data.
+        ? OpenPhoto(imageUrl: map['imageUrl'] as String, credit: 'WineBro')
+        : _photoFrom(map['openData']),
   );
 }
 
@@ -86,22 +85,6 @@ class DishPairing {
   );
 }
 
-enum FoodProperty {
-  highFat('High Fat'),
-  spicyHeat('Spicy Heat'),
-  highProtein('High Protein'),
-  lightDelicate('Light & Delicate'),
-  sweetDessert('Sweet Dessert'),
-  umamiRich('Umami-Rich'),
-  acidic('Acidic'),
-  smokyCharred('Smoky / Charred'),
-  creamy('Creamy'),
-  tangy('Tangy'),
-  aromatic('Aromatic');
-
-  const FoodProperty(this.displayName);
-  final String displayName;
-}
 
 OpenPhoto? _photoFrom(Object? openData) {
   if (openData is! Map) return null;

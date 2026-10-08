@@ -49,14 +49,7 @@ class ProductCard extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Image.asset(
-                      _categoryImage,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                        color: colors.surface2,
-                        child: Icon(_categoryIcon, size: 28, color: colors.paprikaLight),
-                      ),
-                    ),
+                    _categoryImageWidget(colors, 28),
                     Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -121,14 +114,7 @@ class ProductCard extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Image.asset(
-                      _categoryImage,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                        color: colors.surface2,
-                        child: Icon(_categoryIcon, size: 24, color: colors.paprikaLight),
-                      ),
-                    ),
+                    _categoryImageWidget(colors, 24),
                     Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -182,6 +168,18 @@ class ProductCard extends StatelessWidget {
   }
 
   String get _categoryImage => AppIcons.drinkImage(product.category.group);
+
+  /// Group image from config: an app asset path or an uploaded image URL.
+  Widget _categoryImageWidget(AppColors colors, double iconSize) {
+    final src = _categoryImage;
+    Widget fallback(BuildContext _, Object __, StackTrace? ___) => Container(
+          color: colors.surface2,
+          child: Icon(_categoryIcon, size: iconSize, color: colors.paprikaLight),
+        );
+    return src.startsWith('http')
+        ? Image.network(src, fit: BoxFit.cover, errorBuilder: fallback)
+        : Image.asset(src, fit: BoxFit.cover, errorBuilder: fallback);
+  }
   IconData get _categoryIcon => AppIcons.forDrinkGroup(product.category.group);
 }
 

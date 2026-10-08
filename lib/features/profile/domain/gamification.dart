@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:winebro/core/constants/pairing_constants.dart';
+import 'package:winebro/core/config/app_config.dart';
 
 class Badge {
   const Badge({
@@ -21,6 +21,32 @@ class Badge {
 
 sealed class BadgeCondition {
   const BadgeCondition();
+
+  /// Parses `{type, value}` as stored in `config/badges`.
+  factory BadgeCondition.fromMap(Map<String, dynamic> m) {
+    final value = m['value'];
+    final n = value is num ? value.toInt() : 0;
+    return switch (m['type']) {
+      'scanCount' => ScanCountCondition(n),
+      'journalCount' => JournalCountCondition(n),
+      'pairingCount' => PairingCountCondition(n),
+      'streakDays' => StreakCondition(n),
+      'categoryExplored' => CategoryExploredCondition(value.toString()),
+      'challengeCount' => ChallengeCountCondition(n),
+      'special' => SpecialCondition(value.toString()),
+      _ => throw FormatException('unknown badge condition ${m['type']}'),
+    };
+  }
+
+  Map<String, Object> toMap() => switch (this) {
+        ScanCountCondition(:final count) => {'type': 'scanCount', 'value': count},
+        JournalCountCondition(:final count) => {'type': 'journalCount', 'value': count},
+        PairingCountCondition(:final count) => {'type': 'pairingCount', 'value': count},
+        StreakCondition(:final days) => {'type': 'streakDays', 'value': days},
+        CategoryExploredCondition(:final category) => {'type': 'categoryExplored', 'value': category},
+        ChallengeCountCondition(:final count) => {'type': 'challengeCount', 'value': count},
+        SpecialCondition(:final key) => {'type': 'special', 'value': key},
+      };
 }
 
 final class ScanCountCondition extends BadgeCondition {
@@ -58,168 +84,8 @@ final class SpecialCondition extends BadgeCondition {
   final String key;
 }
 
-const kBadges = <Badge>[
-  Badge(
-    id: 'first-scan',
-    name: 'Eagle Eye',
-    description: 'Scanned your first bottle',
-    icon: Icons.visibility,
-    xpReward: 50,
-    condition: ScanCountCondition(1),
-  ),
-  Badge(
-    id: 'scan-master',
-    name: 'Scan Master',
-    description: 'Scanned 50 bottles',
-    icon: Icons.photo_camera,
-    xpReward: 200,
-    condition: ScanCountCondition(50),
-  ),
-  Badge(
-    id: 'first-note',
-    name: 'The Pen',
-    description: 'Wrote your first tasting note',
-    icon: Icons.edit,
-    xpReward: 50,
-    condition: JournalCountCondition(1),
-  ),
-  Badge(
-    id: 'journal-10',
-    name: 'Sommelier in Training',
-    description: 'Logged 10 tastings',
-    icon: Icons.menu_book,
-    xpReward: 100,
-    condition: JournalCountCondition(10),
-  ),
-  Badge(
-    id: 'journal-50',
-    name: 'Dedicated Taster',
-    description: 'Logged 50 tastings',
-    icon: Icons.emoji_events,
-    xpReward: 500,
-    condition: JournalCountCondition(50),
-  ),
-  Badge(
-    id: 'first-pair',
-    name: 'Matchmaker',
-    description: 'Found your first perfect pairing',
-    icon: Icons.handshake,
-    xpReward: 50,
-    condition: PairingCountCondition(1),
-  ),
-  Badge(
-    id: 'pair-25',
-    name: 'Pairing Pro',
-    description: 'Discovered 25 food-drink pairings',
-    icon: Icons.track_changes,
-    xpReward: 200,
-    condition: PairingCountCondition(25),
-  ),
-  Badge(
-    id: 'streak-3',
-    name: 'Getting Serious',
-    description: 'Maintained a 3-day streak',
-    icon: Icons.local_fire_department,
-    xpReward: 50,
-    condition: StreakCondition(3),
-  ),
-  Badge(
-    id: 'streak-7',
-    name: 'On Fire',
-    description: '7-day streak! Commitment unlocked',
-    icon: Icons.whatshot,
-    xpReward: 100,
-    condition: StreakCondition(7),
-  ),
-  Badge(
-    id: 'streak-30',
-    name: 'Iron Will',
-    description: '30-day streak — you\'re unstoppable',
-    icon: Icons.fitness_center,
-    xpReward: 500,
-    condition: StreakCondition(30),
-  ),
-  Badge(
-    id: 'red-explorer',
-    name: 'Red Explorer',
-    description: 'Tried 5 different red wines',
-    icon: Icons.wine_bar,
-    xpReward: 100,
-    condition: CategoryExploredCondition('redWine'),
-  ),
-  Badge(
-    id: 'white-explorer',
-    name: 'White Wanderer',
-    description: 'Tried 5 different white wines',
-    icon: Icons.local_drink,
-    xpReward: 100,
-    condition: CategoryExploredCondition('whiteWine'),
-  ),
-  Badge(
-    id: 'whisky-explorer',
-    name: 'Spirit Guide',
-    description: 'Tried 5 different whiskies',
-    icon: Icons.local_bar,
-    xpReward: 100,
-    condition: CategoryExploredCondition('whisky'),
-  ),
-  Badge(
-    id: 'beer-explorer',
-    name: 'Hop Head',
-    description: 'Tried 5 different beers',
-    icon: Icons.sports_bar,
-    xpReward: 100,
-    condition: CategoryExploredCondition('beer'),
-  ),
-  Badge(
-    id: 'indian-wine',
-    name: 'Swadeshi Sipper',
-    description: 'Tried 3 Indian wines',
-    icon: Icons.flag,
-    xpReward: 100,
-    condition: SpecialCondition('indian-wine-3'),
-  ),
-  Badge(
-    id: 'challenge-5',
-    name: 'Challenger',
-    description: 'Completed 5 daily challenges',
-    icon: Icons.bolt,
-    xpReward: 100,
-    condition: ChallengeCountCondition(5),
-  ),
-  Badge(
-    id: 'challenge-25',
-    name: 'Challenge Champion',
-    description: 'Completed 25 daily challenges',
-    icon: Icons.military_tech,
-    xpReward: 300,
-    condition: ChallengeCountCondition(25),
-  ),
-  Badge(
-    id: 'aroma-master',
-    name: 'Nose Knows',
-    description: 'Explored all 6 aroma wheel categories',
-    icon: Icons.air,
-    xpReward: 200,
-    condition: SpecialCondition('all-aroma-categories'),
-  ),
-  Badge(
-    id: 'brocard-master',
-    name: 'BroCard Master',
-    description: 'Completed 10 detailed BroCard tasting sheets',
-    icon: Icons.assignment,
-    xpReward: 300,
-    condition: SpecialCondition('brocard-10'),
-  ),
-  Badge(
-    id: 'wise-elder',
-    name: 'Wise Elder',
-    description: 'Reached the highest level',
-    icon: Icons.diamond,
-    xpReward: 1000,
-    condition: SpecialCondition('max-level'),
-  ),
-];
+/// All badges, from `config/badges`.
+List<Badge> get kBadges => AppConfig.current.badges.items;
 
 class GamificationState {
   const GamificationState({
@@ -246,18 +112,18 @@ class GamificationState {
   final Map<String, int> exploredCategories;
   final DateTime lastActiveDate;
 
-  ({String name, int minXp, IconData icon}) get levelInfo =>
-      kXpLevels[level] ?? kXpLevels[0]!;
-
-  int? get xpForNextLevel {
-    final next = kXpLevels[level + 1];
-    return next?.minXp;
+  ({String name, int minXp, IconData icon}) get levelInfo {
+    final l = AppConfig.current.gamification.levelInfo(level);
+    return (name: l.name, minXp: l.minXp, icon: l.icon);
   }
+
+  int? get xpForNextLevel =>
+      AppConfig.current.gamification.minXpForLevel(level + 1);
 
   double get levelProgress {
     final nextXp = xpForNextLevel;
     if (nextXp == null) return 1.0;
-    final currentMin = kXpLevels[level]!.minXp;
+    final currentMin = levelInfo.minXp;
     final range = nextXp - currentMin;
     if (range <= 0) return 1.0;
     return ((xp - currentMin) / range).clamp(0.0, 1.0);
@@ -292,7 +158,8 @@ class GamificationState {
         (exploredCategories['aromaCategories'] ?? 0) >= 6,
     'brocard-10' =>
         (exploredCategories['detailedBroCards'] ?? 0) >= 10,
-    'max-level' => level >= 3,
+    'max-level' =>
+        level >= AppConfig.current.gamification.levels.last.level,
     _ => false,
   };
 

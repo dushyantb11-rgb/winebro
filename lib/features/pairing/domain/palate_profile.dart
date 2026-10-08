@@ -88,10 +88,9 @@ class PalateProfile {
       tannin: (map['tannin'] as num).toDouble(),
       freshness: (map['freshness'] as num).toDouble(),
       complexity: (map['complexity'] as num).toDouble(),
-      archetype: PalateArchetype.values.firstWhere(
-        (a) => a.name == map['archetype'],
-        orElse: () => PalateArchetype.balancedSipper,
-      ),
+      archetype: map['archetype'] is String
+          ? PalateArchetype(map['archetype'] as String)
+          : PalateArchetype.balancedSipper,
     );
   }
 

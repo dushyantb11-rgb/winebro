@@ -148,6 +148,14 @@ service cloud.firestore {
                    && request.resource.data.no >= 0;
     }
 
+    // ─── APP CONFIG (rules, reference lists) ─────────────
+    // Read by the app before sign-in (quiz, categories); written only
+    // by the admin API through the Admin SDK.
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     // ─── DENY ALL OTHER PATHS ────────────────────────────
     match /{document=**} {
       allow read, write: if false;

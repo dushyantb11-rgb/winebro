@@ -169,10 +169,7 @@ class Product {
     return Product(
       id: map['id'] as String,
       name: map['name'] as String,
-      category: DrinkCategory.values.firstWhere(
-        (c) => c.name == map['category'],
-        orElse: () => DrinkCategory.redWine,
-      ),
+      category: DrinkCategory(map['category'] as String),
       subcategory: map['subcategory'] as String,
       region: map['region'] as String,
       price: (map['price'] as num).toDouble(),
@@ -183,12 +180,7 @@ class Product {
       freshness: (map['freshness'] as num).toDouble(),
       complexity: (map['complexity'] as num).toDouble(),
       archetypeTags: List.unmodifiable(
-        (map['archetypeTags'] as List).map(
-          (t) => PalateArchetype.values.firstWhere(
-            (a) => a.name == t,
-            orElse: () => PalateArchetype.values.first,
-          ),
-        ),
+        (map['archetypeTags'] as List).map((t) => PalateArchetype(t.toString())),
       ),
       tastingNotes: map['tastingNotes'] as String,
       aromas: List<String>.unmodifiable(map['aromas'] as List),

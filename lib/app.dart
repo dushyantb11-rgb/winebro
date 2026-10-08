@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:winebro/core/config/config_repository.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/notifications/notification_handler.dart';
 import 'package:winebro/core/providers/locale_provider.dart';
@@ -18,6 +19,8 @@ class WineBroApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
     final locale = ref.watch(localeProvider);
     final themeMode = ref.watch(themeProvider);
+    // Keeps Firestore config streaming; AppConfig.current follows it.
+    ref.watch(appConfigProvider);
 
     // Bind router to the FCM handler so notification taps deep-link
     // correctly. Safe to call on every rebuild — bindRouter is idempotent.

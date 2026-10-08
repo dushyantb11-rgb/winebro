@@ -9,25 +9,29 @@
 ///
 /// The Cloud Functions in Sprint 2 emit these. The on-device handler
 /// in [NotificationHandler] resolves them to the correct deep-link.
+library;
+
+import 'package:winebro/core/config/app_config.dart';
+
 enum WineBroNotificationType {
   /// Daily Bro Tip push (8 PM IST). Deep-links to Home.
   ///   data.tipId       — id of the Bro Tip rendered
-  broTip(code: 'broTip', deepLink: '/'),
+  broTip(code: 'broTip', defaultDeepLink: '/'),
 
   /// Sent at 9 PM if the user's streak is about to lapse.
   /// Deep-links to Profile so they see what's at stake.
   ///   data.streakDays  — current streak count (string)
-  streakLoss(code: 'streakLoss', deepLink: '/profile'),
+  streakLoss(code: 'streakLoss', defaultDeepLink: '/profile'),
 
   /// 7 AM morning push surfacing today's curated bottle. Deep-links
   /// to Home so the hero card reloads with the Tonight's Pour.
   ///   data.productId
-  tonightsPour(code: 'tonightsPour', deepLink: '/'),
+  tonightsPour(code: 'tonightsPour', defaultDeepLink: '/'),
 
   /// Sunday 11 AM weekly nudge for buy-again items. Deep-links to
   /// the Restock surface (initially Home; v1.1 dedicated screen).
   ///   data.productId
-  restock(code: 'restock', deepLink: '/'),
+  restock(code: 'restock', defaultDeepLink: '/'),
 
   /// 24 hours after a journal save with `foodPaired`: "Did Bro get
   /// it right?" Deep-links to /feedback/{entryId} which opens the
@@ -36,14 +40,19 @@ enum WineBroNotificationType {
   ///   data.productId
   ///   data.productName
   ///   data.foodPaired
-  pairingFeedback(code: 'pairingFeedback', deepLink: '/feedback'),
+  pairingFeedback(code: 'pairingFeedback', defaultDeepLink: '/feedback'),
 
   /// Generic catch-all. Deep-links to Home.
-  unknown(code: 'unknown', deepLink: '/');
+  unknown(code: 'unknown', defaultDeepLink: '/');
 
-  const WineBroNotificationType({required this.code, required this.deepLink});
+  const WineBroNotificationType({required this.code, required this.defaultDeepLink});
   final String code;
-  final String deepLink;
+
+  /// Bundled fallback; `config/notifications` wins when present.
+  final String defaultDeepLink;
+
+  String get deepLink =>
+      AppConfig.current.notifications.deepLinks[code] ?? defaultDeepLink;
 
   static WineBroNotificationType fromCode(String? code) {
     if (code == null) return WineBroNotificationType.unknown;
