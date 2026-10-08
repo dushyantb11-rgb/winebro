@@ -1,4 +1,5 @@
 import 'package:winebro/core/constants/pairing_constants.dart';
+import 'package:winebro/features/pairing/domain/open_facts.dart';
 
 class Product {
   const Product({
@@ -21,6 +22,7 @@ class Product {
     this.origin,
     this.abv,
     this.grapeVariety,
+    this.openData,
   })  : assert(fruit >= 0 && fruit <= 10),
         assert(acidity >= 0 && acidity <= 10),
         assert(body >= 0 && body <= 10),
@@ -47,6 +49,12 @@ class Product {
   final String? origin;
   final double? abv;
   final String? grapeVariety;
+
+  /// Facts from open datasets, as stored in Firestore. Null for the
+  /// bundled seed list. See [OpenFacts].
+  final Map<String, dynamic>? openData;
+
+  OpenFacts get openFacts => OpenFacts.fromOpenData(openData, ourAbv: abv);
 
   double operator [](PalateAxis axis) => switch (axis) {
     PalateAxis.fruit => fruit,
@@ -101,6 +109,7 @@ class Product {
       origin: origin ?? this.origin,
       abv: abv ?? this.abv,
       grapeVariety: grapeVariety ?? this.grapeVariety,
+      openData: openData,
     );
   }
 
@@ -159,6 +168,9 @@ class Product {
       origin: map['origin'] as String?,
       abv: (map['abv'] as num?)?.toDouble(),
       grapeVariety: map['grapeVariety'] as String?,
+      openData: map['openData'] is Map
+          ? Map<String, dynamic>.from(map['openData'] as Map)
+          : null,
     );
   }
 
