@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/core/affiliate/affiliate_url_resolver.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_elevation.dart';
-import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/features/wishlist/presentation/providers/wishlist_provider.dart';
 import 'package:winebro/shared/widgets/brand_label_card.dart';
@@ -16,6 +16,7 @@ class WishlistScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final catalog = ref.watch(allProductsProvider);
     final colors = context.appColors;
     final wishlist = ref.watch(wishlistProvider);
 
@@ -81,9 +82,9 @@ class WishlistScreen extends ConsumerWidget {
               // Try to resolve full Product from catalogue; fall back
               // to a synthetic Product if it was saved from a non-seed
               // source (Quick log custom name, future scan corrections).
-              final product = kSeedProducts.firstWhere(
+              final product = catalog.firstWhere(
                 (p) => p.id == e.productId,
-                orElse: () => kSeedProducts.first.copyWith(
+                orElse: () => catalog.first.copyWith(
                   id: e.productId,
                   name: e.productName,
                   region: e.region,

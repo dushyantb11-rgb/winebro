@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_elevation.dart';
@@ -13,7 +14,6 @@ import 'package:winebro/features/auth/presentation/providers/auth_provider.dart'
 import 'package:winebro/features/home/presentation/providers/home_providers.dart';
 import 'package:winebro/features/journal/domain/journal_entry.dart';
 import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
-import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/shared/widgets/brand_label_card.dart';
 import 'package:winebro/shared/widgets/emotion_tile.dart';
@@ -292,11 +292,13 @@ class HomeScreen extends ConsumerWidget {
     // Match the restocked product back to a seed product (by name).
     // If we no longer carry that exact product, fall back to a same-
     // category alternative.
-    final matched = kSeedProducts.firstWhere(
+    final catalog =
+        ProviderScope.containerOf(context, listen: false).read(allProductsProvider);
+    final matched = catalog.firstWhere(
       (p) => p.name.toLowerCase() == entry.productName.toLowerCase(),
-      orElse: () => kSeedProducts.firstWhere(
+      orElse: () => catalog.firstWhere(
         (p) => p.category.group == entry.category,
-        orElse: () => kSeedProducts.first,
+        orElse: () => catalog.first,
       ),
     );
     _showProductDetail(context, matched);

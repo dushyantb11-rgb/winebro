@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:winebro/features/home/domain/community_signal.dart';
 import 'package:winebro/features/journal/domain/journal_entry.dart';
-import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 
@@ -20,22 +19,23 @@ import 'package:winebro/features/pairing/presentation/providers/pairing_provider
 // ============================================================
 
 final tonightsPourProvider = FutureProvider<Product?>((ref) async {
+  final catalog = ref.watch(allProductsProvider);
   final profile = await ref.watch(userPalateProvider.future);
   final hour = DateTime.now().hour;
   final daySeed = DateTime.now().day + DateTime.now().month * 31;
 
   // If quiz not done, fall back to a curated seed by daily seed.
   if (profile == null) {
-    return kSeedProducts[daySeed % kSeedProducts.length];
+    return catalog[daySeed % catalog.length];
   }
 
   final engine = ref.read(pairingEngineProvider);
   final ranked = engine.rankProducts(
     userProfile: profile,
-    products: kSeedProducts,
+    products: catalog,
     topN: 5,
   );
-  if (ranked.isEmpty) return kSeedProducts[daySeed % kSeedProducts.length];
+  if (ranked.isEmpty) return catalog[daySeed % catalog.length];
 
   // Bias: post-9pm, prefer bigger body. Pre-7pm, prefer fresher wines.
   final candidates = List<Product>.from(ranked.map((r) => r.product));
@@ -83,12 +83,13 @@ final continueStoryProvider =
       .get()
       .then((s) => s.docs.map((d) => d.data()['productName'] as String).toSet());
 
-  final lastProduct = kSeedProducts.firstWhere(
+  final catalog = ref.read(allProductsProvider);
+  final lastProduct = catalog.firstWhere(
     (p) => p.name.toLowerCase() == last.productName.toLowerCase(),
-    orElse: () => kSeedProducts.first,
+    orElse: () => catalog.first,
   );
 
-  final candidates = kSeedProducts
+  final candidates = catalog
       .where((p) => p.id != lastProduct.id)
       .where((p) => !loggedNames.contains(p.name))
       .where((p) => p.archetypeTags.any(lastProduct.archetypeTags.contains))
@@ -177,9 +178,10 @@ final communitySignalsProvider =
 final broCircleProvider = Provider<List<BroCircleSignal>>((ref) {
   final signalsAsync = ref.watch(communitySignalsProvider);
   final signals = signalsAsync.value ?? const <CommunitySignal>[];
+  final catalog = ref.watch(allProductsProvider);
 
   Product? seedProductFor(String id) =>
-      kSeedProducts.where((p) => p.id == id).firstOrNull;
+      catalog.where((p) => p.id == id).firstOrNull;
 
   if (signals.isNotEmpty) {
     final composed = <BroCircleSignal>[];
@@ -256,7 +258,7 @@ final broCircleProvider = Provider<List<BroCircleSignal>>((ref) {
 
   // Cold-start fallback — shown until CF-11 has produced enough data.
   // Same 4 cards but framed as "be the first" rather than fake numbers.
-  final products = List<Product>.from(kSeedProducts);
+  final products = List<Product>.from(catalog);
   final rng = Random(DateTime.now().day);
   products.shuffle(rng);
 

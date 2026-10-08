@@ -24,33 +24,38 @@ import {
   PalateAxes,
 } from "./constants";
 
-// ─── SEED PRODUCT PROFILES (top 20 for daily pick rotation) ─────
-// These mirror the Dart seed data. In production, read from Firestore.
-// SYNC WITH: lib/features/pairing/data/seed_products.dart
-// Last synced: 2026-03-14
-// If product axis scores change in Dart, update this array.
-const SEED_PRODUCTS: Array<{ id: string; name: string; axes: PalateAxes; archetypeTags: string[] }> = [
-  { id: "sula-sauvignon-blanc", name: "Sula Vineyards Sauvignon Blanc", axes: { fruit: 6, acidity: 7, body: 3, tannin: 1, freshness: 8, complexity: 4 }, archetypeTags: ["crispPurist"] },
-  { id: "sula-shiraz", name: "Sula Vineyards Shiraz", axes: { fruit: 6, acidity: 5, body: 7, tannin: 6, freshness: 3, complexity: 5 }, archetypeTags: ["boldExplorer"] },
-  { id: "grover-zampa-la-reserve", name: "Grover Zampa La Réserve", axes: { fruit: 5, acidity: 5, body: 8, tannin: 7, freshness: 3, complexity: 7 }, archetypeTags: ["boldExplorer"] },
-  { id: "fratelli-tilt-rose", name: "Fratelli TILT Rosé", axes: { fruit: 7, acidity: 6, body: 3, tannin: 2, freshness: 7, complexity: 3 }, archetypeTags: ["fruitForward"] },
-  { id: "krsma-cabernet-sauvignon", name: "KRSMA Cabernet Sauvignon", axes: { fruit: 5, acidity: 5, body: 9, tannin: 8, freshness: 2, complexity: 8 }, archetypeTags: ["boldExplorer"] },
-  { id: "cloudy-bay-sauvignon-blanc", name: "Cloudy Bay Sauvignon Blanc", axes: { fruit: 7, acidity: 8, body: 3, tannin: 1, freshness: 9, complexity: 5 }, archetypeTags: ["crispPurist"] },
-  { id: "catena-zapata-malbec", name: "Catena Zapata Malbec", axes: { fruit: 7, acidity: 5, body: 8, tannin: 7, freshness: 3, complexity: 7 }, archetypeTags: ["boldExplorer"] },
-  { id: "amrut-fusion", name: "Amrut Fusion", axes: { fruit: 5, acidity: 3, body: 8, tannin: 4, freshness: 3, complexity: 8 }, archetypeTags: ["boldExplorer"] },
-  { id: "paul-john-brilliance", name: "Paul John Brilliance", axes: { fruit: 6, acidity: 3, body: 7, tannin: 3, freshness: 4, complexity: 7 }, archetypeTags: ["boldExplorer"] },
-  { id: "glenfiddich-12", name: "Glenfiddich 12 Year Old", axes: { fruit: 7, acidity: 4, body: 5, tannin: 2, freshness: 5, complexity: 6 }, archetypeTags: ["balancedSipper"] },
-  { id: "lagavulin-16", name: "Lagavulin 16 Year Old", axes: { fruit: 3, acidity: 4, body: 8, tannin: 5, freshness: 3, complexity: 9 }, archetypeTags: ["boldExplorer"] },
-  { id: "bira-91-white", name: "Bira 91 White", axes: { fruit: 6, acidity: 4, body: 3, tannin: 1, freshness: 7, complexity: 3 }, archetypeTags: ["crispPurist"] },
-  { id: "hoegaarden", name: "Hoegaarden", axes: { fruit: 5, acidity: 4, body: 3, tannin: 1, freshness: 7, complexity: 4 }, archetypeTags: ["crispPurist"] },
-  { id: "moet-chandon-imperial", name: "Moët & Chandon Impérial", axes: { fruit: 6, acidity: 7, body: 4, tannin: 1, freshness: 8, complexity: 7 }, archetypeTags: ["crispPurist"] },
-  { id: "penfolds-bin-389", name: "Penfolds Bin 389", axes: { fruit: 6, acidity: 5, body: 8, tannin: 7, freshness: 3, complexity: 8 }, archetypeTags: ["boldExplorer"] },
-  { id: "monkey-shoulder", name: "Monkey Shoulder", axes: { fruit: 6, acidity: 3, body: 5, tannin: 2, freshness: 5, complexity: 5 }, archetypeTags: ["balancedSipper"] },
-  { id: "soma-chenin-blanc", name: "Soma Vine Village Chenin Blanc", axes: { fruit: 7, acidity: 6, body: 3, tannin: 1, freshness: 7, complexity: 3 }, archetypeTags: ["fruitForward"] },
-  { id: "sierra-nevada-pale-ale", name: "Sierra Nevada Pale Ale", axes: { fruit: 5, acidity: 4, body: 5, tannin: 4, freshness: 6, complexity: 5 }, archetypeTags: ["balancedSipper"] },
-  { id: "torres-vina-sol", name: "Torres Viña Sol", axes: { fruit: 6, acidity: 6, body: 3, tannin: 1, freshness: 7, complexity: 3 }, archetypeTags: ["crispPurist"] },
-  { id: "chimay-blue", name: "Chimay Blue", axes: { fruit: 6, acidity: 4, body: 8, tannin: 3, freshness: 3, complexity: 8 }, archetypeTags: ["boldExplorer"] },
-];
+type CatalogProduct = {
+  id: string;
+  name: string;
+  axes: PalateAxes;
+  archetypeTags: string[];
+};
+
+/** Loads the drink catalogue from Firestore `products`. */
+async function loadCatalog(
+  db: FirebaseFirestore.Firestore
+): Promise<CatalogProduct[]> {
+  const snap = await db.collection("products").get();
+  const products: CatalogProduct[] = [];
+  for (const doc of snap.docs) {
+    const d = doc.data();
+    const axes = {
+      fruit: d.fruit, acidity: d.acidity, body: d.body,
+      tannin: d.tannin, freshness: d.freshness, complexity: d.complexity,
+    };
+    if (Object.values(axes).some((v) => typeof v !== "number")) {
+      console.warn(`dailyDiscovery: skipping products/${doc.id}, missing axes`);
+      continue;
+    }
+    products.push({
+      id: doc.id,
+      name: String(d.name ?? doc.id),
+      axes: axes as PalateAxes,
+      archetypeTags: Array.isArray(d.archetypeTags) ? d.archetypeTags : [],
+    });
+  }
+  return products;
+}
 
 /**
  * Weighted cosine similarity — same formula as Dart PairingEngine.
@@ -89,11 +94,12 @@ function weightedCosineSimilarity(
  * Includes archetype bonus.
  */
 function pickBrosChoice(
+  catalog: CatalogProduct[],
   userAxes: PalateAxes,
   userArchetype: string,
   dayOfYear: number
 ): { id: string; name: string; score: number } {
-  const scored = SEED_PRODUCTS.map((product) => {
+  const scored = catalog.map((product) => {
     const baseScore = weightedCosineSimilarity(userAxes, product.axes);
     const archetypeBonus = product.archetypeTags.includes(userArchetype)
       ? (ARCHETYPE_BONUSES[userArchetype] ?? 5)
@@ -129,6 +135,12 @@ export const dailyDiscovery = onSchedule(
         (1000 * 60 * 60 * 24)
     );
 
+    const catalog = await loadCatalog(db);
+    if (catalog.length === 0) {
+      console.warn("dailyDiscovery: products collection is empty, no picks written");
+      return;
+    }
+
     const usersSnapshot = await db.collection("users").get();
     let batch: WriteBatch = db.batch();
     let batchCount = 0;
@@ -152,6 +164,7 @@ export const dailyDiscovery = onSchedule(
       };
 
       const pick = pickBrosChoice(
+        catalog,
         userAxes,
         palateProfile.archetype ?? "balancedSipper",
         dayOfYear

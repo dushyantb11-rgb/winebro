@@ -7,12 +7,12 @@ import 'package:go_router/go_router.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:string_similarity/string_similarity.dart';
+import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_motion.dart';
 import 'package:winebro/core/theme/app_theme.dart';
 import 'package:winebro/features/journal/presentation/widgets/quick_log_sheet.dart';
-import 'package:winebro/features/pairing/data/seed_products.dart';
 import 'package:winebro/features/pairing/domain/product.dart';
 import 'package:winebro/features/profile/data/gamification_service.dart';
 
@@ -137,7 +137,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
     Product? best;
     var bestScore = 0.0;
 
-    for (final p in kSeedProducts) {
+    for (final p in ref.read(allProductsProvider)) {
       final nameScore =
           StringSimilarity.compareTwoStrings(p.name.toLowerCase(), normalized);
       final containsName =
