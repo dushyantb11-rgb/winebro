@@ -255,7 +255,7 @@ class PairingEngine {
   /// Points of the first rule for [prop] whose conditions the drink
   /// meets; null when none applies.
   double? _rulePoints(FoodProperty prop, Product product, PairingRulesConfig r) {
-    for (final rule in r.foodFitRules[prop] ?? const <PointsRule>[]) {
+    for (final rule in r.foodFitRules[prop.name] ?? const <PointsRule>[]) {
       if (allHold(rule.when, (a) => product[a])) return rule.points;
     }
     return null;

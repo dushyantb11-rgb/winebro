@@ -5,7 +5,6 @@ import 'package:winebro/core/config/default_config.g.dart';
 import 'package:winebro/core/config/icon_registry.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
 import 'package:winebro/features/aroma_wheel/domain/aroma_taxonomy.dart';
-import 'package:winebro/features/pairing/domain/dish.dart';
 import 'package:winebro/features/profile/domain/gamification.dart';
 
 /// Every rule set and reference list the app runs on, loaded from
@@ -243,7 +242,8 @@ class PairingRulesConfig {
   final double frequencyPenaltyThird;
   final double frequencyPenaltyCap;
   final double foodFitBase;
-  final Map<FoodProperty, List<PointsRule>> foodFitRules;
+  /// Rules per food property code.
+  final Map<String, List<PointsRule>> foodFitRules;
   final List<StrategyIndicator> contrastIndicators;
   final List<StrategyIndicator> complementIndicators;
   final List<ExplanationTemplate> explanations;
@@ -257,8 +257,11 @@ class PairingRulesConfig {
 
     List<StrategyIndicator> ind(Object? v) => [
           for (final e in _maps(v))
-            if (_enumByName(FoodProperty.values, e['property']) case final p?)
-              StrategyIndicator(p, AxisCondition.listFrom(e['when'])),
+            if (e['property'] is String)
+              StrategyIndicator(
+                FoodProperty(e['property'] as String),
+                AxisCondition.listFrom(e['when']),
+              ),
         ];
 
     return PairingRulesConfig(
@@ -277,18 +280,17 @@ class PairingRulesConfig {
       foodFitBase: _num(m, 'foodFitBase', 50),
       foodFitRules: {
         for (final e in rulesRaw.entries)
-          if (_enumByName(FoodProperty.values, e.key) case final p?)
-            p: [for (final r in _maps(e.value)) PointsRule.fromMap(r)],
+          e.key: [for (final r in _maps(e.value)) PointsRule.fromMap(r)],
       },
       contrastIndicators: ind(indicators['contrast']),
       complementIndicators: ind(indicators['complement']),
       explanations: [
         for (final e in _maps(m['explanations']))
           if (_enumByName(PairingStrategy.values, e['strategy']) case final s?)
-            if (_enumByName(FoodProperty.values, e['property']) case final p?)
+            if (e['property'] is String)
               ExplanationTemplate(
                 strategy: s,
-                property: p,
+                property: FoodProperty(e['property'] as String),
                 text: _str(e, 'text'),
                 why: [
                   for (final w in _maps(e['why']))
@@ -341,10 +343,10 @@ class ArchetypeRule {
   final double? lowVariance;
 
   factory ArchetypeRule.fromMap(Map<String, dynamic> m) {
-    final archetype = _enumByName(PalateArchetype.values, m['archetype']);
-    if (archetype == null) {
-      throw FormatException('unknown archetype ${m['archetype']}');
+    if (m['archetype'] is! String) {
+      throw FormatException('rule needs an archetype code');
     }
+    final archetype = PalateArchetype(m['archetype'] as String);
     final all = m['allAxes'] is Map ? Map<String, dynamic>.from(m['allAxes'] as Map) : null;
     final rank = m['rank'] is Map ? Map<String, dynamic>.from(m['rank'] as Map) : const <String, dynamic>{};
     List<PalateAxis> axes(Object? v) => [
@@ -396,15 +398,16 @@ class ArchetypesConfig {
     required this.fallback,
   });
 
-  final Map<PalateArchetype, ArchetypeInfo> items;
+  /// Archetypes by code, in config order.
+  final Map<String, ArchetypeInfo> items;
   final List<ArchetypeRule> rules;
   final PalateArchetype fallback;
 
   factory ArchetypesConfig.fromMap(Map<String, dynamic> m) => ArchetypesConfig(
         items: {
           for (final e in _maps(m['items']))
-            if (_enumByName(PalateArchetype.values, e['code']) case final a?)
-              a: ArchetypeInfo(
+            if (e['code'] is String)
+              e['code'] as String: ArchetypeInfo(
                 displayName: _str(e, 'displayName'),
                 description: _str(e, 'description', ''),
                 iconName: _str(e, 'icon', 'wine_bar'),
@@ -412,8 +415,9 @@ class ArchetypesConfig {
               ),
         },
         rules: [for (final r in _maps(m['rules'])) ArchetypeRule.fromMap(r)],
-        fallback: _enumByName(PalateArchetype.values, m['fallback']) ??
-            PalateArchetype.balancedSipper,
+        fallback: m['fallback'] is String
+            ? PalateArchetype(m['fallback'] as String)
+            : PalateArchetype.balancedSipper,
       );
 }
 
@@ -634,9 +638,9 @@ class CategoriesConfig {
 
   final Map<PalateAxis, String> palateAxes;
   final List<DrinkGroupInfo> drinkGroups;
-  final Map<DrinkCategory, DrinkCategoryInfo> drinks;
-  final Map<FoodCategory, CuisineInfo> cuisines;
-  final Map<FoodProperty, String> foodProperties;
+  final Map<String, DrinkCategoryInfo> drinks;
+  final Map<String, CuisineInfo> cuisines;
+  final Map<String, String> foodProperties;
   final Map<PairingStrategy, StrategyInfo> pairingStrategies;
 
   String? drinkGroupImage(String group) =>
@@ -654,24 +658,23 @@ class CategoriesConfig {
         ],
         drinks: {
           for (final e in _maps(m['drinks']))
-            if (_enumByName(DrinkCategory.values, e['code']) case final c?)
-              c: DrinkCategoryInfo(
+            if (e['code'] is String)
+              e['code'] as String: DrinkCategoryInfo(
                 displayName: _str(e, 'displayName'),
                 group: _str(e, 'group'),
               ),
         },
         cuisines: {
           for (final e in _maps(m['cuisines']))
-            if (_enumByName(FoodCategory.values, e['code']) case final c?)
-              c: CuisineInfo(
+            if (e['code'] is String)
+              e['code'] as String: CuisineInfo(
                 displayName: _str(e, 'displayName'),
                 iconName: _str(e, 'icon', 'restaurant'),
               ),
         },
         foodProperties: {
           for (final e in _maps(m['foodProperties']))
-            if (_enumByName(FoodProperty.values, e['code']) case final p?)
-              p: _str(e, 'displayName'),
+            if (e['code'] is String) e['code'] as String: _str(e, 'displayName'),
         },
         pairingStrategies: {
           for (final e in _maps(m['pairingStrategies']))
@@ -702,13 +705,14 @@ class OccasionInfo {
 
 class OccasionsConfig {
   const OccasionsConfig({required this.items});
-  final Map<Occasion, OccasionInfo> items;
+  /// Occasions by code, in config order.
+  final Map<String, OccasionInfo> items;
 
   factory OccasionsConfig.fromMap(Map<String, dynamic> m) => OccasionsConfig(
         items: {
           for (final e in _maps(m['items']))
-            if (_enumByName(Occasion.values, e['code']) case final o?)
-              o: OccasionInfo(
+            if (e['code'] is String)
+              e['code'] as String: OccasionInfo(
                 displayName: _str(e, 'displayName'),
                 iconName: _str(e, 'icon', 'celebration'),
                 axisModifiers: {
@@ -719,13 +723,8 @@ class OccasionsConfig {
                       if (a.value is num) axis: (a.value as num).toDouble(),
                 },
                 categoryBonus: switch (e['categoryBonus']) {
-                  final Map b when _enumByName(
-                        DrinkCategory.values,
-                        b['category'],
-                      ) !=
-                      null =>
-                    (
-                      category: _enumByName(DrinkCategory.values, b['category'])!,
+                  final Map b when b['category'] is String => (
+                      category: DrinkCategory(b['category'] as String),
                       bonusPercent: ((b['bonusPercent'] as num?) ?? 0).toDouble(),
                     ),
                   _ => null,

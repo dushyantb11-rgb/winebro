@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:winebro/core/config/app_config.dart';
 import 'package:winebro/core/constants/pairing_constants.dart';
+
+export 'package:winebro/core/constants/pairing_constants.dart' show FoodProperty;
 import 'package:winebro/features/pairing/domain/open_facts.dart';
 
 class Dish {
@@ -38,16 +39,10 @@ class Dish {
   factory Dish.fromMap(Map<String, dynamic> map) => Dish(
     id: map['id'] as String,
     name: map['name'] as String,
-    category: FoodCategory.values.firstWhere(
-      (c) => c.name == map['category'],
-      orElse: () => FoodCategory.northIndianRich,
-    ),
-    foodProperties: (map['foodProperties'] as List)
-        .map((p) => FoodProperty.values.firstWhere(
-              (fp) => fp.name == p,
-              orElse: () => FoodProperty.aromatic,
-            ))
-        .toList(),
+    category: FoodCategory(map['category'] as String),
+    foodProperties: [
+      for (final p in map['foodProperties'] as List) FoodProperty(p.toString()),
+    ],
     pairings: (map['pairings'] as List)
         .map((p) => DishPairing.fromMap(p as Map<String, dynamic>))
         .toList(),
@@ -87,23 +82,6 @@ class DishPairing {
   );
 }
 
-enum FoodProperty {
-  highFat,
-  spicyHeat,
-  highProtein,
-  lightDelicate,
-  sweetDessert,
-  umamiRich,
-  acidic,
-  smokyCharred,
-  creamy,
-  tangy,
-  aromatic;
-
-  /// Display name from `config/categories`.
-  String get displayName =>
-      AppConfig.current.categories.foodProperties[this] ?? name;
-}
 
 OpenPhoto? _photoFrom(Object? openData) {
   if (openData is! Map) return null;

@@ -105,6 +105,29 @@ void main() {
       expect(after.total, isNot(base.total));
     });
 
+    test('CF-06 a category added in config appears in the app', () {
+      final raw = jsonDecode(kDefaultConfigJson) as Map<String, dynamic>;
+      final cats = Map<String, dynamic>.from(raw['categories'] as Map);
+      cats['drinks'] = [
+        ...(cats['drinks'] as List),
+        {'code': 'mead', 'displayName': 'Mead', 'group': 'Wine'},
+      ];
+      raw['categories'] = cats;
+      final previous = AppConfig.current;
+      AppConfig.current = AppConfig.fromJson(raw);
+      try {
+        expect(DrinkCategory.values.map((c) => c.name), contains('mead'));
+        const mead = DrinkCategory('mead');
+        expect(mead.displayName, 'Mead');
+        expect(mead.group, 'Wine');
+        final p = drink().copyWith(category: mead);
+        expect(Product.fromMap(p.toMap()).category, mead);
+      } finally {
+        AppConfig.current = previous;
+      }
+      expect(DrinkCategory.values.map((c) => c.name), isNot(contains('mead')));
+    });
+
     test('CF-05 explanation templates fill placeholders', () {
       final spicy = kSeedDishes.firstWhere(
         (d) => d.foodProperties.contains(FoodProperty.spicyHeat),
