@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Icon, useTheme } from "./ui";
+import { signOutUser } from "../lib/auth";
+import { useMe } from "../App";
 
 const NAV: { group: string; items: { to: string; label: string; icon: string }[] }[] = [
-  { group: "Overview", items: [{ to: "/", label: "Dashboard", icon: "dashboard" }] },
+  { group: "Overview", items: [{ to: "/", label: "Dashboard", icon: "dashboard" }, { to: "/access", label: "Access", icon: "admin_panel_settings" }] },
   {
     group: "Catalogue",
     items: [
@@ -38,6 +40,7 @@ export function Layout({ title, crumbs, actions, children }: {
 }) {
   const [open, setOpen] = useState(false);
   const { theme, setTheme } = useTheme();
+  const me = useMe();
   const loc = useLocation();
   const isActive = (to: string) => (to === "/" ? loc.pathname === "/" : loc.pathname.startsWith(to));
   return (
@@ -66,7 +69,11 @@ export function Layout({ title, crumbs, actions, children }: {
               </button>
             ))}
           </div>
-          <div style={{ marginTop: 8 }}>Project winebro · no sign-in yet</div>
+          <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,0.75)" }}>
+            <Icon name="account_circle" className="sm" />
+            <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={me.email}>{me.name || me.email}</span>
+            <button className="btn ghost icon" style={{ color: "inherit", width: 32, height: 32 }} onClick={() => void signOutUser()} aria-label="Sign out" title="Sign out"><Icon name="logout" className="sm" /></button>
+          </div>
         </div>
       </aside>
       <div className="main">

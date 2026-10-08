@@ -1,12 +1,17 @@
 /**
  * CF-12: adminApi — JSON API behind the WineBro admin web app.
  *
- * Served at /api/** through Firebase Hosting (site winebro-admin). Uses the
- * Admin SDK, so the mobile app's Firestore rules stay locked. There is no
- * sign-in yet: anyone with the admin URL can call this. Keep the URL
- * unlisted; add Google sign-in with an allow-list before wider use.
+ * Served at /api/** through Firebase Hosting (site winebro-console). Uses the
+ * Admin SDK, so the mobile app's Firestore rules stay locked.
+ *
+ * Access: every call needs `Authorization: Bearer <Firebase ID token>` from a
+ * Google sign-in whose verified email is in Firestore
+ * `admin_access/allowlist.emails`. Admins manage that list at /api/access.
  *
  * Routes
+ *   GET    /api/me                               who am I, allowed?
+ *   GET    /api/access                           allow-list
+ *   PUT    /api/access                           {emails}
  *   GET    /api/stats
  *   GET    /api/collections/:name                list (whole collection)
  *   GET    /api/collections/:name/:id
@@ -32,8 +37,10 @@ import {
   getFirestore,
 } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
+import { getAuth } from "firebase-admin/auth";
 
 const BUCKET = "winebro.firebasestorage.app";
+const ALLOWLIST_REF = ["admin_access", "allowlist"] as const;
 
 /** Catalogue collections the admin may create, edit, import and delete. */
 const EDITABLE = new Set(["products", "dishes", "pilot_candidates"]);
@@ -164,7 +171,51 @@ async function readBody(req: Request): Promise<Record<string, unknown>> {
   throw new HttpError(400, "JSON object body required");
 }
 
-type Ctx = { db: FirebaseFirestore.Firestore; req: Request; res: Response };
+type Caller = { email: string; name: string; uid: string };
+type Ctx = { db: FirebaseFirestore.Firestore; req: Request; res: Response; caller: Caller };
+
+async function allowlist(db: FirebaseFirestore.Firestore): Promise<string[]> {
+  const snap = await db.collection(ALLOWLIST_REF[0]).doc(ALLOWLIST_REF[1]).get();
+  const emails = snap.get("emails");
+  return Array.isArray(emails) ? emails.map((e) => String(e).trim().toLowerCase()).filter(Boolean) : [];
+}
+
+/** Verifies the Firebase ID token; throws 401 when missing or invalid. */
+async function authenticate(req: Request): Promise<Caller> {
+  const header = req.get("Authorization") ?? "";
+  const token = header.startsWith("Bearer ") ? header.slice(7).trim() : "";
+  if (!token) throw new HttpError(401, "sign in required");
+  let decoded;
+  try {
+    decoded = await getAuth().verifyIdToken(token, true);
+  } catch {
+    throw new HttpError(401, "sign-in expired; please sign in again");
+  }
+  const email = (decoded.email ?? "").toLowerCase();
+  if (!email || decoded.email_verified !== true) throw new HttpError(403, "a verified Google email is required");
+  return { email, name: String(decoded.name ?? email), uid: decoded.uid };
+}
+
+async function accessGet({ db }: Ctx) {
+  const snap = await db.collection(ALLOWLIST_REF[0]).doc(ALLOWLIST_REF[1]).get();
+  return { emails: await allowlist(db), updatedAt: plain(snap.get("updatedAt")), updatedBy: snap.get("updatedBy") ?? "" };
+}
+
+async function accessPut(ctx: Ctx) {
+  const body = await readBody(ctx.req);
+  const raw = Array.isArray(body.emails) ? body.emails : null;
+  if (!raw) throw new HttpError(400, "emails must be a list");
+  const emails = [...new Set(raw.map((e) => String(e).trim().toLowerCase()).filter(Boolean))];
+  const bad = emails.filter((e) => !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e));
+  if (bad.length) throw new HttpError(422, `not an email: ${bad.join(", ")}`);
+  if (!emails.includes(ctx.caller.email)) throw new HttpError(422, "you cannot remove your own access");
+  await ctx.db.collection(ALLOWLIST_REF[0]).doc(ALLOWLIST_REF[1]).set({
+    emails,
+    updatedAt: FieldValue.serverTimestamp(),
+    updatedBy: ctx.caller.email,
+  });
+  return accessGet(ctx);
+}
 
 async function stats({ db }: Ctx) {
   const count = async (q: FirebaseFirestore.Query) => (await q.count().get()).data().count;
@@ -238,6 +289,7 @@ async function writeDoc(ctx: Ctx, name: string, id: string, create: boolean) {
     source: body.source ?? (existing.get("source") ?? "admin"),
     provenance: body.provenance ?? (existing.get("provenance") ?? "admin-entered"),
     updatedAt: FieldValue.serverTimestamp(),
+    updatedBy: ctx.caller.email,
   };
   if (create) data.createdAt = FieldValue.serverTimestamp();
   await ref.set(data);
@@ -351,6 +403,7 @@ async function configPut(ctx: Ctx, doc: string) {
       version: currentVersion + 1,
       source: "admin",
       updatedAt: FieldValue.serverTimestamp(),
+      updatedBy: ctx.caller.email,
     });
   });
   return configGet(ctx, doc);
@@ -400,13 +453,22 @@ export const adminApi = onRequest(
   { region: "asia-south1", memory: "512MiB", timeoutSeconds: 120, maxInstances: 3 },
   async (req, res) => {
     const db = getFirestore();
-    const ctx: Ctx = { db, req, res };
     const parts = req.path.replace(/^\/api\/?/, "").split("/").filter(Boolean).map(decodeURIComponent);
     const m = req.method;
     res.set("Cache-Control", "no-store");
     try {
+      const caller = await authenticate(req);
+      const allowed = (await allowlist(db)).includes(caller.email);
+      if (parts[0] === "me" && m === "GET") {
+        res.status(200).json({ email: caller.email, name: caller.name, allowed });
+        return;
+      }
+      if (!allowed) throw new HttpError(403, `${caller.email} is not on the admin list`);
+      const ctx: Ctx = { db, req, res, caller };
       let result: unknown;
-      if (parts[0] === "stats" && m === "GET") result = await stats(ctx);
+      if (parts[0] === "access" && m === "GET") result = await accessGet(ctx);
+      else if (parts[0] === "access" && m === "PUT") result = await accessPut(ctx);
+      else if (parts[0] === "stats" && m === "GET") result = await stats(ctx);
       else if (parts[0] === "collections" && parts.length === 2 && m === "GET") result = await listCollection(ctx, parts[1]);
       else if (parts[0] === "collections" && parts.length === 2 && m === "POST") {
         const body = await readBody(req);

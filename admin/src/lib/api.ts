@@ -1,4 +1,8 @@
 // Thin client for the adminApi function (same origin via Hosting rewrite).
+import { idToken } from "./auth";
+
+export type Me = { email: string; name: string; allowed: boolean };
+export type Access = { emails: string[]; updatedAt?: string; updatedBy?: string };
 
 export type Doc = Record<string, unknown> & { id: string };
 
@@ -9,9 +13,13 @@ export class ApiError extends Error {
 }
 
 async function call<T>(method: string, path: string, body?: unknown): Promise<T> {
+  const token = await idToken();
+  const headers: Record<string, string> = {};
+  if (token) headers.Authorization = `Bearer ${token}`;
+  if (body !== undefined) headers["Content-Type"] = "application/json";
   const res = await fetch(`/api/${path}`, {
     method,
-    headers: body === undefined ? undefined : { "Content-Type": "application/json" },
+    headers,
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   const text = await res.text();
@@ -42,6 +50,9 @@ export type ImportReport = {
 };
 
 export const api = {
+  me: () => call<Me>("GET", "me"),
+  access: () => call<Access>("GET", "access"),
+  saveAccess: (emails: string[]) => call<Access>("PUT", "access", { emails }),
   stats: () => call<Stats>("GET", "stats"),
   list: (collection: string) => call<Doc[]>("GET", `collections/${collection}`),
   get: (collection: string, id: string) => call<Doc>("GET", `collections/${collection}/${encodeURIComponent(id)}`),
