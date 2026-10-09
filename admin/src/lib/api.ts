@@ -49,6 +49,20 @@ export type DraftItem = { kind: "products" | "dishes" | "config"; id: string; na
 export type Release = { id: string; note: string; by: string; at: string; items: { kind: string; id: string; name?: string; hadPrevious?: boolean; archived?: boolean; version?: number }[]; counts: { products: number; dishes: number; config: number } };
 export type DocWithDraft = Doc & { live: Doc | null; draft: Doc | null; hasDraft?: boolean; archived?: boolean };
 
+export type SourceCard = { id: string; name: string; kind: string; status: "connected" | "linked" | "unusable"; provides: string; licence: string; records: number; extra?: string };
+export type GmAction =
+  | { type: "ping" } | { type: "coverage"; country?: string } | { type: "regions"; country?: string } | { type: "producers"; country?: string }
+  | { type: "wines"; region_id?: string; producer_id?: string; color?: string } | { type: "search"; q: string } | { type: "details"; ids: string[] }
+  | { type: "producer-insights"; id: string } | { type: "region-insights"; id: string } | { type: "licence"; id: string };
+export type GmEstimate = { calls: number; left: number; afterwards: number; allowed: boolean; note: string; month: string; used: number; budget: number; limit: number };
+export type GmStatus = {
+  month: string; used: number; budget: number; limit: number; terms: { commercialOk?: boolean; note?: string; setBy?: string }; lastCall: unknown;
+  counts: { wines: number; withDetail: number; producers: number; regions: number; insights: number; licensed: number; mappedProducts: number };
+  coverage: Record<string, unknown> | null; recent: { at: string; by: string; url: string; status: number }[];
+};
+export type GmWine = { id: string; lwin: string | null; name: string; color: string | null; type: string | null; sub_type: string | null; producer: string | null; region: string | null; country: string | null; hasDetail: boolean; licensed: boolean; grapes: unknown; flavor_profile: Record<string, number> | null; source: string | null };
+export type GmMatch = { productId: string; name: string; category: string; region?: string; grapeVariety: string | null; mapped: { id: unknown; lwin: unknown; licensed: boolean } | null; candidates: (GmWine & { score: number })[] };
+
 const q = (target?: Target) => (target ? `?target=${target}` : "");
 
 export const api = {
@@ -79,6 +93,18 @@ export const api = {
   saveConfig: (doc: string, content: Record<string, unknown>, target: Target = "draft") => call<Doc>("PUT", `config/${doc}${q(target)}`, content),
   configHistory: (doc: string) => call<Doc[]>("GET", `config/${doc}/history`),
   restoreConfig: (doc: string, version: string) => call<Doc>("POST", `config/${doc}/restore/${version}`),
+  sources: () => call<{ sources: SourceCard[]; totals: { products: number; dishes: number } }>("GET", "sources"),
+  gm: {
+    status: () => call<GmStatus>("GET", "sources/grapeminds/status"),
+    wines: () => call<GmWine[]>("GET", "sources/grapeminds/wines"),
+    matches: () => call<GmMatch[]>("GET", "sources/grapeminds/matches"),
+    estimate: (action: GmAction) => call<GmEstimate>("POST", "sources/grapeminds/estimate", { action }),
+    run: (action: GmAction) => call<{ action: GmAction; estimate: GmEstimate; result: unknown; ledger: GmStatus }>("POST", "sources/grapeminds/run", { action, confirm: true }),
+    map: (body: { productId: string; gmId: string; fillEmpty?: boolean; adoptScores?: boolean }) => call<{ productId: string; gmId: string; fills: string[] }>("POST", "sources/grapeminds/map", body),
+    create: (body: { gmId: string; id?: string; name?: string }) => call<{ id: string }>("POST", "sources/grapeminds/create", body),
+    terms: (body: { commercialOk: boolean; note: string }) => call<{ terms: unknown }>("PUT", "sources/grapeminds/terms", body),
+    budget: (budget: number) => call<{ budget: number }>("PUT", "sources/grapeminds/budget", { budget }),
+  },
   upload: (path: string, contentType: string, dataBase64: string, rights?: Record<string, string>) =>
     call<{ path: string; url: string; bytes: number }>("POST", "upload", { path, contentType, dataBase64, rights }),
 };

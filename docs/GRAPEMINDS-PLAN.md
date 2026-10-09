@@ -75,7 +75,20 @@ and India coverage gaps we find.
 - Best value per call: the Indian wine **list** (hundreds of identity rows for under 10 calls), producer insights
   (facts), and flavour profiles for our own 51 wines.
 
-## 6. Tool
+## 6. Console integration — Data Cellar → GrapeMinds (built 10 Oct 2026)
+
+- Key: Cloud Functions secret `GRAPEMINDS_API_KEY` (set by the owner; never in the repo or browser).
+- Ledger `integrations/grapeminds`: calls per month, ceiling (default 230 of 250), recent calls, terms, coverage.
+- Every action is **priced first** (`POST /api/sources/grapeminds/estimate`) and runs only after the admin confirms
+  (`/run` with `confirm: true`). Responses are cached in Firestore (`grapeminds_cache`, `grapeminds_wines`,
+  `grapeminds_producers`, `grapeminds_regions`, `grapeminds_insights`); a call is never paid twice.
+- Mapping writes a **draft** of our product with `openData.grapeminds` (facts + generated text labelled as such),
+  fills empty grape/region/style, optionally adopts acidity/tannin/body; "Add as drink" creates a draft from a
+  GrapeMinds row. Preview → Publish as usual.
+- Publish gate: GrapeMinds-derived fields cannot go live until the wine is licensed (`POST /licence`, metered) or the
+  admin records GrapeMinds' written confirmation under Terms.
+
+## 7. Command-line tool (optional, same budget rules)
 
 `functions/scripts/grapeminds.js` — key from `functions/.env.grapeminds` (gitignored), disk cache under
 `functions/scripts/grapeminds-cache/` (gitignored), ledger `grapeminds-ledger.json`, `--dry-run` prints the URL and

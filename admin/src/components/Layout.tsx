@@ -15,6 +15,7 @@ const NAV: { group: string; items: { to: string; label: string; icon: string }[]
     ],
   },
   { group: "Rules", items: [{ to: "/rules", label: "Rules and lists", icon: "tune" }] },
+  { group: "Sources", items: [{ to: "/sources", label: "Data Cellar", icon: "warehouse" }] },
   { group: "Publishing", items: [{ to: "/releases", label: "Releases", icon: "rocket_launch" }] },
   {
     group: "People",

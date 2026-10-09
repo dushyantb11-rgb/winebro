@@ -45,6 +45,7 @@ import { DocumentData, FieldValue, Timestamp, getFirestore } from "firebase-admi
 import { getStorage } from "firebase-admin/storage";
 import { getAuth } from "firebase-admin/auth";
 import { mergeDocs, RefContext, SCORE_AXES, validateCatalogueDoc } from "./schema";
+import * as gm from "./grapeminds";
 
 const BUCKET = "winebro.firebasestorage.app";
 const ALLOWLIST_REF = ["admin_access", "allowlist"] as const;
@@ -432,6 +433,14 @@ async function publishItems(ctx: Ctx, items: PublishItem[], note: string, config
   const db = ctx.db;
   const releaseId = `${new Date().toISOString().replace(/[-:.TZ]/g, "").slice(0, 14)}-${randomUUID().slice(0, 6)}`;
   const manifest: Record<string, unknown>[] = [];
+  for (const it of items) {
+    try {
+      await gm.assertPublishable(db, it.kind, it.data as Record<string, unknown>);
+    } catch (e) {
+      if (e instanceof gm.GmError) throw new HttpError(e.status, e.message, e.details);
+      throw e;
+    }
+  }
   for (let i = 0; i < items.length; i += 200) {
     const batch = db.batch();
     for (const it of items.slice(i, i + 200)) {
@@ -612,10 +621,36 @@ async function upload(ctx: Ctx) {
   return { path, url, bytes: buffer.length };
 }
 
+// ─── Data Cellar: GrapeMinds ─────────────────────────────────────
+
+async function grapemindsRoute(ctx: Ctx, sub: string | undefined, m: string) {
+  try {
+    const body = m === "POST" || m === "PUT" ? await readBody(ctx.req) : {};
+    switch (`${m} ${sub ?? ""}`) {
+      case "GET status": return await gm.status(ctx.db);
+      case "GET wines": return await gm.listWines(ctx.db);
+      case "GET matches": return await gm.matches(ctx.db);
+      case "POST estimate": return await gm.estimate(ctx.db, body.action as gm.Action);
+      case "POST run": {
+        if (body.confirm !== true) throw new HttpError(422, "confirm the estimate first");
+        return await gm.run(ctx.db, ctx.caller.email, body.action as gm.Action);
+      }
+      case "POST map": return await gm.applyMapping(ctx.db, ctx.caller.email, body);
+      case "POST create": return await gm.createFromGrapeminds(ctx.db, ctx.caller.email, body);
+      case "PUT terms": return await gm.setTerms(ctx.db, ctx.caller.email, body);
+      case "PUT budget": return await gm.setBudget(ctx.db, body);
+      default: throw new HttpError(404, `no route ${m} /api/sources/grapeminds/${sub ?? ""}`);
+    }
+  } catch (e) {
+    if (e instanceof gm.GmError) throw new HttpError(e.status, e.message, e.details);
+    throw e;
+  }
+}
+
 // ─── Router ──────────────────────────────────────────────────────
 
 export const adminApi = onRequest(
-  { region: "asia-south1", memory: "512MiB", timeoutSeconds: 300, maxInstances: 3 },
+  { region: "asia-south1", memory: "512MiB", timeoutSeconds: 300, maxInstances: 3, secrets: [gm.GRAPEMINDS_KEY] },
   async (req, res) => {
     const db = getFirestore();
     const parts = req.path.replace(/^\/api\/?/, "").split("/").filter(Boolean).map(decodeURIComponent);
@@ -662,6 +697,8 @@ export const adminApi = onRequest(
       else if (a === "config" && c === "history" && m === "GET") result = await configHistory(ctx, b);
       else if (a === "config" && c === "restore" && m === "POST") result = await configRestore(ctx, b, d);
       else if (a === "upload" && m === "POST") result = await upload(ctx);
+      else if (a === "sources" && parts.length === 1 && m === "GET") result = await gm.sourcesOverview(db);
+      else if (a === "sources" && b === "grapeminds") result = await grapemindsRoute(ctx, c, m);
       else throw new HttpError(404, `no route ${m} /api/${parts.join("/")}`);
       res.status(200).json(result);
     } catch (e) {
