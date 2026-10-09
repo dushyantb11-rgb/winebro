@@ -82,12 +82,28 @@ export function Table({ spec, rows, st, setSt, onOpen, options }: {
           {rows.map((r) => (
             <tr key={r.id} className="click" onClick={() => onOpen(r)}>
               {img && <td><Thumb spec={spec} row={r} /></td>}
-              {cols.map((c) => <td key={c.key} className={c.type === "number" || c.type === "score" ? "num" : ""}><Cell field={c} value={getAny(r, c.key)} options={options} /></td>)}
+              {cols.map((c, ci) => (
+                <td key={c.key} className={c.type === "number" || c.type === "score" ? "num" : ""}>
+                  <Cell field={c} value={getAny(r, c.key)} options={options} />
+                  {ci === 1 && <StatusChips row={r} />}
+                </td>
+              ))}
             </tr>
           ))}
         </tbody>
       </table>
     </div>
+  );
+}
+
+/** Draft / new / archived markers next to a row's name. */
+export function StatusChips({ row }: { row: Row }) {
+  if (!row.hasDraft && row.archived !== true) return null;
+  return (
+    <span style={{ marginLeft: 6, display: "inline-flex", gap: 4 }}>
+      {row.draftOnly ? <span className="chip warn">new draft</span> : row.hasDraft ? <span className="chip warn">draft</span> : null}
+      {row.archived === true && <span className="chip err">archived</span>}
+    </span>
   );
 }
 

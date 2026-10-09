@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,6 +6,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:winebro/features/settings/presentation/screens/photo_credits_screen.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
+import 'package:winebro/core/preview/drafts_preview.dart';
 import 'package:winebro/core/providers/locale_provider.dart';
 import 'package:winebro/core/providers/theme_provider.dart';
 import 'package:winebro/core/theme/app_colors.dart';
@@ -77,6 +79,41 @@ class SettingsScreen extends ConsumerWidget {
           _PrivacyVisibilityTile(colors: colors),
           const SizedBox(height: 24),
 
+          if (ref.watch(isAdminProvider).valueOrNull == true) ...[
+            _SectionHeader(label: context.l10n.settingsConsole, colors: colors),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+              child: Row(
+                children: [
+                  Icon(Icons.visibility_outlined, color: colors.textSecondary, size: 22),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          context.l10n.settingsPreviewDrafts,
+                          style: TextStyle(fontWeight: FontWeight.w600, color: colors.textPrimary),
+                        ),
+                        Text(
+                          context.l10n.settingsPreviewDraftsSub,
+                          style: TextStyle(fontSize: 12, color: colors.textSecondary),
+                        ),
+                      ],
+                    ),
+                  ),
+                  _ThemeSwitch(
+                    value: ref.watch(draftsPreviewEnabledProvider),
+                    colors: colors,
+                    onChanged: (bool v) =>
+                        ref.read(draftsPreviewEnabledProvider.notifier).set(v),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
+
           _SectionHeader(label: context.l10n.settingsAccount, colors: colors),
           _SettingsTile(
             icon: Icons.logout,
@@ -109,12 +146,7 @@ class SettingsScreen extends ConsumerWidget {
                 isDestructive: true,
               );
               if (confirmed == true && context.mounted) {
-                // TODO: wire to account deletion endpoint when ready
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(context.l10n.settingsDeleteComingSoon),
-                  ),
-                );
+                await _deleteAccount(context, ref);
               }
             },
           ),
@@ -216,6 +248,26 @@ class SettingsScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// Calls CF-04 (removes every document, photo, token and index row,
+  /// then the sign-in itself) and returns to the login screen.
+  Future<void> _deleteAccount(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
+    messenger.showSnackBar(SnackBar(content: Text(l10n.settingsDeleting)));
+    try {
+      await FirebaseFunctions.instanceFor(region: 'asia-south1')
+          .httpsCallable('deleteAccount')
+          .call<Map<String, dynamic>>();
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(SnackBar(content: Text(l10n.settingsDeleted)));
+      await ref.read(authStateProvider.notifier).signOut();
+      if (context.mounted) context.go('/login');
+    } on FirebaseFunctionsException catch (e) {
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(SnackBar(content: Text(l10n.settingsDeleteFailed(e.message ?? e.code))));
+    }
   }
 
   Future<bool?> _confirm(

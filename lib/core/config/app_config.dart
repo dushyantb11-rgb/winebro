@@ -807,9 +807,26 @@ class EmotionTileConfig {
 }
 
 class HomeConfig {
-  const HomeConfig({required this.emotionTiles, required this.logo});
+  const HomeConfig({
+    required this.emotionTiles,
+    required this.logo,
+    this.quickStartDishIds = const [],
+    this.retailEnabled = false,
+    this.remindersEnabled = false,
+  });
+
   final List<EmotionTileConfig> emotionTiles;
   final String logo;
+
+  /// Dish ids shown as quick-start chips on Home (only those present in
+  /// the catalogue are rendered).
+  final List<String> quickStartDishIds;
+
+  /// Buy / find-to-buy hand-off. Off until a retail partner is live.
+  final bool retailEnabled;
+
+  /// Pick-up reminders. Off until a real scheduler exists.
+  final bool remindersEnabled;
 
   factory HomeConfig.fromMap(Map<String, dynamic> m) => HomeConfig(
         emotionTiles: [
@@ -823,6 +840,9 @@ class HomeConfig {
             ),
         ],
         logo: _str(m, 'logo', 'assets/images/logo.png'),
+        quickStartDishIds: _strings(m['quickStart']),
+        retailEnabled: m['retailEnabled'] == true,
+        remindersEnabled: m['remindersEnabled'] == true,
       );
 }
 

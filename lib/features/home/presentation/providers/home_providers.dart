@@ -180,6 +180,10 @@ final broCircleProvider = Provider<List<BroCircleSignal>>((ref) {
   final signals = signalsAsync.valueOrNull ?? const <CommunitySignal>[];
   final catalog = ref.watch(allProductsProvider);
 
+  // Do not manufacture a community before one exists. Home can omit this
+  // surface until there are enough real, server-derived signals.
+  if (signals.isEmpty) return const <BroCircleSignal>[];
+
   Product? seedProductFor(String id) =>
       catalog.where((p) => p.id == id).firstOrNull;
 
@@ -251,7 +255,7 @@ final broCircleProvider = Provider<List<BroCircleSignal>>((ref) {
       }
     }
 
-    if (composed.length >= 3) return composed;
+    return composed;
     // If the live data was thin (fewer than 3 distinct signals), fall
     // through to the seed-product fallback below.
   }

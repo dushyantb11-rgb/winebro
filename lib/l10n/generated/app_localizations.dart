@@ -2393,6 +2393,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please confirm you are 21+ and accept the policies to continue.'**
   String get ageGateRequired;
+
+  /// Banner while the catalogue loads
+  ///
+  /// In en, this message translates to:
+  /// **'Loading the drinks and dishes…'**
+  String get catalogLoading;
+
+  /// Banner when Firestore returns no products
+  ///
+  /// In en, this message translates to:
+  /// **'The catalogue is empty right now. Please check back soon.'**
+  String get catalogEmpty;
+
+  /// Banner when the catalogue stream fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load the catalogue. Check your connection and try again.'**
+  String get catalogError;
+
+  /// Snackbar while CF-04 runs
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting your account and data…'**
+  String get settingsDeleting;
+
+  /// Snackbar after deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Your account and all your data have been deleted.'**
+  String get settingsDeleted;
+
+  /// Snackbar when deletion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not delete the account: {reason}'**
+  String settingsDeleteFailed(String reason);
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'WHAT ARE YOU HAVING TONIGHT?'**
+  String get homeLauncherEyebrow;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us the meal or show us the bottle.'**
+  String get homeLauncherTitle;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'We explain the pairing and remember what worked.'**
+  String get homeLauncherSubtitle;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Scan a bottle'**
+  String get homeScanBottle;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a meal'**
+  String get homeChooseMeal;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Type a dish'**
+  String get homeTypeDish;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'QUICK START'**
+  String get homeQuickStart;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'What dish are you having?'**
+  String get homeTypeDishTitle;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Type a dish; you will pick the closest match next.'**
+  String get homeTypeDishHint;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'For example: spicy paneer tikka'**
+  String get homeTypeDishExample;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Find a pairing'**
+  String get homeFindPairing;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Retail availability soon'**
+  String get actionRetailSoon;
+
+  /// Home 2.0 / action row
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders coming soon'**
+  String get actionRemindSoon;
+
+  /// Profile row to the Aroma Wheel
+  ///
+  /// In en, this message translates to:
+  /// **'Explore the aroma wheel'**
+  String get profileAromaWheel;
+
+  /// Profile row to the Aroma Wheel
+  ///
+  /// In en, this message translates to:
+  /// **'Learn the smells behind every sip, with Indian names too.'**
+  String get profileAromaWheelSub;
+
+  /// No-match: open Pair in drink mode
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name'**
+  String get scanSearchByName;
+
+  /// No-match: open Quick Log with a typed name
+  ///
+  /// In en, this message translates to:
+  /// **'Log it anyway'**
+  String get scanLogAnyway;
+
+  /// Admin drafts preview
+  ///
+  /// In en, this message translates to:
+  /// **'Console'**
+  String get settingsConsole;
+
+  /// Admin drafts preview
+  ///
+  /// In en, this message translates to:
+  /// **'Preview console drafts'**
+  String get settingsPreviewDrafts;
+
+  /// Admin drafts preview
+  ///
+  /// In en, this message translates to:
+  /// **'Show unpublished console drafts on this phone only.'**
+  String get settingsPreviewDraftsSub;
+
+  /// Admin drafts preview
+  ///
+  /// In en, this message translates to:
+  /// **'PREVIEW · showing console drafts on this phone'**
+  String get previewDraftsBanner;
 }
 
 class _AppLocalizationsDelegate

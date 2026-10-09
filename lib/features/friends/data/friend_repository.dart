@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crypto/crypto.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:winebro/features/friends/domain/friend.dart';
@@ -10,8 +9,7 @@ import 'package:winebro/features/friends/domain/friend.dart';
 /// Phone-number-keyed friend graph.
 ///
 /// Storage layout:
-///   phone_index/{sha256(e164)} → { uid }
-///   users/{uid}.phoneHash      = sha256 of own phone
+///   phone_index/{hmac(pepper, e164)} → { uid }   (server-only, CF-13)
 ///   users/{me}/friends/{theirUid}  = Friend
 ///
 /// Privacy: contact phone numbers leave the device only as
@@ -19,97 +17,71 @@ import 'package:winebro/features/friends/domain/friend.dart';
 /// only if that uid already wrote their own hash to phone_index.
 /// We never store the user's contacts list anywhere.
 class FriendRepository {
-  FriendRepository(this._firestore, this._auth);
+  FriendRepository(this._firestore, this._auth, [FirebaseFunctions? functions])
+      : _functions = functions ?? FirebaseFunctions.instanceFor(region: 'asia-south1');
 
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
+  final FirebaseFunctions _functions;
 
-  /// Hash a normalized E.164 phone number.
-  static String hashPhone(String e164) {
-    final normalized = e164.replaceAll(RegExp(r'[^\d+]'), '');
-    return sha256.convert(utf8.encode(normalized)).toString();
-  }
-
-  /// Best-effort phone-index write on every login. The user's hash
-  /// must exist in phone_index for friends-of-friends to discover
-  /// them. Idempotent — uses set+merge.
+  /// Asks the server to index this account's verified phone number
+  /// (peppered HMAC, never a plain hash) so contacts can find it.
+  /// Best-effort; idempotent.
   Future<void> ensureSelfIndexed() async {
     final user = _auth.currentUser;
     if (user == null) return;
-    final phone = user.phoneNumber;
-    if (phone == null || phone.isEmpty) return;
-    final hash = hashPhone(phone);
-    await _firestore.collection('phone_index').doc(hash).set({
-      'uid': user.uid,
-      'updatedAt': FieldValue.serverTimestamp(),
-    });
-    // Mirror onto own user doc so we can detect mismatches later.
-    await _firestore.collection('users').doc(user.uid).set(
-      {'phoneHash': hash},
-      SetOptions(merge: true),
-    );
+    if (user.phoneNumber == null || user.phoneNumber!.isEmpty) return;
+    try {
+      await _functions.httpsCallable('registerPhoneIndex').call<Map<String, dynamic>>();
+    } on FirebaseFunctionsException catch (e) {
+      debugPrint('registerPhoneIndex: ${e.code} ${e.message}');
+    }
   }
 
-  /// Read device contacts (caller owns the permission prompt),
-  /// hash each phone, batch-lookup phone_index, return matched
-  /// users. Does NOT auto-follow — the user reviews + opts in.
+  /// Read device contacts (caller owns the permission prompt), send the
+  /// numbers to the server, which matches them against the peppered
+  /// index and returns only users who allow discovery. Does NOT
+  /// auto-follow — the user reviews + opts in.
   Future<List<DiscoveredFriend>> discoverFromContacts() async {
     final granted = await FlutterContacts.requestPermission();
     if (!granted) return const [];
 
     final me = _auth.currentUser?.uid;
     if (me == null) return const [];
-    final myPhone = _auth.currentUser?.phoneNumber;
-    final myHash = myPhone != null ? hashPhone(myPhone) : null;
 
     final contacts = await FlutterContacts.getContacts(
       withProperties: true,
       withPhoto: false,
     );
 
-    // Build hash → contact name map (last-wins is fine — same hash
-    // means same number, so the name they share with their contact
-    // entry is whichever was processed last).
-    final hashToName = <String, String>{};
+    // number → contact name (last-wins; same number, same person).
+    final phoneToName = <String, String>{};
     for (final c in contacts) {
       for (final p in c.phones) {
-        final raw = p.number;
-        if (raw.trim().isEmpty) continue;
-        final hash = hashPhone(raw);
-        if (hash == myHash) continue;
-        hashToName[hash] = c.displayName;
+        final raw = p.number.replaceAll(RegExp(r'[^\d+]'), '');
+        if (raw.length < 8) continue;
+        phoneToName[raw] = c.displayName;
       }
     }
-    if (hashToName.isEmpty) return const [];
+    if (phoneToName.isEmpty) return const [];
 
-    // Firestore whereIn caps at 30 — chunk.
-    const chunkSize = 30;
-    final hashes = hashToName.keys.toList();
     final results = <DiscoveredFriend>[];
-
-    for (var i = 0; i < hashes.length; i += chunkSize) {
-      final chunk = hashes.sublist(
-        i,
-        i + chunkSize > hashes.length ? hashes.length : i + chunkSize,
-      );
-      final snap = await _firestore
-          .collection('phone_index')
-          .where(FieldPath.documentId, whereIn: chunk)
-          .get();
-      for (final doc in snap.docs) {
-        final uid = doc.data()['uid'] as String?;
+    final phones = phoneToName.keys.toList();
+    const chunk = 500; // server limit per call
+    for (var i = 0; i < phones.length; i += chunk) {
+      final part = phones.sublist(i, i + chunk > phones.length ? phones.length : i + chunk);
+      final res = await _functions
+          .httpsCallable('lookupContacts')
+          .call<Map<String, dynamic>>({'phones': part});
+      final matches = (res.data['matches'] as List?) ?? const [];
+      for (final m in matches) {
+        if (m is! Map) continue;
+        final uid = m['uid'] as String?;
         if (uid == null || uid == me) continue;
-        final contactName = hashToName[doc.id] ?? '';
-        // We deliberately don't read users/{uid} here — the user's
-        // user doc is owner-only readable. The contact-list name is
-        // what the discoverer already knows them by, which is the
-        // honest label to show. After following, the per-user friends
-        // doc denormalizes whatever name we render.
-        results.add(DiscoveredFriend(
-          uid: uid,
-          contactName: contactName,
-          displayName: contactName,
-        ));
+        // The contact-list name is what the discoverer already knows
+        // them by, which is the honest label to show.
+        final name = phoneToName[m['phone'] as String? ?? ''] ?? '';
+        results.add(DiscoveredFriend(uid: uid, contactName: name, displayName: name));
       }
     }
     return results;

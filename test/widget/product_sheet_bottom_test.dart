@@ -43,6 +43,6 @@ void main() {
     ));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
-    expect(find.text('Find to buy'), findsOneWidget);
+    expect(find.text('Retail availability soon'), findsOneWidget);
   });
 }

@@ -40,10 +40,18 @@ class NotificationHandler {
   StreamSubscription<RemoteMessage>? _openedSub;
   GoRouter? _router;
 
+  /// Tap that opened the app before the router was bound.
+  RemoteMessage? _pendingOpen;
+
   /// Bind a router so notification taps can deep-link. Call after
   /// router creation (typically in WineBroApp.build via a one-shot ref).
   void bindRouter(GoRouter router) {
     _router = router;
+    final pending = _pendingOpen;
+    if (pending != null) {
+      _pendingOpen = null;
+      _onOpened(pending);
+    }
   }
 
   /// Bootstrap. Call from main.dart AFTER Firebase.initializeApp().
@@ -183,10 +191,10 @@ class NotificationHandler {
     developer.log('Opened from push: ${n.type.code}', name: 'wb.fcm');
     final router = _router;
     if (router == null) {
-      developer.log(
-        'Router not bound yet; deep-link skipped',
-        name: 'wb.fcm',
-      );
+      // Cold start: the router is created after initialize(). Keep the
+      // tap and replay it from bindRouter().
+      _pendingOpen = message;
+      developer.log('Router not bound yet; deep-link queued', name: 'wb.fcm');
       return;
     }
 

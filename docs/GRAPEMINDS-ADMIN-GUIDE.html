@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WineBro Console — GrapeMinds operating guide</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
+  :root { --paprika:#93003C; --deep:#5A0026; --thunder:#252122; --salem:#0F8044; --cream:#FAF6EE; --ink:#252122; --muted:#6B6166; --line:#E4DEDB; --warn:#D4960A; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; color: var(--ink); font-size: 11.5pt; line-height: 1.55; margin: 0; }
+  h1 { font-family: Georgia, "Times New Roman", serif; font-size: 26pt; color: var(--paprika); margin: 0 0 4px; }
+  h2 { font-family: Georgia, serif; font-size: 16pt; color: var(--paprika); margin: 26px 0 8px; padding-bottom: 4px; border-bottom: 2px solid var(--paprika); page-break-after: avoid; }
+  h3 { font-size: 12.5pt; margin: 16px 0 6px; color: var(--thunder); page-break-after: avoid; }
+  p { margin: 6px 0; }
+  .sub { color: var(--muted); font-size: 11pt; margin-bottom: 14px; }
+  .cover { background: var(--cream); border-left: 6px solid var(--paprika); padding: 16px 18px; border-radius: 6px; margin: 10px 0 18px; }
+  .cover b { color: var(--deep); }
+  ol, ul { margin: 6px 0 6px 22px; padding: 0; }
+  li { margin: 3px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 10.5pt; page-break-inside: avoid; }
+  th { background: var(--thunder); color: #fff; text-align: left; padding: 7px 9px; font-weight: 600; }
+  td { padding: 6px 9px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:nth-child(even) td { background: #FBF8F3; }
+  .box { border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; margin: 10px 0; background: #fff; page-break-inside: avoid; }
+  .tip { border-left: 4px solid var(--salem); background: #F0FAF4; }
+  .warn { border-left: 4px solid var(--warn); background: #FFF8E6; }
+  .stop { border-left: 4px solid var(--paprika); background: #FDF0F4; }
+  .path { font-family: Consolas, "Courier New", monospace; font-size: 10pt; background: #F3EEEA; padding: 1px 6px; border-radius: 4px; white-space: nowrap; }
+  .btn { display: inline-block; border: 1px solid var(--thunder); border-radius: 6px; padding: 0 7px; font-size: 10pt; font-weight: 600; background: #fff; }
+  .btn.p { background: var(--paprika); color: #fff; border-color: var(--paprika); }
+  .flow { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin: 8px 0; }
+  .flow span { background: var(--cream); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; font-size: 10pt; font-weight: 600; }
+  .flow i { color: var(--muted); font-style: normal; }
+  .footer { margin-top: 28px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 9.5pt; }
+  .pb { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<h1>GrapeMinds in the WineBro Console</h1>
+<div class="sub">Operating guide for admins · 10 October 2026 · Console: <span class="path">https://winebro-console.web.app</span></div>
+
+<div class="cover">
+  <p><b>What this is.</b> GrapeMinds is a wine database (311,480 wines). We have a free key: <b>250 calls per month</b>. The console lets you spend those calls carefully, keeps every answer, and helps you attach the data to our drinks so customers see it in the WineBro app.</p>
+  <p><b>The rule in one line:</b> nothing is called until you confirm the price, nothing is paid twice, and nothing reaches customers until you map it and publish it.</p>
+</div>
+
+<h2>1. Before you start</h2>
+<ul>
+  <li>Sign in to the console with your Google account (<span class="path">ravi.p.sankar@gmail.com</span> or <span class="path">dushyantb11@gmail.com</span>).</li>
+  <li>GrapeMinds covers <b>wines only</b>. Whisky, rum, gin, brandy, vodka and beer are not in it.</li>
+  <li>Calls reset on the 1st of every month. The console stops at a ceiling of 230 to keep a reserve (you can change this under <i>Terms &amp; budget</i>).</li>
+</ul>
+
+<h2>2. Where to find it</h2>
+<div class="flow"><span>Sidebar</span><i>→</i><span>Data Cellar</span><i>→</i><span>GrapeMinds card</span><i>→</i><span>GrapeMinds dashboard</span></div>
+<p><b>Data Cellar</b> shows one card per outside source (GrapeMinds, Open Food Facts, Wikidata, Wikimedia Commons, X-Wines, BJCP, Indian Food 101, Spirits Database). Each card tells you what the source provides, how many of our records use it and its licence. Only connected sources open a dashboard; today that is GrapeMinds.</p>
+
+<h2>3. The GrapeMinds dashboard at a glance</h2>
+<table>
+  <tr><th style="width:26%">Part</th><th>What it shows / does</th></tr>
+  <tr><td>Four tiles at the top</td><td><b>Calls left this month</b> (with the bar), wines downloaded, our drinks mapped, producers/regions/insights downloaded.</td></tr>
+  <tr><td>Tab: Download</td><td>All actions that spend calls. Each shows a <span class="btn">price</span> button; pressing it tells you the exact cost and asks you to confirm.</td></tr>
+  <tr><td>Tab: Downloaded wines</td><td>Every wine we have fetched, with producer, region, colour, type, whether full detail is downloaded, and its flavour profile.</td></tr>
+  <tr><td>Tab: Map to our drinks</td><td>Our 51 wines on the left, best GrapeMinds matches on the right. Mapping writes a draft of our drink.</td></tr>
+  <tr><td>Tab: Terms &amp; budget</td><td>Record GrapeMinds' written permission; set the monthly ceiling.</td></tr>
+</table>
+
+<h2>4. Downloading data (spending calls)</h2>
+<p>Every action follows the same three steps:</p>
+<div class="flow"><span>1 Press "price it"</span><i>→</i><span>2 Read: "This will use N calls · X left → Y afterwards"</span><i>→</i><span>3 Press "Use N calls"</span></div>
+<p>If there are not enough calls left, the button is disabled and nothing happens.</p>
+
+<h3>Recommended order (first month)</h3>
+<table>
+  <tr><th style="width:30%">Action</th><th style="width:12%">Cost</th><th>Why</th></tr>
+  <tr><td>Check <b>IN</b> coverage</td><td>1</td><td>Tells you how many Indian wines, producers and regions GrapeMinds has. Decides everything else.</td></tr>
+  <tr><td>Download IN regions</td><td>1</td><td>Gives region ids (Nashik, Nandi Hills, Akluj …) for listing wines.</td></tr>
+  <tr><td>Download IN producers</td><td>1–2</td><td>Producer ids (Sula, Grover Zampa, Fratelli, York, Charosa, KRSMA …).</td></tr>
+  <tr><td>Download a wine list by region id</td><td>1 per 100 wines</td><td>The cheap layer: identity rows (name, colour, type, sugar, producer, region, LWIN). Do this for each Indian region.</td></tr>
+  <tr><td>Search by name</td><td>1 per search</td><td>For imported wines we sell (Jacob's Creek, Penfolds, Yellow Tail, Mondavi …).</td></tr>
+  <tr><td>Details for selected wines</td><td>1 per wine</td><td>Grapes, flavour profile, description, tasting notes, pairings. Do this only for wines you will map or add.</td></tr>
+  <tr><td>Producer / region insights</td><td>1 each</td><td>Founded year, hectares, certifications, website; region climate and styles. Good for ~10 producers and ~6 regions.</td></tr>
+</table>
+<div class="box tip"><b>Tip.</b> Lists are cheap (100 wines for one call); details are expensive (one call per wine). Download lists widely, details narrowly.</div>
+<div class="box warn"><b>About the text fields.</b> GrapeMinds generates descriptions, tasting notes and food pairings on demand (machine-written). The console stores them under "generated" and the app will never show them as facts. Grapes, producer, region, sugar level and LWIN are catalogue facts.</div>
+
+<h2 class="pb">5. Where the downloaded data lives</h2>
+<table>
+  <tr><th style="width:34%">Where</th><th>What</th></tr>
+  <tr><td>Dashboard → <b>Downloaded wines</b> tab</td><td>The working view: filter, select, download details, "Add as drink".</td></tr>
+  <tr><td>Dashboard → Download tab → <b>Last result</b></td><td>The raw answer of the action you just ran (for example the coverage numbers).</td></tr>
+  <tr><td>Dashboard → Download tab → <b>Recent calls</b></td><td>Who called what, when, and the response code.</td></tr>
+  <tr><td>Firestore (for engineers)</td><td><span class="path">grapeminds_wines</span>, <span class="path">grapeminds_producers</span>, <span class="path">grapeminds_regions</span>, <span class="path">grapeminds_insights</span>, raw answers in <span class="path">grapeminds_cache</span>, the call ledger in <span class="path">integrations/grapeminds</span>.</td></tr>
+  <tr><td>On a drink, after mapping</td><td>Drink page → section <b>Open data</b> → key <span class="path">grapeminds</span>.</td></tr>
+</table>
+<p>Downloaded data is <b>not</b> visible to customers. It is raw material until you map it and publish.</p>
+
+<h2>6. Mapping GrapeMinds data to our drinks</h2>
+<p>Open the dashboard → <b>Map to our drinks</b>. Each row is one of our wines with up to five GrapeMinds candidates, scored by how well the names match.</p>
+<ol>
+  <li>If a candidate shows a <b>↓</b>, its details are not downloaded yet. Clicking it prices a 1-call detail download; confirm it.</li>
+  <li>Decide whether to switch on <b>"Also adopt acidity, tannin and body from GrapeMinds"</b>. On: those three scores replace our estimates and the label changes to say so. Off: the profile is stored under open data only.</li>
+  <li>Click the right candidate. A sheet shows what will be written: GrapeMinds id/LWIN, grapes, flavour profile, licence state.</li>
+  <li>Press <span class="btn p">Save as draft</span>. The console writes a <b>draft</b> of the drink: <span class="path">openData.grapeminds</span> plus empty fields filled (grape variety, region, style). The live drink is untouched.</li>
+</ol>
+<h3>Adding a wine we do not have</h3>
+<p>Downloaded wines tab → row with details → <span class="btn">Add as drink</span>. A draft drink is created with category (from colour/type), name, producer, region, grapes, and acidity/tannin/body from the profile; fruit, freshness and complexity start at 5 and stay "estimated". You then edit it like any drink.</p>
+<div class="box tip"><b>No candidate for a wine?</b> Use Download → <i>Search by name</i> with the producer and wine name, then come back to the Map tab.</div>
+
+<h2>7. Making it visible to customers</h2>
+<div class="flow"><span>Draft saved</span><i>→</i><span>Drink page: review</span><i>→</i><span>Preview in WineBro</span><i>→</i><span>Publish now / Releases → Publish</span><i>→</i><span>Live in the app</span></div>
+<ol>
+  <li>Open the drink (Drinks → the row shows a <b>draft</b> chip, or click the name in the Map tab).</li>
+  <li>Check the filled fields and the <b>Open data → grapeminds</b> block. Adjust anything you like.</li>
+  <li>Press <span class="btn">Preview in WineBro</span>. The real app opens in a phone frame with your draft. Check the product sheet (grape, region, open facts) and, for a dish, the ranking.</li>
+  <li>Publish: <span class="btn p">Publish now</span> on the drink page, or collect several drafts and publish them together under <b>Releases</b> (one release id, one-click roll back).</li>
+  <li>The app picks it up on the next screen open. No app update is needed.</li>
+</ol>
+<h3>What the customer sees</h3>
+<table>
+  <tr><th style="width:36%">GrapeMinds field</th><th>Where it shows in the app</th></tr>
+  <tr><td>Grape variety, region, style (when filled)</td><td>Product sheet header and facts; Pair results.</td></tr>
+  <tr><td>Producer facts (from insights)</td><td>Open facts section ("Producer: … since …").</td></tr>
+  <tr><td>Acidity / tannin / body (if adopted)</td><td>Drive the pairing scores; the note under the sheet says "Acidity, tannin and body from GrapeMinds; other scores estimated".</td></tr>
+  <tr><td>Generated description, notes, pairings</td><td>Not shown as facts. Pairings may be used by an editor to write hand-written dish pairings after review.</td></tr>
+</table>
+
+<h2>8. Licence rule — read before publishing</h2>
+<div class="box stop">
+  <p><b>Publishing a drink that carries GrapeMinds data is blocked</b> until one of these is true:</p>
+  <ol>
+    <li>The wine is <b>licensed</b> (GrapeMinds sells a per-wine licence, about €0.38, billed on paid plans). Future console button; today ask engineering to run it for the chosen wines.</li>
+    <li>GrapeMinds has confirmed <b>in writing</b> that our plan allows storing and showing their data. Record it under <b>Terms &amp; budget</b> (tick the box, paste the confirmation). The block then lifts for all mapped wines.</li>
+  </ol>
+  <p>Downloading, mapping, drafting and previewing are always allowed — they do not publish anything.</p>
+</div>
+
+<h2>9. Budget plan for 250 calls</h2>
+<table>
+  <tr><th>Phase</th><th style="width:12%">Calls</th><th>Result</th></tr>
+  <tr><td>Check</td><td>3</td><td>Coverage, regions, producers for India</td></tr>
+  <tr><td>Indian wine lists</td><td>6–10</td><td>Every Indian wine as an identity row</td></tr>
+  <tr><td>Match our 51 wines</td><td>10–15</td><td>Indian ones from the lists; name search for imports</td></tr>
+  <tr><td>Details for our wines</td><td>≈51</td><td>Grapes, profile, notes, pairings</td></tr>
+  <tr><td>Details for new Indian wines</td><td>≈80</td><td>First real catalogue growth</td></tr>
+  <tr><td>Producer + region insights</td><td>≈16</td><td>Facts for cards</td></tr>
+  <tr><td>Reserve</td><td>≈50</td><td>Retries and surprises</td></tr>
+</table>
+
+<h2>10. Troubleshooting</h2>
+<table>
+  <tr><th style="width:36%">You see</th><th>What it means / what to do</th></tr>
+  <tr><td>"Not enough calls left this month"</td><td>The ceiling is reached. Wait for the 1st, or raise the ceiling under Terms &amp; budget (max 250).</td></tr>
+  <tr><td>"GrapeMinds answered 401/403"</td><td>The key is wrong or expired. Engineering resets the secret <span class="path">GRAPEMINDS_API_KEY</span>.</td></tr>
+  <tr><td>"GrapeMinds answered 429"</td><td>Too fast (5 per second) or their monthly limit. Wait a minute and retry; the call was still counted by them.</td></tr>
+  <tr><td>A candidate shows ↓</td><td>Details not downloaded yet; click it and confirm 1 call.</td></tr>
+  <tr><td>"GrapeMinds data is not licensed for publication yet"</td><td>See section 8.</td></tr>
+  <tr><td>Nothing changes in the app after publishing</td><td>Open another screen or restart the app; the catalogue refreshes on the next screen open.</td></tr>
+</table>
+
+<div class="footer">WineBro Console · internal guide · Source details: app/docs/GRAPEMINDS-PLAN.md · Data rules: facts stay facts with source and date; generated text is labelled; taste scores remain "estimated" until a person reviews them.</div>
+</body>
+</html>

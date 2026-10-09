@@ -42,6 +42,10 @@ enum WineBroNotificationType {
   ///   data.foodPaired
   pairingFeedback(code: 'pairingFeedback', defaultDeepLink: '/feedback'),
 
+  /// Sent by CF-02 when a badge is earned. Deep-links to Profile.
+  ///   data.badgeId, data.badgeName, data.xpReward
+  badgeEarned(code: 'badgeEarned', defaultDeepLink: '/profile'),
+
   /// Generic catch-all. Deep-links to Home.
   unknown(code: 'unknown', defaultDeepLink: '/');
 

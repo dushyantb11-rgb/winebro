@@ -493,6 +493,35 @@ class _IdleOrErrorSheet extends StatelessWidget {
           icon: const Icon(Icons.camera_alt, size: 20),
           label: Text(isError ? context.l10n.scanTryAgain : context.l10n.scanOpenCamera),
         ),
+        if (phase == _ScanPhase.noMatch) ...[
+          const SizedBox(height: 10),
+          // A label we do not know yet must not be a dead end.
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    context.go('/pair?mode=drink');
+                  },
+                  icon: const Icon(Icons.search, size: 18),
+                  label: Text(context.l10n.scanSearchByName),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    QuickLogSheet.show(context);
+                  },
+                  icon: const Icon(Icons.edit_note, size: 18),
+                  label: Text(context.l10n.scanLogAnyway),
+                ),
+              ),
+            ],
+          ),
+        ],
       ],
     );
   }

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:winebro/shared/widgets/load_error_view.dart';
 import 'package:winebro/core/services/firebase_providers.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
@@ -516,8 +517,7 @@ class _EmptyState extends StatelessWidget {
                     label: Text(context.l10n.journalCtaScan),
                     onPressed: () {
                       HapticFeedback.mediumImpact();
-                      Navigator.of(context, rootNavigator: true)
-                          .pushNamed('/scan');
+                      context.push('/scan');
                     },
                   ),
                 ),

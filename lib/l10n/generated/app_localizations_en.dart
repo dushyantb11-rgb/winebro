@@ -1279,4 +1279,95 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get ageGateRequired =>
       'Please confirm you are 21+ and accept the policies to continue.';
+
+  @override
+  String get catalogLoading => 'Loading the drinks and dishes…';
+
+  @override
+  String get catalogEmpty =>
+      'The catalogue is empty right now. Please check back soon.';
+
+  @override
+  String get catalogError =>
+      'Could not load the catalogue. Check your connection and try again.';
+
+  @override
+  String get settingsDeleting => 'Deleting your account and data…';
+
+  @override
+  String get settingsDeleted =>
+      'Your account and all your data have been deleted.';
+
+  @override
+  String settingsDeleteFailed(String reason) {
+    return 'Could not delete the account: $reason';
+  }
+
+  @override
+  String get homeLauncherEyebrow => 'WHAT ARE YOU HAVING TONIGHT?';
+
+  @override
+  String get homeLauncherTitle => 'Tell us the meal or show us the bottle.';
+
+  @override
+  String get homeLauncherSubtitle =>
+      'We explain the pairing and remember what worked.';
+
+  @override
+  String get homeScanBottle => 'Scan a bottle';
+
+  @override
+  String get homeChooseMeal => 'Choose a meal';
+
+  @override
+  String get homeTypeDish => 'Type a dish';
+
+  @override
+  String get homeQuickStart => 'QUICK START';
+
+  @override
+  String get homeTypeDishTitle => 'What dish are you having?';
+
+  @override
+  String get homeTypeDishHint =>
+      'Type a dish; you will pick the closest match next.';
+
+  @override
+  String get homeTypeDishExample => 'For example: spicy paneer tikka';
+
+  @override
+  String get homeFindPairing => 'Find a pairing';
+
+  @override
+  String get actionRetailSoon => 'Retail availability soon';
+
+  @override
+  String get actionRemindSoon => 'Reminders coming soon';
+
+  @override
+  String get profileAromaWheel => 'Explore the aroma wheel';
+
+  @override
+  String get profileAromaWheelSub =>
+      'Learn the smells behind every sip, with Indian names too.';
+
+  @override
+  String get scanSearchByName => 'Search by name';
+
+  @override
+  String get scanLogAnyway => 'Log it anyway';
+
+  @override
+  String get settingsConsole => 'Console';
+
+  @override
+  String get settingsPreviewDrafts => 'Preview console drafts';
+
+  @override
+  String get settingsPreviewDraftsSub =>
+      'Show unpublished console drafts on this phone only.';
+
+  @override
+  String get previewDraftsBanner =>
+      'PREVIEW · showing console drafts on this phone';
 }

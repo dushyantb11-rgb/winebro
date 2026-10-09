@@ -1712,7 +1712,7 @@
           "paprika",
           "paprikaDeep"
         ],
-        "route": "/pair"
+        "route": "/pair?mode=food"
       },
       {
         "id": "hosting",
@@ -1722,7 +1722,7 @@
           "thunder",
           "paprikaDark"
         ],
-        "route": "/pair"
+        "route": "/pair?mode=occasion"
       },
       {
         "id": "justSipping",
@@ -1732,10 +1732,18 @@
           "paprikaDark",
           "thunderLight"
         ],
-        "route": "/pair"
+        "route": "/pair?mode=drink"
       }
     ],
-    "logo": "assets/images/logo.png"
+    "logo": "assets/images/logo.png",
+    "quickStart": [
+      "butter-chicken",
+      "hyderabadi-biryani",
+      "paneer-tikka",
+      "masala-dosa"
+    ],
+    "retailEnabled": false,
+    "remindersEnabled": false
   },
   "notifications": {
     "types": [
@@ -1758,6 +1766,10 @@
       {
         "code": "pairingFeedback",
         "deepLink": "/feedback"
+      },
+      {
+        "code": "badgeEarned",
+        "deepLink": "/profile"
       },
       {
         "code": "unknown",
