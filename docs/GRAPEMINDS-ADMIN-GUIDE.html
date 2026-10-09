@@ -17,7 +17,8 @@
   .cover b { color: var(--deep); }
   ol, ul { margin: 6px 0 6px 22px; padding: 0; }
   li { margin: 3px 0; }
-  table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 10.5pt; page-break-inside: avoid; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 10.5pt; }
+  tr { page-break-inside: avoid; }
   th { background: var(--thunder); color: #fff; text-align: left; padding: 7px 9px; font-weight: 600; }
   td { padding: 6px 9px; border-bottom: 1px solid var(--line); vertical-align: top; }
   tr:nth-child(even) td { background: #FBF8F3; }
@@ -85,7 +86,7 @@
 <div class="box tip"><b>Tip.</b> Lists are cheap (100 wines for one call); details are expensive (one call per wine). Download lists widely, details narrowly.</div>
 <div class="box warn"><b>About the text fields.</b> GrapeMinds generates descriptions, tasting notes and food pairings on demand (machine-written). The console stores them under "generated" and the app will never show them as facts. Grapes, producer, region, sugar level and LWIN are catalogue facts.</div>
 
-<h2 class="pb">5. Where the downloaded data lives</h2>
+<h2>5. Where the downloaded data lives</h2>
 <table>
   <tr><th style="width:34%">Where</th><th>What</th></tr>
   <tr><td>Dashboard → <b>Downloaded wines</b> tab</td><td>The working view: filter, select, download details, "Add as drink".</td></tr>
