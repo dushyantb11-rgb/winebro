@@ -497,8 +497,18 @@ const LABEL_KEYS = ["homeEmotionCooking", "homeEmotionHosting", "homeEmotionJust
 function HomeForm({ value, onChange }: Props) {
   const set = useSet(value, onChange);
   const tiles = arr<{ id: string; labelKey: string; icon: string; gradient: string[]; route: string }>(value.emotionTiles);
+  const tips = arr<{ text: string; note: string }>(value.tips);
   return (
     <div className="stack" style={{ gap: 16 }}>
+      <Section title="Bro Tip of the day" hint="The card at the top of Home. The app shows one tip per day and moves to the next tip the following day. With no tips, the app shows its built-in tip.">
+        <ListEditor items={tips} onChange={(v) => set("tips", v)} addLabel="Tip" blank={() => ({ text: "", note: "" })} title={(t) => (t.text ? t.text.slice(0, 60) + (t.text.length > 60 ? "…" : "") : "New tip")}
+          render={(t, upd) => (
+            <div className="stack" style={{ gap: 8 }}>
+              <Field label="Tip"><textarea className="textarea" style={{ minHeight: 64 }} value={t.text} onChange={(e) => upd({ text: e.target.value })} /></Field>
+              <Field label="Small line under the tip (optional)"><TextInput value={t.note ?? ""} onChange={(e) => upd({ note: e.target.value })} /></Field>
+            </div>
+          )} />
+      </Section>
       <Section title="Emotion tiles" hint="The three tiles under the greeting. Labels come from the app's translations (label key); colours are palette tokens.">
         <ListEditor items={tiles} onChange={(v) => set("emotionTiles", v)} addLabel="Tile" blank={() => ({ id: "", labelKey: LABEL_KEYS[0].value, icon: "local_bar", gradient: ["paprika", "paprikaDeep"], route: "/pair" })} title={(t) => t.id || "New tile"}
           render={(t, upd) => (

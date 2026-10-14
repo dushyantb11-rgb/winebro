@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:winebro/core/config/app_config.dart';
+import 'package:winebro/core/config/config_repository.dart';
 import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
@@ -90,10 +91,18 @@ class HomeScreen extends ConsumerWidget {
               ],
             ),
 
+            // ====== Bro Tip of the day (config home.tips) ======
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.only(top: 12),
+                child: _BroTipCard(),
+              ),
+            ),
+
             // ====== Home's primary job: start a real decision ======
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
                 child: _DecisionLauncher(
                   onScanBottle: () => context.push('/scan'),
                   onChooseMeal: () => context.go('/pair'),
@@ -369,6 +378,87 @@ class HomeScreen extends ConsumerWidget {
 
   void _showProductDetail(BuildContext context, Product product) =>
       showProductDetailSheet(context, product);
+}
+
+// ============================================================
+// Bro Tip — full-bleed paprika card with serif quote
+// ============================================================
+
+class _BroTipCard extends ConsumerWidget {
+  const _BroTipCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.appColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final home = ref.watch(appConfigProvider).valueOrNull?.home ??
+        AppConfig.current.home;
+    final tip = home.tipFor(DateTime.now()) ??
+        HomeTip(text: context.l10n.broTipContent);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.paprika, colors.paprikaDeep],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: AppElevation.e2(dark: isDark),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.lightbulb_outline,
+                    size: 16, color: colors.inkOnHero),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.homeBroTipHeader,
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    color: colors.inkOnHero,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              tip.text,
+              style: TextStyle(
+                fontFamily: 'PlayfairDisplay',
+                fontStyle: FontStyle.italic,
+                fontSize: 18,
+                height: 1.4,
+                color: colors.inkOnHero,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            if (tip.note.isNotEmpty) ...[
+              const SizedBox(height: 14),
+              Text(
+                tip.note,
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: colors.inkOnHero.withValues(alpha: 0.7),
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 // ============================================================

@@ -834,6 +834,11 @@ class AppLocalizationsHi extends AppLocalizations {
   String get quickLogSavedSnackbar => 'Saved to your story';
 
   @override
+  String journalSaveFailed(String code) {
+    return 'Couldn\'t save this entry. Please try again. ($code)';
+  }
+
+  @override
   String get wishlistTitle => 'Wishlist';
 
   @override

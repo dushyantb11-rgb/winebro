@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:string_similarity/string_similarity.dart';
 import 'package:winebro/features/pairing/presentation/providers/pairing_providers.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
+import 'package:winebro/core/utils/error_code.dart';
 import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_motion.dart';
 import 'package:winebro/core/theme/app_theme.dart';
@@ -182,8 +183,13 @@ class _QuickLogSheetState extends ConsumerState<QuickLogSheet> {
         );
         Navigator.pop(context, true);
       }
-    } catch (_) {
-      if (mounted) setState(() => _saving = false);
+    } on Object catch (e) {
+      if (mounted) {
+        setState(() => _saving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.l10n.journalSaveFailed(errorCode(e)))),
+        );
+      }
     }
   }
 

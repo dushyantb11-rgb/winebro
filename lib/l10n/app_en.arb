@@ -805,6 +805,8 @@
 
   "quickLogSavedSnackbar": "Saved to your story",
   "@quickLogSavedSnackbar": {"description": "Snackbar after Quick-log save"},
+  "journalSaveFailed": "Couldn't save this entry. Please try again. ({code})",
+  "@journalSaveFailed": {"description": "Snackbar when a journal entry fails to save; code is the technical error code", "placeholders": {"code": {"type": "String"}}},
 
   "wishlistTitle": "Wishlist",
   "@wishlistTitle": {"description": "Wishlist screen + Home tile title"},

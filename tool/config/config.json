@@ -1743,7 +1743,16 @@
       "masala-dosa"
     ],
     "retailEnabled": false,
-    "remindersEnabled": false
+    "remindersEnabled": false,
+    "tips": [
+      { "text": "When pairing with spicy Indian food, reach for an off-dry Riesling or a fruity Rosé. The residual sugar tames the heat while the acidity keeps your palate refreshed.", "note": "High-tannin reds amplify the burn. Avoid them." },
+      { "text": "Creamy curries like butter chicken love a white with some body. Try a Chenin Blanc or an oaked Chardonnay.", "note": "Acidity cuts through the cream." },
+      { "text": "Tandoori and grilled meats can take a medium-bodied red. Smoke and char sit well with Shiraz.", "note": "Serve it slightly cool, around 16°C." },
+      { "text": "Sparkling wine is the safest bet with fried snacks. Bubbles and acidity clean the palate after every pakora.", "note": "" },
+      { "text": "Match weight with weight. Light dishes with light drinks, rich dishes with fuller ones.", "note": "This one rule fixes most pairings." },
+      { "text": "Chill whites and rosés, but take them out ten minutes before you pour. Too cold hides the flavour.", "note": "" },
+      { "text": "Sweet desserts need a drink that is sweeter than the dish, or the drink will taste sour.", "note": "" }
+    ]
   },
   "notifications": {
     "types": [

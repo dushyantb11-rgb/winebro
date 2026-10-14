@@ -1602,6 +1602,12 @@ abstract class AppLocalizations {
   /// **'Saved to your story'**
   String get quickLogSavedSnackbar;
 
+  /// Snackbar when a journal entry fails to save; code is the technical error code
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save this entry. Please try again. ({code})'**
+  String journalSaveFailed(String code);
+
   /// Wishlist screen + Home tile title
   ///
   /// In en, this message translates to:
