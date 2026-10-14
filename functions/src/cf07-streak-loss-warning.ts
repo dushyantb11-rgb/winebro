@@ -15,7 +15,7 @@
 
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { getFirestore } from "firebase-admin/firestore";
-import { getMessaging } from "firebase-admin/messaging";
+import { hasToken, sendToUser } from "./push";
 
 const STREAK_RISK_HOURS = 22; // last activity > 22h ago = at risk
 
@@ -27,7 +27,6 @@ export const streakLossWarning = onSchedule(
   },
   async () => {
     const firestore = getFirestore();
-    const messaging = getMessaging();
     const cutoff = Date.now() - STREAK_RISK_HOURS * 60 * 60 * 1000;
 
     const snap = await firestore
@@ -58,22 +57,14 @@ export const streakLossWarning = onSchedule(
         skipped++;
         continue;
       }
-      const tokenDoc = await firestore
-        .collection("users")
-        .doc(uid)
-        .collection("fcm_token")
-        .doc("primary")
-        .get();
-      const token = tokenDoc.data()?.token as string | undefined;
-      if (!token) {
+      if (!(await hasToken(uid))) {
         skipped++;
         continue;
       }
 
       const streakDays = data.streak as number;
       try {
-        await messaging.send({
-          token,
+        const result = await sendToUser(uid, {
           notification: {
             title: `${streakDays}-day streak — about to lapse`,
             body:
@@ -93,6 +84,10 @@ export const streakLossWarning = onSchedule(
             payload: { aps: { sound: "default", badge: 1 } },
           },
         });
+        if (result.sent === 0) {
+          skipped++;
+          continue;
+        }
         sent++;
       } catch (err) {
         errors++;

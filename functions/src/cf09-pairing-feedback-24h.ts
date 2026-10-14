@@ -16,7 +16,7 @@
 
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
-import { getMessaging } from "firebase-admin/messaging";
+import { hasToken, sendToUser } from "./push";
 
 const FEEDBACK_AGE_MIN_HOURS = 24;
 const FEEDBACK_AGE_MAX_HOURS = 25;
@@ -29,7 +29,6 @@ export const pairingFeedback24h = onSchedule(
   },
   async () => {
     const firestore = getFirestore();
-    const messaging = getMessaging();
 
     const now = Date.now();
     const minCreated = new Date(
@@ -69,14 +68,7 @@ export const pairingFeedback24h = onSchedule(
         continue;
       }
 
-      const tokenDoc = await firestore
-        .collection("users")
-        .doc(uid)
-        .collection("fcm_token")
-        .doc("primary")
-        .get();
-      const token = tokenDoc.data()?.token as string | undefined;
-      if (!token) {
+      if (!(await hasToken(uid))) {
         skipped++;
         continue;
       }
@@ -85,12 +77,7 @@ export const pairingFeedback24h = onSchedule(
       const foodPaired = data.foodPaired as string;
 
       try {
-        await doc.ref.update({
-          feedbackRequestedAt: FieldValue.serverTimestamp(),
-        });
-
-        await messaging.send({
-          token,
+        const result = await sendToUser(uid, {
           notification: {
             title: "Did Bro get it right?",
             body: `Yesterday's ${productName} with ${foodPaired} — how did it land?`,
@@ -112,6 +99,13 @@ export const pairingFeedback24h = onSchedule(
           apns: {
             payload: { aps: { sound: "default", badge: 1 } },
           },
+        });
+        if (result.sent === 0) {
+          skipped++;
+          continue; // nothing delivered; try again next hour
+        }
+        await doc.ref.update({
+          feedbackRequestedAt: FieldValue.serverTimestamp(),
         });
         sent++;
       } catch (err) {

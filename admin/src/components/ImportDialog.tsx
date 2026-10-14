@@ -44,7 +44,8 @@ export function ImportDialog({ spec, onClose, options, example }: {
       setDone(rep);
       void qc.invalidateQueries({ queryKey: ["collection", spec.id] });
       void qc.invalidateQueries({ queryKey: ["stats"] });
-      toast(`${rep.written} ${spec.singular}${rep.written === 1 ? "" : "s"} written`);
+      toast(`${rep.writtenToDrafts} ${spec.singular}${rep.writtenToDrafts === 1 ? "" : "s"} saved as drafts — publish them from Releases`);
+      void qc.invalidateQueries({ queryKey: ["drafts"] });
     } catch (e) {
       toast(e instanceof Error ? e.message : "Import failed", "err");
     } finally {
@@ -58,12 +59,12 @@ export function ImportDialog({ spec, onClose, options, example }: {
     <Sheet title={`Import ${spec.title.toLowerCase()}`} onClose={onClose} wide footer={<>
       <button className="btn" onClick={onClose}>{done ? "Close" : "Cancel"}</button>
       {!done && <button className="btn primary" disabled={!rows || busy || !!check?.errors.length} onClick={run}>
-        <Icon name="cloud_upload" className="sm" />{busy ? "Writing…" : `Write ${rows?.length ?? 0} rows`}
+        <Icon name="cloud_upload" className="sm" />{busy ? "Saving…" : `Save ${rows?.length ?? 0} rows as drafts`}
       </button>}
     </>}>
       <div className="stack" style={{ gap: 16 }}>
         <div className="row between">
-          <div className="small muted">1. Download the template, fill it in Excel. 2. Choose the file here. 3. Check the preview and write.</div>
+          <div className="small muted">1. Download the template, fill it in Excel. 2. Choose the file here. 3. Check the preview and save. Rows are saved as drafts; nothing goes live until you publish from Releases. If any row has a problem, nothing is saved.</div>
           <button className="btn sm" onClick={() => downloadTemplate(spec, example, optionsByList)}><Icon name="download" className="sm" />Excel template</button>
         </div>
         <div className="row">
@@ -105,7 +106,7 @@ export function ImportDialog({ spec, onClose, options, example }: {
         )}
         {done && (
           <div className="card card-pad">
-            <b>Done.</b> {done.created} created, {done.updated} updated.
+            <b>Saved as drafts.</b> {done.created} new, {done.updated} updated. Open <a href="/releases">Releases</a> to preview and publish.
           </div>
         )}
       </div>

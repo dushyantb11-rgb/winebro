@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:winebro/shared/widgets/load_error_view.dart';
 import 'package:winebro/core/services/firebase_providers.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
@@ -10,6 +11,8 @@ import 'package:winebro/core/theme/app_colors.dart';
 import 'package:winebro/core/theme/app_elevation.dart';
 import 'package:winebro/core/theme/app_motion.dart';
 import 'package:winebro/core/theme/app_theme.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:winebro/core/utils/error_code.dart';
 import 'package:winebro/core/utils/formatters.dart';
 import 'package:winebro/features/aroma_wheel/domain/aroma_taxonomy.dart';
 import 'package:image_picker/image_picker.dart';
@@ -39,10 +42,24 @@ final journalEntriesProvider =
       .orderBy('createdAt', descending: true)
       .limit(50)
       .snapshots()
-      .map((snap) => snap.docs
-          .map((doc) => JournalEntry.fromMap(doc.data()))
-          .toList());
+      .map((snap) => [
+            // One malformed entry must not hide the whole journal.
+            for (final doc in snap.docs)
+              if (_tryParse({'id': doc.id, ...doc.data()}) case final e?) e,
+          ]);
 });
+
+JournalEntry? _tryParse(Map<String, dynamic> data) {
+  try {
+    return JournalEntry.fromMap(data);
+  } on Object catch (e, st) {
+    try {
+      FirebaseCrashlytics.instance
+          .recordError(e, st, reason: 'journal entry ${data['id']}');
+    } on Object catch (_) {}
+    return null;
+  }
+}
 
 /// Redesigned 2026 Journal.
 ///
@@ -516,8 +533,7 @@ class _EmptyState extends StatelessWidget {
                     label: Text(context.l10n.journalCtaScan),
                     onPressed: () {
                       HapticFeedback.mediumImpact();
-                      Navigator.of(context, rootNavigator: true)
-                          .pushNamed('/scan');
+                      context.push('/scan');
                     },
                   ),
                 ),
@@ -665,12 +681,21 @@ class _BroCardSheetState extends ConsumerState<BroCardSheet> {
       occasion: _context?.code,
     );
 
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .collection('journal')
-        .doc(id)
-        .set(entry.toMap());
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('journal')
+          .doc(id)
+          .set(entry.toMap());
+    } on Object catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.l10n.journalSaveFailed(errorCode(e)))),
+        );
+      }
+      return;
+    }
 
     // ignore: discarded_futures
     ref.read(gamificationServiceProvider).recordAction(

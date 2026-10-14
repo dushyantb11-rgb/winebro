@@ -17,7 +17,7 @@
 
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
-import { getMessaging } from "firebase-admin/messaging";
+import { hasToken, sendToUser } from "./push";
 
 const RESTOCK_AGE_MIN_DAYS = 28;
 const RESTOCK_AGE_MAX_DAYS = 35;
@@ -30,7 +30,6 @@ export const restockSundayPush = onSchedule(
   },
   async () => {
     const firestore = getFirestore();
-    const messaging = getMessaging();
 
     const now = Date.now();
     const minCreated = new Date(
@@ -83,14 +82,7 @@ export const restockSundayPush = onSchedule(
         continue;
       }
 
-      const tokenDoc = await firestore
-        .collection("users")
-        .doc(uid)
-        .collection("fcm_token")
-        .doc("primary")
-        .get();
-      const token = tokenDoc.data()?.token as string | undefined;
-      if (!token) {
+      if (!(await hasToken(uid))) {
         skipped++;
         continue;
       }
@@ -99,12 +91,7 @@ export const restockSundayPush = onSchedule(
       const productId = (data.productId as string) ?? "";
 
       try {
-        await doc.ref.update({
-          restockNotifiedAt: FieldValue.serverTimestamp(),
-        });
-
-        await messaging.send({
-          token,
+        const result = await sendToUser(uid, {
           notification: {
             title: "Time to restock?",
             body: `You loved ${productName} a few weeks ago. Bro thinks the bottle's running low.`,
@@ -125,6 +112,13 @@ export const restockSundayPush = onSchedule(
           apns: {
             payload: { aps: { sound: "default", badge: 1 } },
           },
+        });
+        if (result.sent === 0) {
+          skipped++;
+          continue; // nothing delivered; try again next Sunday
+        }
+        await doc.ref.update({
+          restockNotifiedAt: FieldValue.serverTimestamp(),
         });
         notifiedUids.add(uid);
         sent++;

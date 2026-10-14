@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
+import 'package:winebro/core/utils/error_code.dart';
 
 /// Friendly "couldn't load" message with a Try again button. Records the
 /// real error in Crashlytics so failures can be diagnosed from the field.
@@ -28,8 +30,10 @@ class _LoadErrorViewState extends State<LoadErrorView> {
   void initState() {
     super.initState();
     try {
+      if (!kIsWeb) {
       FirebaseCrashlytics.instance
           .recordError(widget.error, widget.stackTrace, reason: widget.reason);
+      }
     } on Object catch (_) {
       // Crashlytics unavailable (e.g. tests); the message still shows.
     }
@@ -50,6 +54,13 @@ class _LoadErrorViewState extends State<LoadErrorView> {
               context.l10n.loadErrorMessage,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 15, color: colors.textSecondary),
+            ),
+            const SizedBox(height: 6),
+            // Short code so a tester's screenshot names the real cause.
+            Text(
+              errorCode(widget.error),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 11, color: colors.textTertiary),
             ),
             const SizedBox(height: 16),
             OutlinedButton.icon(

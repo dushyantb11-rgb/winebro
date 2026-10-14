@@ -1,4 +1,6 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
+
 enum NoseIntensity {
   light, medium, pronounced;
 
@@ -238,15 +240,16 @@ class JournalEntry {
 
   factory JournalEntry.fromMap(Map<String, dynamic> map) => JournalEntry(
     id: map['id'] as String,
-    userId: map['userId'] as String,
-    productId: map['productId'] as String,
-    productName: map['productName'] as String,
-    category: map['category'] as String,
-    region: map['region'] as String,
-    rating: map['rating'] as int,
-    createdAt: DateTime.parse(map['createdAt'] as String),
-    appearance: map['appearance'] != null
-        ? AppearanceData.fromMap(map['appearance'] as Map<String, dynamic>)
+    userId: map['userId'] as String? ?? '',
+    productId: map['productId'] as String? ?? map['id'] as String,
+    productName: map['productName'] as String? ?? '',
+    category: map['category'] as String? ?? '',
+    region: map['region'] as String? ?? '',
+    rating: (map['rating'] as num?)?.round() ?? 0,
+    createdAt: _readDate(map['createdAt']),
+    appearance: map['appearance'] is Map
+        ? AppearanceData.fromMap(
+            Map<String, dynamic>.from(map['appearance'] as Map))
         : null,
     noseIntensity: map['noseIntensity'] != null
         ? NoseIntensity.values.firstWhere(
@@ -326,8 +329,17 @@ class AppearanceData {
   };
 
   factory AppearanceData.fromMap(Map<String, dynamic> map) => AppearanceData(
-    colour: map['colour'] as String,
-    clarity: map['clarity'] as String,
-    intensity: map['intensity'] as String,
+    colour: map['colour'] as String? ?? '',
+    clarity: map['clarity'] as String? ?? '',
+    intensity: map['intensity'] as String? ?? '',
   );
 }
+
+/// Entries store an ISO string; older or server-written ones may hold a
+/// Firestore Timestamp or epoch millis.
+DateTime _readDate(Object? v) => switch (v) {
+      String s => DateTime.tryParse(s) ?? DateTime.fromMillisecondsSinceEpoch(0),
+      int ms => DateTime.fromMillisecondsSinceEpoch(ms),
+      Timestamp t => t.toDate(),
+      _ => DateTime.fromMillisecondsSinceEpoch(0),
+    };

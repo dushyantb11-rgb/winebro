@@ -1,0 +1,5 @@
+
+# GrapeMinds (free key, cached responses, call ledger)
+.env.grapeminds
+scripts/grapeminds-cache/
+scripts/grapeminds-ledger.json

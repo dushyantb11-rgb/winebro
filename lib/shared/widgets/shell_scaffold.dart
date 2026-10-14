@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:winebro/core/preview/drafts_preview.dart';
 import 'package:go_router/go_router.dart';
 import 'package:winebro/core/l10n/l10n_extension.dart';
 import 'package:winebro/core/theme/app_colors.dart';
@@ -12,19 +14,48 @@ import 'package:winebro/core/theme/app_motion.dart';
 ///   1) It's a verb, not a destination
 ///   2) Iconic center FAB is more discoverable than a 5th tab
 ///   3) Premium consumer apps top out at 5 tabs (Vivino: 5, Distiller: 4)
-class ShellScaffold extends StatelessWidget {
+class ShellScaffold extends ConsumerWidget {
   const ShellScaffold({required this.shell, super.key});
 
   final StatefulNavigationShell shell;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.appColors;
     final l10n = context.l10n;
 
+    final previewing = ref.watch(draftsOverlayProvider).valueOrNull?.isEmpty == false;
+
     return Scaffold(
       extendBody: true,
-      body: shell,
+      body: Column(
+        children: [
+          if (previewing)
+            Material(
+              color: colors.thunder,
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                  child: Row(
+                    children: [
+                      Icon(Icons.visibility, size: 14, color: colors.paprikaOnDark),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          l10n.previewDraftsBanner,
+                          style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.6),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          Expanded(child: shell),
+        ],
+      ),
       floatingActionButton: _ScanFab(
         onPressed: () {
           HapticFeedback.mediumImpact();

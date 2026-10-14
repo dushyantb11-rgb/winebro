@@ -21,6 +21,7 @@ function Kpi({ icon, value, label, sub, to, bar }: { icon: string; value: string
 
 export default function Dashboard() {
   const stats = useQuery({ queryKey: ["stats"], queryFn: api.stats });
+  const health = useQuery({ queryKey: ["health"], queryFn: api.health });
   const products = useQuery({ queryKey: ["collection", "products"], queryFn: () => api.list("products") });
   const dishes = useQuery({ queryKey: ["collection", "dishes"], queryFn: () => api.list("dishes") });
   const s = stats.data;
@@ -43,6 +44,7 @@ export default function Dashboard() {
             <Kpi icon="restaurant" value={s.dishes} label="Dishes" sub={`${dPhoto} with a photo`} to="/c/dishes" bar={pct(dPhoto, d.length)} />
             <Kpi icon="auto_awesome" value={estimated} label="Taste scores estimated" sub="labelled in the app" to="/c/products" />
             <Kpi icon="trending_up" value={bestSellers} label="Best-seller notes" to="/c/products" />
+            <Kpi icon="rocket_launch" value={s.pendingDrafts} label="Drafts waiting to publish" to="/releases" />
             <Kpi icon="group" value={s.users} label="Users" to="/users" />
             <Kpi icon="menu_book" value={s.journalEntries} label="BroCards (journal)" to="/users" />
             <Kpi icon="favorite" value={s.wishlistAdds} label="Wishlist adds" to="/users" />
@@ -67,6 +69,27 @@ export default function Dashboard() {
                 ))}
               </div>
             </div>
+          </div>
+
+          <div className="card">
+            <div className="card-head"><h3>Needs attention</h3><span className="small muted">content health, live catalogue</span></div>
+            {health.isLoading ? <Skeleton rows={4} /> : (
+              <div className="table-wrap">
+                <table className="tbl">
+                  <thead><tr><th>Queue</th><th>Count</th><th>What to do</th><th>Examples</th></tr></thead>
+                  <tbody>
+                    {(health.data?.queues ?? []).map((qq) => (
+                      <tr key={qq.title} className="click" onClick={() => (window.location.href = `/c/${qq.kind}`)}>
+                        <td>{qq.title}</td>
+                        <td><span className={`pill-num ${qq.count ? "" : "muted"}`}>{qq.count}</span></td>
+                        <td className="small muted" style={{ whiteSpace: "normal" }}>{qq.hint}</td>
+                        <td className="small muted">{qq.ids.slice(0, 3).map((x) => x.name ?? x.id).join(", ")}{qq.count > 3 ? "…" : ""}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           <div className="card">

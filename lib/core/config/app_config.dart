@@ -807,9 +807,31 @@ class EmotionTileConfig {
 }
 
 class HomeConfig {
-  const HomeConfig({required this.emotionTiles, required this.logo});
+  const HomeConfig({
+    required this.emotionTiles,
+    required this.logo,
+    this.quickStartDishIds = const [],
+    this.retailEnabled = false,
+    this.remindersEnabled = false,
+    this.tips = const [],
+  });
+
   final List<EmotionTileConfig> emotionTiles;
+
+  /// Bro Tip of the day on Home; one is picked per calendar day. Empty
+  /// list falls back to the bundled tip.
+  final List<HomeTip> tips;
   final String logo;
+
+  /// Dish ids shown as quick-start chips on Home (only those present in
+  /// the catalogue are rendered).
+  final List<String> quickStartDishIds;
+
+  /// Buy / find-to-buy hand-off. Off until a retail partner is live.
+  final bool retailEnabled;
+
+  /// Pick-up reminders. Off until a real scheduler exists.
+  final bool remindersEnabled;
 
   factory HomeConfig.fromMap(Map<String, dynamic> m) => HomeConfig(
         emotionTiles: [
@@ -823,7 +845,34 @@ class HomeConfig {
             ),
         ],
         logo: _str(m, 'logo', 'assets/images/logo.png'),
+        quickStartDishIds: _strings(m['quickStart']),
+        retailEnabled: m['retailEnabled'] == true,
+        remindersEnabled: m['remindersEnabled'] == true,
+        tips: [
+          for (final t in _maps(m['tips']))
+            if (_str(t, 'text', '').trim().isNotEmpty)
+              HomeTip(text: _str(t, 'text'), note: _str(t, 'note', '')),
+        ],
       );
+
+  /// The tip for [day]; stable through the day, rotates daily.
+  HomeTip? tipFor(DateTime day) {
+    if (tips.isEmpty) return null;
+    final index = DateTime.utc(day.year, day.month, day.day)
+            .difference(DateTime.utc(2026))
+            .inDays %
+        tips.length;
+    return tips[index];
+  }
+}
+
+class HomeTip {
+  const HomeTip({required this.text, this.note = ''});
+
+  final String text;
+
+  /// Optional short line under the tip, e.g. what to avoid.
+  final String note;
 }
 
 class NotificationsConfig {

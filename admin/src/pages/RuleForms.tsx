@@ -497,8 +497,18 @@ const LABEL_KEYS = ["homeEmotionCooking", "homeEmotionHosting", "homeEmotionJust
 function HomeForm({ value, onChange }: Props) {
   const set = useSet(value, onChange);
   const tiles = arr<{ id: string; labelKey: string; icon: string; gradient: string[]; route: string }>(value.emotionTiles);
+  const tips = arr<{ text: string; note: string }>(value.tips);
   return (
     <div className="stack" style={{ gap: 16 }}>
+      <Section title="Bro Tip of the day" hint="The card at the top of Home. The app shows one tip per day and moves to the next tip the following day. With no tips, the app shows its built-in tip.">
+        <ListEditor items={tips} onChange={(v) => set("tips", v)} addLabel="Tip" blank={() => ({ text: "", note: "" })} title={(t) => (t.text ? t.text.slice(0, 60) + (t.text.length > 60 ? "…" : "") : "New tip")}
+          render={(t, upd) => (
+            <div className="stack" style={{ gap: 8 }}>
+              <Field label="Tip"><textarea className="textarea" style={{ minHeight: 64 }} value={t.text} onChange={(e) => upd({ text: e.target.value })} /></Field>
+              <Field label="Small line under the tip (optional)"><TextInput value={t.note ?? ""} onChange={(e) => upd({ note: e.target.value })} /></Field>
+            </div>
+          )} />
+      </Section>
       <Section title="Emotion tiles" hint="The three tiles under the greeting. Labels come from the app's translations (label key); colours are palette tokens.">
         <ListEditor items={tiles} onChange={(v) => set("emotionTiles", v)} addLabel="Tile" blank={() => ({ id: "", labelKey: LABEL_KEYS[0].value, icon: "local_bar", gradient: ["paprika", "paprikaDeep"], route: "/pair" })} title={(t) => t.id || "New tile"}
           render={(t, upd) => (
@@ -511,6 +521,13 @@ function HomeForm({ value, onChange }: Props) {
               <Field label="Gradient to"><Select value={t.gradient?.[1]} options={TOKENS} onChange={(g) => upd({ gradient: [t.gradient?.[0] ?? "paprika", g] })} /></Field>
             </div>
           )} />
+      </Section>
+      <Section title="Quick start" hint="Dish ids shown as chips under the Home decision launcher. Only dishes that exist in the catalogue are shown in the app.">
+        <Field label="Dish ids (in order)"><Tags value={arr<string>(value.quickStart)} onChange={(v) => set("quickStart", v.map((x) => x.trim().toLowerCase()))} placeholder="e.g. butter-chicken" /></Field>
+      </Section>
+      <Section title="Actions" hint="Keep these off until a retail partner and a real reminder scheduler exist; the app shows the buttons as 'coming soon' meanwhile.">
+        <Toggle checked={value.retailEnabled === true} onChange={(b) => set("retailEnabled", b)} label="Retail hand-off (Find to buy) enabled" />
+        <Toggle checked={value.remindersEnabled === true} onChange={(b) => set("remindersEnabled", b)} label="Pick-up reminders enabled" />
       </Section>
       <Section title="Logo"><Field label="Asset path or URL"><TextInput value={str(value.logo)} onChange={(e) => set("logo", e.target.value)} /></Field></Section>
     </div>
